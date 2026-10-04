@@ -11,7 +11,7 @@ if errorlevel 1 goto failed
 "%BEAM_NODE%" node_modules\vite\bin\vite.js build
 if errorlevel 1 goto failed
 set "NODE_ENV=production"
-if not defined PORT set "PORT=2568"
+if not defined PORT set "PORT=2571"
 echo Open http://localhost:%PORT% on this laptop. Keep this window open.
 echo Press Ctrl+C to stop the server.
 "%BEAM_NODE%" build\server\index.js
