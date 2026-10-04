@@ -2,6 +2,10 @@
 
 Browser multiplayer foundation for 2–8 workers. One Node.js process serves the browser client and authoritative Colyseus rooms. No physics engine, database, login, or player installation.
 
+## Verification status — October 4, 2026
+
+TypeScript checks and production build passed. All six automated tests passed, including the eight-client real-WebSocket test through the laptop's Wi-Fi address. Two real browser tabs verified room creation/joining, synchronized lobby, entry into the 3D platform, Space action, quick signals, and refresh reconnect. Actual phone joystick/action behavior, cross-device smoothness, and remote public hosting remain unverified and are the next acceptance gate.
+
 ## Try it on this laptop and a phone
 
 The server started during development uses port **2568**.
