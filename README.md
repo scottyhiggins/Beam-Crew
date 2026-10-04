@@ -12,7 +12,7 @@ The server started during development uses port **2568**.
 
 1. Keep the laptop awake. Connect the phone to the same Wi-Fi network.
 2. On the laptop, open `http://localhost:2568` in Chrome or Edge.
-3. On the phone, open `http://192.168.1.166:2568` in Safari or Chrome. That was the laptop's Wi-Fi address during setup; if it changes, find its IPv4 address with `ipconfig` and substitute it.
+3. On the phone, open `http://<laptop-Wi-Fi-IPv4>:2568` in Safari or Chrome. That was the laptop's Wi-Fi address during setup; if it changes, find its IPv4 address with `ipconfig` and substitute it.
 4. Enter different names. Create a room on the laptop. Enter its five-character code on the phone and select **Join**.
 5. Confirm both names and distinct colors appear on both devices. Only the host should have **Start test**; it requires two connected players.
 6. Start the test. Move using **WASD** on the laptop and the left joystick on the phone. Both devices should show the workers moving and turning independently.
@@ -22,7 +22,7 @@ The server started during development uses port **2568**.
 10. On the host select **Lobby controls → Return to lobby**. Confirm both devices return, then start again without rejoining.
 11. During a test, have the host select **Lobby controls → Leave room**. The other connected worker should inherit host controls and keep the session running.
 
-Report the phone model/browser, whether each step passed, movement smoothness/delay, and any error text. **Stop here: Milestone 2 is gated on the actual-device results.**
+Report the phone model/browser, whether each step passed, movement smoothness/delay, and any error text. Milestone 2 will begin after the repository setup is verified. See PROJECT_STATUS.md for the current handoff.
 
 If the phone cannot load the page, check that both devices use the same non-guest Wi-Fi and that VPN software permits local network access. If Windows asks about Node.js network access, allow **Private networks** for this trusted home-network test. Do not disable the firewall. A network with client isolation needs another network or public hosting. No firewall or VPN settings were changed by this project.
 
@@ -70,3 +70,4 @@ Requires an owner-controlled Git remote and Render account. Neither was configur
 Free hosting can sleep and restart; rooms can disappear when the process restarts. Do not switch to a paid plan without the user's approval. Local tests do not establish reliability on a public host or cellular connection.
 
 Synced materials under `sources/` remain read-only references.
+
