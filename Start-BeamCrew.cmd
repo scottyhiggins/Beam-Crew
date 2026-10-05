@@ -4,6 +4,11 @@ cd /d "%~dp0"
 set "BEAM_NODE=%USERPROFILE%\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe"
 if not exist "%BEAM_NODE%" set "BEAM_NODE=node"
 if not exist "node_modules\typescript\bin\tsc" goto dependencies
+if not defined PORT set "PORT=2571"
+echo BEAM CREW - MILESTONE 3: WHEELBARROW RACE
+echo Repository: %CD%
+"%BEAM_NODE%" scripts\check-port.mjs %PORT%
+if errorlevel 1 goto failed
 "%BEAM_NODE%" node_modules\typescript\bin\tsc --noEmit
 if errorlevel 1 goto failed
 "%BEAM_NODE%" node_modules\typescript\bin\tsc -p tsconfig.server.json

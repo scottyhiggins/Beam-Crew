@@ -26,14 +26,28 @@ Phone model/browser, pass/fail for each step, any error text, whether movement f
 
 ## Milestone 3 — Wheelbarrow Race personal test
 
+The launch window and browser should show **Milestone 3 · Wheelbarrow Race**. If the launcher reports an occupied port, close the existing Beam Crew server window with Ctrl+C before launching again. Refresh both browsers after restarting. If Beam Carry is already running, the host uses **Lobby controls → Return to lobby / change game mode** to reveal the Game mode selector. Only the host can change modes.
+
 1. Double-click Start-BeamCrew.cmd in C:\Users\higgi\OneDrive\Documents\Beam-Crew. Keep its window open.
 2. Laptop: http://localhost:2571. iPhone on the same Wi-Fi: http://192.168.1.166:2571 (current Wi-Fi address; check ipconfig if it changes).
 3. Create a room on laptop; join its code on iPhone with a different name.
 4. Host selects Wheelbarrow Race from Game mode, then Start test. Both carts wait for 3–2–1; GO unlocks driving.
-5. WASD / existing joystick points the cart in the desired world direction and pushes it. No grab/action is needed. Release keys or center the joystick before corners to brake; on desktop feather key presses, on mobile use partial joystick travel for lower speed.
-6. Follow numbered signs through the moderate bend, sharp corner, rough strips and green finish. Your cart has a YOU label and your worker color. A wobbling load and red HUD warn of risk above 70%. At 100% the tray tips, bricks disappear and driving stops for 2.4 seconds before automatic reload at the same position.
+5. WASD / existing joystick points the cart in the desired world direction and pushes it. No grab/action is needed. **Protect the load: fewest spills wins; finish time only breaks equal-spill ties.** Release keys or center the joystick before corners to brake; on desktop feather key presses, on mobile use partial joystick travel for lower speed.
+6. Follow painted arrows through the bends, caution-marked rough strips and finish stripe. Your cart has a YOU label and your worker color. A wobbling load and red HUD warn of risk above 70%. At 100% the tray tips, six brick piles remain on the course and driving stops for 2.4 seconds before automatic reload at the same position.
 7. Compare an aggressive lap against a careful lap. Try fast direction reversals, easing off before corners, crossing rough strips fast/slow, and recovering risk by stopping. Confirm that only your cart spills and your opponent continues. Compare keyboard feathering against partial joystick input for fairness.
 8. Finish both racers and compare place, time and spill counts. Times include reload penalties. Host opens Lobby controls → Restart course for another countdown without refreshing. Return to lobby to select Beam Carry again.
 9. Refresh one browser during a race: reconnect within 30 seconds and continue with the same cart/spills. Try host departure and confirm the remaining player gets restart/lobby controls.
 
 Human acceptance is pending. Answer the twelve questions in the milestone request, especially whether fast versus careful driving creates interesting choices and whether you immediately want another race. Automated passes do not prove fun. Milestone 4 is not authorized.
+
+### Playtest-fix pass
+
+Close the previous Beam Crew server window with Ctrl+C, then launch Start-BeamCrew.cmd again and refresh both browsers. Confirm **Milestone 3 · Wheelbarrow Race · Playtest fixes**. The older server is deliberately rejected after the protocol update.
+
+1. Hit an edge post gently, then at speed. The faster impact should brake/deflect the cart and add more load risk. Compare slow and fast crossings of the rough strips.
+2. Deliberately spill. After reload, verify the bricks remain visible on both devices. Have the other racer hit them: bricks should move, and the impact should slow/add risk to that racer. Refresh the phone and confirm the same material is still there.
+3. Let one racer finish while the other stays on course. The finished cart should disappear; the unfinished racer should keep driving. Results are provisional until both finish. Finish the second racer and check final ranking, times and spill counts.
+4. Try a fast lap with a spill against a slower clean lap. The clean racer must rank higher. With equal spills, the faster finish must rank higher.
+5. Restart course and confirm all spilled bricks clear. Return to the lobby, select Beam Carry and verify normal grab/carry controls on both devices.
+
+Report whether arrows are easy to follow, impact/roughness feel fair, bricks are useful movable obstacles, finish independence works and the scoring priority is clear. Approval remains pending.

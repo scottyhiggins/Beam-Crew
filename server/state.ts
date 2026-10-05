@@ -14,7 +14,9 @@ export class Beam extends Schema {
   constructor(){super();Object.assign(this,createBeam());}
 }
 defineTypes(Beam,{x:'number',z:'number',angle:'number',leftHeight:'number',rightHeight:'number',leftSupported:'boolean',rightSupported:'boolean',checkpoint:'boolean',delivered:'boolean',blocked:'boolean',resets:'number'});
-export class RaceResult extends Schema {name='';color=0;spills=0;time=0;place=0;}
-defineTypes(RaceResult,{name:'string',color:'number',spills:'number',time:'number',place:'number'});
-export class CrewState extends Schema {players=new MapSchema<Player>();beam=new Beam();code='';host='';phase='lobby';mode='beam';racePhase='waiting';countdown=0;elapsed=0;raceResets=0;finishCount=0;results=new ArraySchema<RaceResult>();}
-defineTypes(CrewState,{players:{map:Player},beam:Beam,code:'string',host:'string',phase:'string',mode:'string',racePhase:'string',countdown:'number',elapsed:'number',raceResets:'number',results:[RaceResult]});
+export class RaceResult extends Schema {name='';color=0;spills=0;time=0;place=0;finishOrder=0;}
+defineTypes(RaceResult,{name:'string',color:'number',spills:'number',time:'number',place:'number',finishOrder:'number'});
+export class SpilledMaterial extends Schema {x=0;z=0;amount=1;vx=0;vz=0;}
+defineTypes(SpilledMaterial,{x:'number',z:'number',amount:'number'});
+export class CrewState extends Schema {players=new MapSchema<Player>();beam=new Beam();code='';host='';phase='lobby';mode='beam';racePhase='waiting';countdown=0;elapsed=0;raceResets=0;finishCount=0;firstFinishAt=-1;results=new ArraySchema<RaceResult>();material=new ArraySchema<SpilledMaterial>();}
+defineTypes(CrewState,{players:{map:Player},beam:Beam,code:'string',host:'string',phase:'string',mode:'string',racePhase:'string',countdown:'number',elapsed:'number',raceResets:'number',results:[RaceResult],material:[SpilledMaterial]});

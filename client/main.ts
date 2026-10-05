@@ -2,21 +2,22 @@ import * as THREE from 'three';
 import { Client, Room } from 'colyseus.js';
 import './style.css';
 import { BEAM_CONFIG, COURSE, GRIPS, gripPosition } from '../shared/beam';
-import { WHEEL_CONFIG, WHEEL_COURSE } from '../shared/wheelbarrow';
+import { WHEEL_CONFIG, WHEEL_COURSE, WHEEL_OBSTACLES, WHEEL_ROUGH } from '../shared/wheelbarrow';
+import { BUILD_LABEL, PROTOCOL_VERSION } from '../shared/version';
 const colors=[0xffad32,0x35b9ff,0xff5985,0x59d595,0xa38aff,0xf2ee57,0xffffff,0x965c42];
 const app=document.querySelector<HTMLDivElement>('#app')!;
-app.innerHTML=`<main id="panel"><h1>BEAM CREW</h1><p>Choose Beam Carry or Wheelbarrow Race</p><label>Your name <input id="name" maxlength="18" value="Worker" autocomplete="nickname"></label><button id="create">Create room</button><div class="join"><input id="code" maxlength="5" placeholder="ROOM CODE" aria-label="Room code"><button id="join">Join</button></div><p id="status" role="status"></p><section id="room" hidden><h2 id="roomCode"></h2><button id="share">Copy join link</button><ul id="players"></ul><label id="modeLabel">Game mode <select id="mode"><option value="beam">Beam Carry</option><option value="wheel">Wheelbarrow Race</option></select></label><button id="start">Start test</button><button id="back">Return to lobby</button><button id="reset" hidden>Reset to checkpoint</button><button id="restart" hidden>Restart course</button><button id="leave">Leave room</button></section><p id="help">WASD to move · Space to grab/release<br>On phones: joystick + ACTION</p></main><div id="hud" hidden><span id="hudText"></span><div id="beamStatus" role="status"></div><button id="grab">GRAB · Space</button><div id="signals"><button data-signal="LIFT">LIFT</button><button data-signal="WAIT">WAIT</button><button data-signal="LEFT">LEFT</button><button data-signal="RIGHT">RIGHT</button></div><button id="menu">Lobby controls</button></div><div id="touch" hidden><div id="joystick" aria-label="Movement joystick"><div id="stick"></div></div><button id="action">ACTION</button></div>`;
+app.innerHTML=`<main id="panel"><h1>BEAM CREW</h1><p id="buildLabel">${BUILD_LABEL}</p><p>Choose Beam Carry or Wheelbarrow Race</p><label>Your name <input id="name" maxlength="18" value="Worker" autocomplete="nickname"></label><button id="create">Create room</button><div class="join"><input id="code" maxlength="5" placeholder="ROOM CODE" aria-label="Room code"><button id="join">Join</button></div><p id="status" role="status"></p><section id="room" hidden><h2 id="roomCode"></h2><button id="share">Copy join link</button><ul id="players"></ul><label id="modeLabel">Game mode <select id="mode"><option value="beam">Beam Carry</option><option value="wheel">Wheelbarrow Race</option></select></label><button id="start">Start test</button><button id="back">Return to lobby</button><button id="reset" hidden>Reset to checkpoint</button><button id="restart" hidden>Restart course</button><button id="leave">Leave room</button></section><p id="help">WASD to move · Space to grab/release<br>On phones: joystick + ACTION</p></main><div id="hud" hidden><span id="hudText"></span><div id="beamStatus" role="status"></div><button id="grab">GRAB · Space</button><div id="signals"><button data-signal="LIFT">LIFT</button><button data-signal="WAIT">WAIT</button><button data-signal="LEFT">LEFT</button><button data-signal="RIGHT">RIGHT</button></div><button id="menu">Lobby controls</button></div><div id="touch" hidden><div id="joystick" aria-label="Movement joystick"><div id="stick"></div></div><button id="action">ACTION</button></div>`;
 const el=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 const signalReadout=document.createElement('div');signalReadout.id='crewSignals';el('hud').append(signalReadout);
 const status=(message:string)=>{el('status').textContent=message;};
 const client=new Client(`${location.protocol==='https:'?'wss':'ws'}://${location.host}`);
-let room:Room|null=null;let busy=false;let recovery=false;let menuOpen=false;
+let room:Room|null=null;let serverCompatible=false;let busy=false;let recovery=false;let menuOpen=false;
 const keys=new Set<string>();let joyX=0,joyZ=0;let joyPointer:number|null=null;
 const savedCode=new URLSearchParams(location.search).get('room');if(savedCode)el<HTMLInputElement>('code').value=savedCode.toUpperCase();
 try {el<HTMLInputElement>('name').value=localStorage.getItem('beam-name')||'Worker';}catch{}
 function storage(key:string,value:string|null){try{if(value===null)sessionStorage.removeItem(key);else sessionStorage.setItem(key,value);}catch{}}
 function stopInput(){keys.clear();joyX=joyZ=0;joyPointer=null;el('stick').style.transform='translate(0px,0px)';room?.send('input',{x:0,z:0});}
-async function connect(create:boolean){if(busy||room)return;busy=true;status('Connecting…');try{const name=el<HTMLInputElement>('name').value;try{localStorage.setItem('beam-name',name);}catch{}
+async function connect(create:boolean){if(busy||room||!serverCompatible)return;busy=true;status('Connecting…');try{const name=el<HTMLInputElement>('name').value;try{localStorage.setItem('beam-name',name);}catch{}
   let joined:Room;
   if(create)joined=await client.create('crew',{name});
   else {const code=el<HTMLInputElement>('code').value.trim().toUpperCase();if(!/^[A-Z2-9]{5}$/.test(code))throw Error('Enter a five-character room code');const response=await fetch(`/api/rooms/${code}`);const result=await response.json();if(!response.ok)throw Error(result.error);joined=await client.joinById(result.roomId,{name});}
@@ -35,7 +36,7 @@ el('reset').onclick=()=>{stopInput();room?.send('reset');menuOpen=false;render()
 el('restart').onclick=()=>{stopInput();room?.send('restart');menuOpen=false;render();};el('back').onclick=()=>{stopInput();room?.send('lobby');menuOpen=false;};
 el('leave').onclick=()=>{storage('beam-token',null);void room?.leave();};
 el('share').onclick=async()=>{if(!room?.state.code)return;const url=new URL(location.href);url.search='';url.searchParams.set('room',room.state.code);try{await navigator.clipboard.writeText(url.href);status('Join link copied');}catch{status(`Join link: ${url.href}`);}};
-el('menu').onclick=()=>{menuOpen=!menuOpen;render();};
+el('menu').onclick=()=>{menuOpen=!menuOpen;if(menuOpen)stopInput();render();};
 function action(){if(room?.state.phase==='test')room.send('action');}
 el('grab').onclick=action;
 el('action').addEventListener('pointerdown',e=>{e.preventDefault();action();});
@@ -47,12 +48,14 @@ function moveJoystick(e:PointerEvent){if(e.pointerId!==joyPointer)return;const r
 joystick.onpointerdown=e=>{joyPointer=e.pointerId;joystick.setPointerCapture(e.pointerId);moveJoystick(e);};joystick.onpointermove=moveJoystick;
 joystick.onpointerup=joystick.onpointercancel=()=>{joyPointer=null;joyX=joyZ=0;el('stick').style.transform='translate(0px,0px)';};
 setInterval(()=>{if(room?.state.phase==='test'&&!document.hidden){room.send('input',{x:(Number(keys.has('KeyD'))-Number(keys.has('KeyA')))+joyX,z:(Number(keys.has('KeyS'))-Number(keys.has('KeyW')))+joyZ});}},1000/30);
-function render(){const state=room?.state,playing=state?.phase==='test';el('room').hidden=!room;el('panel').classList.toggle('playing',!!playing&&!menuOpen);el('hud').hidden=!playing;el('touch').hidden=!playing;
-  el<HTMLButtonElement>('create').disabled=busy||!!room;el<HTMLButtonElement>('join').disabled=busy||!!room;
-  if(!state?.players)return;el('roomCode').textContent=`Room ${state.code}`;el('players').replaceChildren();let connected=0;
+function render(){const state=room?.state,playing=state?.phase==='test';el('room').hidden=!room;el('panel').classList.toggle('playing',!!playing&&!menuOpen);el('hud').hidden=!playing;el('touch').hidden=!playing||menuOpen;
+  el<HTMLButtonElement>('create').disabled=busy||!!room||!serverCompatible;el<HTMLButtonElement>('join').disabled=busy||!!room||!serverCompatible;
+  if(!state?.players)return;
+  if(state.code&&typeof state.mode!=='string'){status('Outdated Beam Crew server. Close the existing server, relaunch Start-BeamCrew.cmd, then refresh both browsers.');el<HTMLButtonElement>('start').disabled=true;return;}el('roomCode').textContent=`Room ${state.code}`;el('players').replaceChildren();let connected=0;
   state.players.forEach((p:any,id:string)=>{if(p.connected)connected++;const row=document.createElement('li');row.textContent=`${p.name}${id===room?.sessionId?' (you)':''}${id===state.host?' • host':''}${p.connected?'':' • reconnecting'}`;row.style.borderLeft=`6px solid #${colors[p.color].toString(16).padStart(6,'0')}`;el('players').append(row);});
   const host=state.host===room?.sessionId;el('start').hidden=!host||playing;el<HTMLButtonElement>('start').disabled=connected<2;el('back').hidden=!host||!playing;el('reset').hidden=!host||!playing;el('restart').hidden=!host||!playing;
-  el('help').innerHTML=state.mode==='wheel'?'WASD / joystick to steer and push.<br>Ease off before turns; follow numbered signs.':'WASD to move · Space to grab/release<br>On phones: joystick + ACTION';
+  el('back').textContent=playing?'Return to lobby / change game mode':'Return to lobby';
+  el('help').innerHTML=state.mode==='wheel'?'Protect the load: fewest spills wins; time breaks ties.<br>WASD / joystick to push. Follow painted arrows; brake before turns.':'WASD to move · Space to grab/release<br>On phones: joystick + ACTION';
   el('modeLabel').hidden=playing;el<HTMLSelectElement>('mode').disabled=!host;el<HTMLSelectElement>('mode').value=state.mode;
   const me=state.players.get(room?.sessionId);renderBeamHud(state,me);el('hudText').textContent=`${state.code} · ${connected}/8 workers · ${me?.grip>=0?'GRIPPING '+(me.grip+1):'FREE'}${me?.signal?' · '+me.signal:''}`;
   if(state.mode==='wheel'){renderWheelHud(state,me);el('reset').hidden=true;}
@@ -82,7 +85,6 @@ function frame(now:number){requestAnimationFrame(frame);const dt=Math.min((now-p
   const me=room&&workers.get(room.sessionId);const target=me?.position??new THREE.Vector3();camera.position.lerp(new THREE.Vector3(target.x,15,target.z+18),1-Math.exp(-4*dt));camera.lookAt(target.x,0,target.z);updateBeamVisual(state,dt,now);updateWheelVisual(state,dt,now);renderer.render(scene,camera);
 }
 requestAnimationFrame(frame);window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
-try{const token=sessionStorage.getItem('beam-token');if(token)void reconnect(token);}catch{}
 
 
 function label(text:string,color='#172d3c',width=3,square=false){
@@ -178,29 +180,39 @@ box(30,.3,36,0x776e5d,0,-.2,-7,wheelCourseVisual);
 WHEEL_COURSE.slice(1).forEach((b,i)=>{
   const a=WHEEL_COURSE[i],dx=b.x-a.x,dz=b.z-a.z,length=Math.hypot(dx,dz);
   const road=box(WHEEL_CONFIG.corridorRadius*2,.05,length+WHEEL_CONFIG.corridorRadius*2,0xbfa780,(a.x+b.x)/2,.01,(a.z+b.z)/2,wheelCourseVisual);road.rotation.y=Math.atan2(dx,dz);
-  for(let t=0;t<=length;t+=2)for(const side of [-1,1]){const x=a.x+dx*t/length+side*dz/length*WHEEL_CONFIG.corridorRadius,z=a.z+dz*t/length-side*dx/length*WHEEL_CONFIG.corridorRadius;box(.25,.55,.25,0xffc137,x,.3,z,wheelCourseVisual);}
-  const mark=label(i===4?'FINISH':i===0?'1 • STRAIGHT':i===1?'2 • TURN':i===2?'3 • SHARP TURN':'4 • ROUGH', '#172d3c',3);mark.position.set(b.x,.7,b.z);wheelCourseVisual.add(mark);
+  for(let t=1;t<length;t+=2.8){
+    const arrow=new THREE.Group();arrow.position.set(a.x+dx*t/length,.07,a.z+dz*t/length);arrow.rotation.y=Math.atan2(dx,dz);wheelCourseVisual.add(arrow);
+    box(.16,.025,.85,0xffedb0,0,0,-.15,arrow);
+    for(const side of [-1,1]){const wing=box(.16,.025,.65,0xffedb0,side*.2,0,.27,arrow);wing.rotation.y=-side*Math.PI/4;}
+  }
 });
-for(let x=-2;x<=2;x+=.65)box(.16,.13,5,0x7f705d,x,.1,-10,wheelCourseVisual);
+for(const p of WHEEL_OBSTACLES){box(.3,.65,.3,0xffc137,p.x,.32,p.z,wheelCourseVisual);box(.32,.12,.32,0x27343d,p.x,.48,p.z,wheelCourseVisual);}
+for(let x=WHEEL_ROUGH.minX;x<=WHEEL_ROUGH.maxX;x+=.65)box(.16,.13,WHEEL_ROUGH.maxZ-WHEEL_ROUGH.minZ,0x7f705d,x,.1,-10,wheelCourseVisual);
+for(const x of [WHEEL_ROUGH.minX,WHEEL_ROUGH.maxX])for(let z=WHEEL_ROUGH.minZ;z<WHEEL_ROUGH.maxZ;z+=.4)box(.3,.025,.2,Math.round(z*10)%8===0?0x27343d:0xffc137,x,.09,z,wheelCourseVisual);
 box(5,.04,.25,0x54d695,-6,.09,6,wheelCourseVisual);box(5,.04,.5,0x54d695,-3,.09,-18,wheelCourseVisual);
+for(let i=0;i<10;i++)box(.5,.025,.3,i%2?0xffffff:0x27343d,-5.25+i*.5,.12,-18,wheelCourseVisual);
 const carts=new Map<string,{root:THREE.Group;tray:THREE.Group;load:THREE.Group;tag:THREE.Sprite}>();
+const materialMeshes:THREE.Mesh[]=[];
+const brickGeometry=new THREE.BoxGeometry(.45,.22,.45),brickMaterial=new THREE.MeshLambertMaterial({color:0xbd6549});
 let wheelReset=-1;
 function renderWheelHud(state:any,me:any){
   if(!me)return;
   const countdown=state.racePhase==='countdown';
-  el('hudText').textContent=countdown?String(Math.ceil(state.countdown))+' • GET READY':state.racePhase==='results'?'RESULTS':me.finishOrder?'FINISHED • #'+me.finishOrder:'GO • '+state.elapsed.toFixed(1)+'s';
-  const warning=me.reload>0?'SPILLED! Reloading '+me.reload.toFixed(1)+'s':me.finishOrder?'Finished in '+me.finishTime.toFixed(2)+'s':me.instability>.7?'CAREFUL — LOAD TIPPING!':'Follow numbered turns • ease off to recover';
+  el('hudText').textContent=countdown?String(Math.ceil(state.countdown))+' • GET READY':state.racePhase==='results'?'FINAL RESULTS':me.finishOrder?'FINISHED • waiting for other racers':'GO • '+state.elapsed.toFixed(1)+'s';
+  const warning=me.reload>0?'SPILLED! Reloading '+me.reload.toFixed(1)+'s':me.finishOrder?'Finished in '+me.finishTime.toFixed(2)+'s':me.instability>.7?'CAREFUL — LOAD TIPPING!':'Follow painted arrows • ease off before turns and rough ground';
   el('beamStatus').textContent=warning+'\nLoad risk '+Math.round(me.instability*100)+'% • Spills '+me.spills+' • Speed '+Math.round(me.speed/WHEEL_CONFIG.maxSpeed*100)+'%';
   el('beamStatus').style.borderLeft=me.instability>.7?'8px solid #ff6849':'8px solid #59d595';
   const results=Array.from(state.results as Iterable<any>).sort((a,b)=>a.place-b.place);
-  signalReadout.textContent=results.map(p=>'#'+p.place+' '+p.name+' '+p.time.toFixed(2)+'s • '+p.spills+' spills').join(' | ');
+  signalReadout.textContent='FEWEST SPILLS WINS • Time breaks ties'+(results.length?'\n'+(state.racePhase==='results'?'Final ranking: ':'Provisional ranking — others still racing: ')+results.map(p=>'#'+p.place+' '+p.name+' • '+p.spills+' spills • '+p.time.toFixed(2)+'s').join(' | '):'');
 }
 function updateWheelVisual(state:any,dt:number,now:number){
   const active=state?.phase==='test'&&state.mode==='wheel';wheelCourseVisual.visible=active;for(const o of baseVisuals)o.visible=!active;
   if(!active)el('beamStatus').style.borderLeft='';
   if(active&&wheelReset!==state.raceResets){wheelReset=state.raceResets;stopInput();for(const c of carts.values())scene.remove(c.root);carts.clear();}
   for(const [id,c]of carts){c.root.visible=active&&!!state?.players.get(id)?.connected;if(!state?.players.has(id)){scene.remove(c.root);carts.delete(id);}}
+  while(materialMeshes.length>(active?state.material.length:0)){scene.remove(materialMeshes.pop()!);}
   if(!active)return;
+  state.material.forEach((b:any,i:number)=>{let mesh=materialMeshes[i];if(!mesh){mesh=new THREE.Mesh(brickGeometry,brickMaterial);scene.add(mesh);materialMeshes.push(mesh);}mesh.position.set(b.x,.11,b.z);mesh.scale.y=Math.min(3,1+(b.amount-1)*.15);mesh.position.y=.11*mesh.scale.y;});
   state.players.forEach((p:any,id:string)=>{
     let c=carts.get(id);if(!c){
       const root=new THREE.Group(),tray=new THREE.Group(),load=new THREE.Group();root.add(tray);tray.add(load);scene.add(root);
@@ -213,8 +225,27 @@ function updateWheelVisual(state:any,dt:number,now:number){
       const tag=label(id===room?.sessionId?'YOU':p.name,'#172d3c',1.6);tag.position.set(0,2.8,0);root.add(tag);
       c={root,tray,load,tag};carts.set(id,c);root.position.set(p.x,0,p.z);root.rotation.y=p.rotation;
     }
+    c.root.visible=p.connected&&!p.finishOrder;
+    const w=workers.get(id);if(w&&p.finishOrder)w.visible=false;
     const blend=1-Math.exp(-18*dt);c.root.position.x+=(p.x-c.root.position.x)*blend;c.root.position.z+=(p.z-c.root.position.z)*blend;c.root.rotation.y+=Math.atan2(Math.sin(p.rotation-c.root.rotation.y),Math.cos(p.rotation-c.root.rotation.y))*blend;
     c.tray.rotation.z=p.reload>0?1.15:Math.sin(now*.016+p.color)*p.instability*.22-p.lean*p.instability*.08;
     c.load.visible=p.reload<=0;c.load.position.x=Math.sin(now*.016)*p.instability*.2;
   });
 }
+
+async function verifyServer(){
+  status('Checking Milestone 3 server…');render();
+  try{const response=await fetch('/health',{cache:'no-store',signal:AbortSignal.timeout(5000)});const health=await response.json();if(!response.ok||health.protocol!==PROTOCOL_VERSION||typeof health.startedAt!=='string')throw Error('The running server is an older version. Close its window with Ctrl+C, relaunch Start-BeamCrew.cmd, then refresh both browsers.');serverCompatible=true;status(BUILD_LABEL+' server ready — create or join a room.');
+    try{
+      const start=health.startedAt;
+      const oldStart=sessionStorage.getItem('beam-server-start');
+      if(oldStart!==start)storage('beam-token',null);
+      storage('beam-server-start',start);
+      const token=sessionStorage.getItem('beam-token');
+      if(token)void reconnect(token);
+    }catch{}
+  }
+  catch(error){status(error instanceof Error?error.message:'Could not verify the server. Check Start-BeamCrew.cmd.');}
+  render();
+}
+void verifyServer();

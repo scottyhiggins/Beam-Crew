@@ -3,3 +3,5 @@
 #beamStatus{white-space:pre-line;display:table;max-width:min(510px,74%);background:#fffffff0;padding:9px;border-radius:8px;font-size:13px;line-height:1.4;margin-top:7px}#grab{position:fixed;right:24px;bottom:28px;padding:18px!important;font-size:17px!important}.attached{background:#59d595;color:#143629}@media(pointer:coarse){#grab{display:none}}@media(max-width:600px){#beamStatus{font-size:11px;max-width:78%;padding:7px}#signals{flex-wrap:wrap;max-width:75%}}
 
 select{font:inherit;background:#e8eef2;border:0;border-radius:8px;padding:10px;max-width:100%}
+
+#buildLabel{font-weight:750;color:#246857;border-left:4px solid #59d595;padding-left:8px}

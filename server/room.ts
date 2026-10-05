@@ -1,9 +1,9 @@
 import { Room, Client, ServerError } from '@colyseus/core';
 import { randomInt } from 'node:crypto';
-import { CrewState, Player, RaceResult } from './state.js';
+import { CrewState, Player, RaceResult, SpilledMaterial } from './state.js';
 import { CONFIG, movement } from '../shared/movement.js';
 import { GRIPS, gripPosition, nearestGrip, resetBeam, stepBeam, workerCollides } from '../shared/beam.js';
-import { WHEEL_CONFIG, resetCart, stepCart, finishCarts } from '../shared/wheelbarrow.js';
+import { WHEEL_CONFIG, resetCart, stepCart, finishCarts, spillMaterial, stepMaterial, compareResults, shouldEndRace } from '../shared/wheelbarrow.js';
 export const roomsByCode=new Map<string,CrewRoom>();
 const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 export class CrewRoom extends Room<CrewState> {
@@ -37,7 +37,7 @@ export class CrewRoom extends Room<CrewState> {
   feedback(p:Player,text:string){p.feedback=text;p.feedbackUntil=Date.now()+2500;}
   restart(checkpoint:boolean){
     this.lastReset=Date.now();
-    if(this.state.mode==='wheel'){this.state.racePhase='countdown';this.state.countdown=WHEEL_CONFIG.countdownSeconds;this.state.elapsed=0;this.state.raceResets++;this.state.finishCount=0;this.state.results.clear();let slot=0;for(const p of this.state.players.values()){resetCart(p,slot++,this.state.players.size);p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;p.lastInput=0;}return;}
+    if(this.state.mode==='wheel'){this.state.racePhase='countdown';this.state.countdown=WHEEL_CONFIG.countdownSeconds;this.state.elapsed=0;this.state.raceResets++;this.state.finishCount=0;this.state.firstFinishAt=-1;this.state.results.clear();this.state.material.clear();let slot=0;for(const p of this.state.players.values()){resetCart(p,slot++,this.state.players.size);p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;p.lastInput=0;}return;}
     resetBeam(this.state.beam,checkpoint);this.state.beam.resets++;
     for(const p of this.state.players.values()){
       p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;p.lastInput=0;p.feedback='';
@@ -67,10 +67,16 @@ export class CrewRoom extends Room<CrewState> {
       if(this.state.racePhase!=='racing')return;
       this.state.elapsed+=dt;
       const players=Array.from(this.state.players.values());
-      for(const p of players){const active=p.connected&&now-p.lastInput<300;stepCart(p,active?p.inputX:0,active?p.inputZ:0,dt);}
+      const material=Array.from(this.state.material);
+      stepMaterial(material,dt);
+      for(const p of players){const active=p.connected&&now-p.lastInput<300,spills=p.spills;stepCart(p,active?p.inputX:0,active?p.inputZ:0,dt,material);
+        if(p.spills>spills)spillMaterial(p,material,value=>{const brick=new SpilledMaterial();Object.assign(brick,value);this.state.material.push(brick);material.push(brick);});
+      }
       this.state.finishCount=finishCarts(players,this.state.elapsed,this.state.finishCount);
-      for(const p of players)if(p.finishOrder&&!this.state.results.some(r=>r.place===p.finishOrder)){const result=new RaceResult();Object.assign(result,{name:p.name,color:p.color,spills:p.spills,time:p.finishTime,place:p.finishOrder});this.state.results.push(result);}
-      if(players.length&&players.every(p=>p.finishOrder))this.state.racePhase='results';
+      if(this.state.finishCount&&this.state.firstFinishAt<0)this.state.firstFinishAt=this.state.elapsed;
+      for(const p of players)if(p.finishOrder&&!this.state.results.some(r=>r.finishOrder===p.finishOrder)){const result=new RaceResult();Object.assign(result,{name:p.name,color:p.color,spills:p.spills,time:p.finishTime,finishOrder:p.finishOrder});this.state.results.push(result);}
+      [...this.state.results].sort(compareResults).forEach((r,i)=>{r.place=i+1;});
+      if(shouldEndRace(players,this.state.elapsed,this.state.firstFinishAt))this.state.racePhase='results';
       return;
     }
     for(const p of this.state.players.values()){
