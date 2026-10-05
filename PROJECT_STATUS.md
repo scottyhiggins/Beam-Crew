@@ -1,6 +1,6 @@
 # Beam Crew — project status
 
-Updated October 4, 2026. **Milestone 2 personal playtest PASSED on laptop + iPhone as two separate players.** Milestone 3 has not been authorized; stop before implementing it. Public game hosting is deferred.
+Updated October 4, 2026. **Milestone 2 personal playtest PASSED on laptop + iPhone as two separate players.** Milestone 3 Wheelbarrow Race MVP is implemented and awaiting the user’s laptop + iPhone playtest; it is NOT personally approved. Public game hosting is deferred.
 
 ## Project and repository
 Low-poly construction party game for 2–8 browser players. Cooperative carry/turn/delivery of a steel beam is the current mechanic. Built for the Handshake AI Skills Studio x OpenAI multiplayer game challenge.
@@ -48,9 +48,33 @@ Beam Carry is primarily a **team race with teams of exactly two players per beam
 | 6 | Three teams |
 | 8 | Four teams |
 
-**Wheelbarrow Race is the individual mode and works well for odd player counts.** This records the intended future mode structure; Wheelbarrow Race is not yet implemented.
+**Wheelbarrow Race is the individual mode and works well for odd player counts.** This records the intended future mode structure; The Milestone 3 individual Wheelbarrow MVP is now implemented; personal acceptance remains pending.
 
 The current multiple numbered grip points were useful for validating the MVP. The eventual Beam Carry design should move toward clear front/end grip ownership for the two teammates. The current implementation remains one shared beam with eight available grips; no teams, simultaneous race, per-end ownership or time trial have been added by this documentation update.
 
+## Milestone 3 — Wheelbarrow Race MVP
+
+Authorized by the new milestone request. Beam Carry mechanics and its accepted two-person future direction are preserved; no expansion of Beam Carry or Milestone 4.
+
+- Host-only lobby mode selector launches Beam Carry or individual Wheelbarrow Race. Independent carts and loads for up to eight workers; two racers spawn symmetrically alongside each other. Five to eight use a second starting row.
+- Server-owned fixed-step steering, acceleration, instability, per-player spills, reload, ordered course checkpoints, finish detection, times and places. Three-second countdown freezes carts; elapsed simulation time starts at GO. Times include reload delay. Simultaneous finish ticks share a time, with join order deciding placing.
+- Small repeatable construction corridor: straight, moderate diagonal bend, sharp turn, rough strips and finish straight. Ordered checkpoints and corridor containment prevent skipping the course. Course edges stop motion; reverse/turn to recover. No cart-cart collision or shoving.
+- Colored wheelbarrows, front wheel/handles, worker pushing pose, visible brick load, wobble/lean, tipping and disappearing load on spill, automatic reload at the same position/heading. YOU label, countdown, speed/risk/spill HUD and simple finish results. Host can restart without refresh or return to lobby to switch modes.
+- Existing WASD and mobile joystick. Direction indicates desired heading; cart turns gradually. Release to brake/recover. Keyboard feathering and partial joystick travel provide careful driving. Laptop/mobile fairness and fun require the personal test.
+- Existing room codes, host transfer, no late joins, 30-second reconnect and input expiry remain. Disconnected carts brake; reserved racers can resume, and do not prematurely end the race. Results survive a finisher leaving; next-place numbering remains monotonic.
+
+### Wheelbarrow tuning
+
+All gameplay tuning is in shared/wheelbarrow.ts, WHEEL_CONFIG and WHEEL_COURSE (world units, seconds, radians). Maximum speed 5.5, acceleration 3.8, braking 7, steering cap 2.8 radians/sec. Instability adds speedGain .24 × speedRatio³, turnGain .65 × absolute turnRate × speedRatio², plus roughGain .65 × speedRatio² in the marked rough section; recovery subtracts .3/sec. Risk threshold 1; reload 2.4 sec; countdown 3 sec; corridor radius 2.8; checkpoint radius 2.4. Full-speed straight driving is safe; accumulated turning/rough risk can spill. Lean is visual feedback for authoritative turn rate. Server flow: server/room.ts; synchronized fields/results: server/state.ts; render/HUD: client/main.ts.
+
+### Verification and limits
+
+TypeScript and production build pass; the Three.js bundle-size warning remains. Full automated suite: 24 tests with live TEST_URL, none skipped, including all 16 existing tests and deterministic Wheelbarrow risk/recovery/threshold/reload/independence/roughness/checkpoint/finish/full traversal plus a two-client countdown/authority/reconnect/finish/restart/mode-switch run. Final verification is recorded by the completion response. Browser inspection covers two rendered independent carts, course and HUD; personal iPhone testing is pending.
+
+This is deliberately lightweight custom math: no rigid-body physics, individually simulated spilled bricks, prediction, awards, persistent results, public hosting or final art. Finish position uses the worker/cart origin. Larger lobbies use two starting rows, so eight-player start fairness needs further tuning. No dedicated spectator system; an unfinished connected racer keeps the race active until finishing or the host restarts. Identical-tick ordering favors join order. Race data lives only in memory and resets on restart. Desktop has binary keys while joystick supports analog throttle; compare fairness during the personal test.
+
+See PLAYTEST.md for simple start, URLs, mode selection, controls and risk-versus-reward checks.
+
 ## Next and stop condition
-Milestone 2 has passed the personal playtest. Preserve its working behavior. Use the documented two-person team-race direction when scoping the next approved milestone, and implement those changes only if they belong naturally in that approved scope. **Do not begin Milestone 3 now.** This task is limited to documenting acceptance and design direction, committing and pushing the status document, then stopping. Public production hosting remains deferred.
+
+Stop after Milestone 3 implementation, testing, commit and push. Await the user’s laptop + iPhone personal playtest and explicit acceptance. Do NOT mark Milestone 3 personally approved and do NOT begin Milestone 4. Production hosting remains deferred.

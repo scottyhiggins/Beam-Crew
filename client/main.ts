@@ -2,9 +2,10 @@ import * as THREE from 'three';
 import { Client, Room } from 'colyseus.js';
 import './style.css';
 import { BEAM_CONFIG, COURSE, GRIPS, gripPosition } from '../shared/beam';
+import { WHEEL_CONFIG, WHEEL_COURSE } from '../shared/wheelbarrow';
 const colors=[0xffad32,0x35b9ff,0xff5985,0x59d595,0xa38aff,0xf2ee57,0xffffff,0x965c42];
 const app=document.querySelector<HTMLDivElement>('#app')!;
-app.innerHTML=`<main id="panel"><h1>BEAM CREW</h1><p>Beam Carry • cooperate through the doorway</p><label>Your name <input id="name" maxlength="18" value="Worker" autocomplete="nickname"></label><button id="create">Create room</button><div class="join"><input id="code" maxlength="5" placeholder="ROOM CODE" aria-label="Room code"><button id="join">Join</button></div><p id="status" role="status"></p><section id="room" hidden><h2 id="roomCode"></h2><button id="share">Copy join link</button><ul id="players"></ul><button id="start">Start test</button><button id="back">Return to lobby</button><button id="reset" hidden>Reset to checkpoint</button><button id="restart" hidden>Restart course</button><button id="leave">Leave room</button></section><p id="help">WASD to move · Space to grab/release<br>On phones: joystick + ACTION</p></main><div id="hud" hidden><span id="hudText"></span><div id="beamStatus" role="status"></div><button id="grab">GRAB · Space</button><div id="signals"><button data-signal="LIFT">LIFT</button><button data-signal="WAIT">WAIT</button><button data-signal="LEFT">LEFT</button><button data-signal="RIGHT">RIGHT</button></div><button id="menu">Lobby controls</button></div><div id="touch" hidden><div id="joystick" aria-label="Movement joystick"><div id="stick"></div></div><button id="action">ACTION</button></div>`;
+app.innerHTML=`<main id="panel"><h1>BEAM CREW</h1><p>Choose Beam Carry or Wheelbarrow Race</p><label>Your name <input id="name" maxlength="18" value="Worker" autocomplete="nickname"></label><button id="create">Create room</button><div class="join"><input id="code" maxlength="5" placeholder="ROOM CODE" aria-label="Room code"><button id="join">Join</button></div><p id="status" role="status"></p><section id="room" hidden><h2 id="roomCode"></h2><button id="share">Copy join link</button><ul id="players"></ul><label id="modeLabel">Game mode <select id="mode"><option value="beam">Beam Carry</option><option value="wheel">Wheelbarrow Race</option></select></label><button id="start">Start test</button><button id="back">Return to lobby</button><button id="reset" hidden>Reset to checkpoint</button><button id="restart" hidden>Restart course</button><button id="leave">Leave room</button></section><p id="help">WASD to move · Space to grab/release<br>On phones: joystick + ACTION</p></main><div id="hud" hidden><span id="hudText"></span><div id="beamStatus" role="status"></div><button id="grab">GRAB · Space</button><div id="signals"><button data-signal="LIFT">LIFT</button><button data-signal="WAIT">WAIT</button><button data-signal="LEFT">LEFT</button><button data-signal="RIGHT">RIGHT</button></div><button id="menu">Lobby controls</button></div><div id="touch" hidden><div id="joystick" aria-label="Movement joystick"><div id="stick"></div></div><button id="action">ACTION</button></div>`;
 const el=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 const signalReadout=document.createElement('div');signalReadout.id='crewSignals';el('hud').append(signalReadout);
 const status=(message:string)=>{el('status').textContent=message;};
@@ -28,6 +29,7 @@ async function reconnect(token:string){if(recovery)return;recovery=true;busy=tru
   while(Date.now()<deadline&&recovery){try{attach(await client.reconnect(token));busy=false;render();return;}catch{await new Promise(resolve=>setTimeout(resolve,1000));}}
   recovery=false;busy=false;storage('beam-token',null);status('Reconnect expired. Create or join a lobby again.');render();}
 el('create').onclick=()=>void connect(true);el('join').onclick=()=>void connect(false);
+el<HTMLSelectElement>('mode').onchange=()=>room?.send('mode',el<HTMLSelectElement>('mode').value);
 el('start').onclick=()=>room?.send('start');
 el('reset').onclick=()=>{stopInput();room?.send('reset');menuOpen=false;render();};
 el('restart').onclick=()=>{stopInput();room?.send('restart');menuOpen=false;render();};el('back').onclick=()=>{stopInput();room?.send('lobby');menuOpen=false;};
@@ -50,9 +52,13 @@ function render(){const state=room?.state,playing=state?.phase==='test';el('room
   if(!state?.players)return;el('roomCode').textContent=`Room ${state.code}`;el('players').replaceChildren();let connected=0;
   state.players.forEach((p:any,id:string)=>{if(p.connected)connected++;const row=document.createElement('li');row.textContent=`${p.name}${id===room?.sessionId?' (you)':''}${id===state.host?' • host':''}${p.connected?'':' • reconnecting'}`;row.style.borderLeft=`6px solid #${colors[p.color].toString(16).padStart(6,'0')}`;el('players').append(row);});
   const host=state.host===room?.sessionId;el('start').hidden=!host||playing;el<HTMLButtonElement>('start').disabled=connected<2;el('back').hidden=!host||!playing;el('reset').hidden=!host||!playing;el('restart').hidden=!host||!playing;
+  el('help').innerHTML=state.mode==='wheel'?'WASD / joystick to steer and push.<br>Ease off before turns; follow numbered signs.':'WASD to move · Space to grab/release<br>On phones: joystick + ACTION';
+  el('modeLabel').hidden=playing;el<HTMLSelectElement>('mode').disabled=!host;el<HTMLSelectElement>('mode').value=state.mode;
   const me=state.players.get(room?.sessionId);renderBeamHud(state,me);el('hudText').textContent=`${state.code} · ${connected}/8 workers · ${me?.grip>=0?'GRIPPING '+(me.grip+1):'FREE'}${me?.signal?' · '+me.signal:''}`;
-  const signals:string[]=[];state.players.forEach((p:any)=>{if(p.signal)signals.push(`${p.name}: ${p.signal}`);});signalReadout.textContent=signals.join(' · ');
-  if(playing)status('Beam Carry active — host controls can reset or restart.');else status(connected<2?'Waiting for another worker to start.':'Ready — the host can start the test.');}
+  if(state.mode==='wheel'){renderWheelHud(state,me);el('reset').hidden=true;}
+  el('grab').hidden=el('action').hidden=el('signals').hidden=state.mode==='wheel';
+  const signals:string[]=[];state.players.forEach((p:any)=>{if(p.signal)signals.push(`${p.name}: ${p.signal}`);});if(state.mode!=='wheel')signalReadout.textContent=signals.join(' · ');
+  if(playing&&state.mode==='wheel')status('Wheelbarrow Race — host can restart from Lobby controls.');else if(playing)status('Beam Carry active — host controls can reset or restart.');else status(connected<2?'Waiting for another worker to start.':'Ready — the host can start the test.');}
 // Render only: all gameplay positions and rotations originate on the server.
 const scene=new THREE.Scene();scene.background=new THREE.Color(0xa8d5e7);scene.fog=new THREE.Fog(0xa8d5e7,30,85);
 const camera=new THREE.PerspectiveCamera(50,innerWidth/innerHeight,.1,100);camera.position.set(0,15,18);
@@ -66,13 +72,14 @@ for(const x of [-10,10])for(const z of [-10,10]){box(.4,5,.4,0x405768,x,2.5,z);}
 for(const z of [-10,10]){box(20,.15,.15,0xffc137,0,.8,z);box(20,.15,.15,0xffc137,0,1.4,z);}
 for(const x of [-10,10]){box(.15,.15,20,0xffc137,x,.8,0);box(.15,.15,20,0xffc137,x,1.4,0);}
 for(let i=0;i<12;i++){const h=4+(i%5)*3;box(4,h,4,0x7898ab,(i-6)*7,-8+h/2,-28);}
+const baseVisuals=scene.children.filter(o=>o instanceof THREE.Mesh||o instanceof THREE.GridHelper);
 const workers=new Map<string,THREE.Group>();
 function worker(color:number){const g=new THREE.Group();box(.8,.9,.55,color,0,.8,0,g);box(.65,.55,.6,0xe6b68e,0,1.48,0,g);box(.9,.15,.8,0xffd447,0,1.82,0,g);box(.65,.25,.55,0xffd447,0,1.98,0,g);box(.24,.45,.3,0x354c65,-.22,.23,0,g);box(.24,.45,.3,0x354c65,.22,.23,0,g);box(.25,.6,.3,color,-.53,.85,0,g);box(.25,.6,.3,color,.53,.85,0,g);box(.09,.09,.04,0x263748,-.15,1.5,.32,g);box(.09,.09,.04,0x263748,.15,1.5,.32,g);scene.add(g);return g;}
 let previous=performance.now();
 function frame(now:number){requestAnimationFrame(frame);const dt=Math.min((now-previous)/1000,.1);previous=now;const state=room?.state;
   for(const [id,g]of workers){if(!state?.players?.has(id)){scene.remove(g);workers.delete(id);}}
   state?.players?.forEach((p:any,id:string)=>{let g=workers.get(id);if(!g){g=worker(colors[p.color]);g.position.set(p.x,0,p.z);workers.set(id,g);}const blend=1-Math.exp(-18*dt);g.position.x+=(p.x-g.position.x)*blend;g.position.z+=(p.z-g.position.z)*blend;const difference=Math.atan2(Math.sin(p.rotation-g.rotation.y),Math.cos(p.rotation-g.rotation.y));g.rotation.y+=difference*blend;g.position.y=Math.sin(now*.008+p.color)*.025;g.visible=p.connected;});
-  const me=room&&workers.get(room.sessionId);const target=me?.position??new THREE.Vector3();camera.position.lerp(new THREE.Vector3(target.x,15,target.z+18),1-Math.exp(-4*dt));camera.lookAt(target.x,0,target.z);updateBeamVisual(state,dt,now);renderer.render(scene,camera);
+  const me=room&&workers.get(room.sessionId);const target=me?.position??new THREE.Vector3();camera.position.lerp(new THREE.Vector3(target.x,15,target.z+18),1-Math.exp(-4*dt));camera.lookAt(target.x,0,target.z);updateBeamVisual(state,dt,now);updateWheelVisual(state,dt,now);renderer.render(scene,camera);
 }
 requestAnimationFrame(frame);window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
 try{const token=sessionStorage.getItem('beam-token');if(token)void reconnect(token);}catch{}
@@ -131,7 +138,7 @@ function renderBeamHud(state:any,me:any){
   el('grab').classList.toggle('attached',attached);el('action').classList.toggle('attached',attached);
 }
 function updateBeamVisual(state:any,dt:number,now:number){
-  const b=state?.beam,playing=state?.phase==='test';
+  const b=state?.beam,playing=state?.phase==='test'&&state?.mode!=='wheel';
   courseVisual.visible=beamVisual.visible=playing;
   for(const sprite of [startLabel,doorLabel,turnLabel,destinationLabel])sprite.visible=playing;
   for(const visual of gripVisuals){visual.ring.visible=visual.text.visible=visual.rope.visible=playing;}
@@ -164,4 +171,50 @@ function updateBeamVisual(state:any,dt:number,now:number){
     dragMarkers[i].position.set(displayedBeam.x+Math.cos(displayedBeam.angle)*end*BEAM_CONFIG.length/2,.045,displayedBeam.z+Math.sin(displayedBeam.angle)*end*BEAM_CONFIG.length/2);
   });
   goalMaterial.color.setHex(b.delivered?0x85ff8c:0x45bfa4);
+}
+
+const wheelCourseVisual=new THREE.Group();scene.add(wheelCourseVisual);
+box(30,.3,36,0x776e5d,0,-.2,-7,wheelCourseVisual);
+WHEEL_COURSE.slice(1).forEach((b,i)=>{
+  const a=WHEEL_COURSE[i],dx=b.x-a.x,dz=b.z-a.z,length=Math.hypot(dx,dz);
+  const road=box(WHEEL_CONFIG.corridorRadius*2,.05,length+WHEEL_CONFIG.corridorRadius*2,0xbfa780,(a.x+b.x)/2,.01,(a.z+b.z)/2,wheelCourseVisual);road.rotation.y=Math.atan2(dx,dz);
+  for(let t=0;t<=length;t+=2)for(const side of [-1,1]){const x=a.x+dx*t/length+side*dz/length*WHEEL_CONFIG.corridorRadius,z=a.z+dz*t/length-side*dx/length*WHEEL_CONFIG.corridorRadius;box(.25,.55,.25,0xffc137,x,.3,z,wheelCourseVisual);}
+  const mark=label(i===4?'FINISH':i===0?'1 • STRAIGHT':i===1?'2 • TURN':i===2?'3 • SHARP TURN':'4 • ROUGH', '#172d3c',3);mark.position.set(b.x,.7,b.z);wheelCourseVisual.add(mark);
+});
+for(let x=-2;x<=2;x+=.65)box(.16,.13,5,0x7f705d,x,.1,-10,wheelCourseVisual);
+box(5,.04,.25,0x54d695,-6,.09,6,wheelCourseVisual);box(5,.04,.5,0x54d695,-3,.09,-18,wheelCourseVisual);
+const carts=new Map<string,{root:THREE.Group;tray:THREE.Group;load:THREE.Group;tag:THREE.Sprite}>();
+let wheelReset=-1;
+function renderWheelHud(state:any,me:any){
+  if(!me)return;
+  const countdown=state.racePhase==='countdown';
+  el('hudText').textContent=countdown?String(Math.ceil(state.countdown))+' • GET READY':state.racePhase==='results'?'RESULTS':me.finishOrder?'FINISHED • #'+me.finishOrder:'GO • '+state.elapsed.toFixed(1)+'s';
+  const warning=me.reload>0?'SPILLED! Reloading '+me.reload.toFixed(1)+'s':me.finishOrder?'Finished in '+me.finishTime.toFixed(2)+'s':me.instability>.7?'CAREFUL — LOAD TIPPING!':'Follow numbered turns • ease off to recover';
+  el('beamStatus').textContent=warning+'\nLoad risk '+Math.round(me.instability*100)+'% • Spills '+me.spills+' • Speed '+Math.round(me.speed/WHEEL_CONFIG.maxSpeed*100)+'%';
+  el('beamStatus').style.borderLeft=me.instability>.7?'8px solid #ff6849':'8px solid #59d595';
+  const results=Array.from(state.results as Iterable<any>).sort((a,b)=>a.place-b.place);
+  signalReadout.textContent=results.map(p=>'#'+p.place+' '+p.name+' '+p.time.toFixed(2)+'s • '+p.spills+' spills').join(' | ');
+}
+function updateWheelVisual(state:any,dt:number,now:number){
+  const active=state?.phase==='test'&&state.mode==='wheel';wheelCourseVisual.visible=active;for(const o of baseVisuals)o.visible=!active;
+  if(!active)el('beamStatus').style.borderLeft='';
+  if(active&&wheelReset!==state.raceResets){wheelReset=state.raceResets;stopInput();for(const c of carts.values())scene.remove(c.root);carts.clear();}
+  for(const [id,c]of carts){c.root.visible=active&&!!state?.players.get(id)?.connected;if(!state?.players.has(id)){scene.remove(c.root);carts.delete(id);}}
+  if(!active)return;
+  state.players.forEach((p:any,id:string)=>{
+    let c=carts.get(id);if(!c){
+      const root=new THREE.Group(),tray=new THREE.Group(),load=new THREE.Group();root.add(tray);tray.add(load);scene.add(root);
+      box(1.25,.25,1.5,colors[p.color],0,.7,1.15,tray);
+      for(const x of [-.66,.66])box(.1,.45,1.5,colors[p.color],x,.95,1.15,tray);
+      box(1.3,.45,.1,colors[p.color],0,.95,1.9,tray);
+      for(const x of [-.5,.5])box(.08,.08,1.5,0x384956,x,.75,.3,root);
+      const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.33,.33,.22,12),new THREE.MeshLambertMaterial({color:0x27343d}));wheel.rotation.z=Math.PI/2;wheel.position.set(0,.33,1.8);root.add(wheel);
+      for(let i=0;i<6;i++)box(.42,.22,.5,0xbd6549,(i%2-.5)*.5,1.05+Math.floor(i/2)*.23,1.15,load);
+      const tag=label(id===room?.sessionId?'YOU':p.name,'#172d3c',1.6);tag.position.set(0,2.8,0);root.add(tag);
+      c={root,tray,load,tag};carts.set(id,c);root.position.set(p.x,0,p.z);root.rotation.y=p.rotation;
+    }
+    const blend=1-Math.exp(-18*dt);c.root.position.x+=(p.x-c.root.position.x)*blend;c.root.position.z+=(p.z-c.root.position.z)*blend;c.root.rotation.y+=Math.atan2(Math.sin(p.rotation-c.root.rotation.y),Math.cos(p.rotation-c.root.rotation.y))*blend;
+    c.tray.rotation.z=p.reload>0?1.15:Math.sin(now*.016+p.color)*p.instability*.22-p.lean*p.instability*.08;
+    c.load.visible=p.reload<=0;c.load.position.x=Math.sin(now*.016)*p.instability*.2;
+  });
 }

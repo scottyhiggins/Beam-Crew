@@ -23,3 +23,17 @@ Phone model/browser, pass/fail for each step, any error text, whether movement f
 
 ## Tuning
 `shared/beam.ts` → `BEAM_CONFIG`: supported effectiveness .9, dragging effectiveness .2, drive speed 2.8, turn gain 1.6, acceleration response 7, max turn speed 1.25, grab radius 1.25, length 6.4, width .32, carried/grounded height 1.05/.22. `GRIPS` defines eight positions; `COURSE` defines doorway walls, column, checkpoint and destination. Values are world units and seconds. Change one or two values between playtests rather than several at once.
+
+## Milestone 3 — Wheelbarrow Race personal test
+
+1. Double-click Start-BeamCrew.cmd in C:\Users\higgi\OneDrive\Documents\Beam-Crew. Keep its window open.
+2. Laptop: http://localhost:2571. iPhone on the same Wi-Fi: http://192.168.1.166:2571 (current Wi-Fi address; check ipconfig if it changes).
+3. Create a room on laptop; join its code on iPhone with a different name.
+4. Host selects Wheelbarrow Race from Game mode, then Start test. Both carts wait for 3–2–1; GO unlocks driving.
+5. WASD / existing joystick points the cart in the desired world direction and pushes it. No grab/action is needed. Release keys or center the joystick before corners to brake; on desktop feather key presses, on mobile use partial joystick travel for lower speed.
+6. Follow numbered signs through the moderate bend, sharp corner, rough strips and green finish. Your cart has a YOU label and your worker color. A wobbling load and red HUD warn of risk above 70%. At 100% the tray tips, bricks disappear and driving stops for 2.4 seconds before automatic reload at the same position.
+7. Compare an aggressive lap against a careful lap. Try fast direction reversals, easing off before corners, crossing rough strips fast/slow, and recovering risk by stopping. Confirm that only your cart spills and your opponent continues. Compare keyboard feathering against partial joystick input for fairness.
+8. Finish both racers and compare place, time and spill counts. Times include reload penalties. Host opens Lobby controls → Restart course for another countdown without refreshing. Return to lobby to select Beam Carry again.
+9. Refresh one browser during a race: reconnect within 30 seconds and continue with the same cart/spills. Try host departure and confirm the remaining player gets restart/lobby controls.
+
+Human acceptance is pending. Answer the twelve questions in the milestone request, especially whether fast versus careful driving creates interesting choices and whether you immediately want another race. Automated passes do not prove fun. Milestone 4 is not authorized.

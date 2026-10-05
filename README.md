@@ -31,7 +31,7 @@ corepack pnpm test
 
 Development serves on 2567. Client edits refresh; server edits require restart. Production: build, set `NODE_ENV=production`, then `corepack pnpm start`; `PORT` overrides the server port. Dependencies must be installed before using the launcher.
 
-For all multiplayer tests, run the game separately and set `TEST_URL=http://localhost:2571` before testing. Without TEST_URL, two network tests explicitly skip. There are 16 tests: deterministic movement/beam math, schema encoding, an eight-client lifecycle and a two-client carry/delivery/reconnect/reset run.
+For all multiplayer tests, run the game separately and set `TEST_URL=http://localhost:2571` before testing. Without TEST_URL, three network tests explicitly skip. There are 24 tests: deterministic movement/beam math, schema encoding, an eight-client lifecycle and a two-client carry/delivery/reconnect/reset run.
 
 ## Architecture and tuning
 
@@ -43,4 +43,4 @@ TypeScript, Three.js, Express and Colyseus. The server owns all movement and bea
 - `shared/movement.ts`: free-worker movement settings.
 - `PROJECT_STATUS.md`: current handoff, verification and limitations.
 
-Public game hosting and Milestone 3 are deferred until after human playtest approval.
+Milestone 3 Wheelbarrow Race is available from the host’s Game mode selector. See PLAYTEST.md for race instructions and tuning details in PROJECT_STATUS.md. Personal acceptance is pending; Milestone 4 and public hosting remain deferred.
