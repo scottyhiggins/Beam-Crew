@@ -5,3 +5,5 @@
 select{font:inherit;background:#e8eef2;border:0;border-radius:8px;padding:10px;max-width:100%}
 
 #buildLabel{font-weight:750;color:#246857;border-left:4px solid #59d595;padding-left:8px}
+
+#panel.selecting{width:min(1000px,calc(100% - 40px))}#materialGrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}#materialGrid>div{display:flex;flex-direction:column;gap:6px}#materialGrid button{width:100%;font-size:12px;min-height:74px;background:#e8eef2}#materialGrid .selected{background:#59d595;outline:3px solid #246857}@media(max-width:700px){#materialGrid{grid-template-columns:repeat(3,minmax(0,1fr))}#panel.selecting{width:calc(100% - 24px)}}@media(max-width:380px){#materialGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}

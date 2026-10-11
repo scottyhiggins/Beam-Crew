@@ -67,6 +67,7 @@ export function workerCollides(x:number,z:number,radius=.45) {
   return COURSE.obstacles.some(o=>Math.hypot(Math.max(Math.abs(x-o.x)-o.halfX,0),Math.max(Math.abs(z-o.z)-o.halfZ,0))<radius);
 }
 export function stepBeam(b:BeamMotion,carriers:Carrier[],dt:number) {
+  const wasBeforeDoor=beamCorners(b).some(p=>p.z>=COURSE.doorwayZ-.5);
   const cfg=BEAM_CONFIG, c=Math.cos(b.angle),s=Math.sin(b.angle);
   b.leftSupported=carriers.some(p=>GRIPS[p.grip]?.u<0);
   b.rightSupported=carriers.some(p=>GRIPS[p.grip]?.u>0);
@@ -101,9 +102,9 @@ export function stepBeam(b:BeamMotion,carriers:Carrier[],dt:number) {
     const oldAngle=b.angle;b.angle+=b.angularVelocity*dt/steps;if(collides()){b.angle=oldAngle;b.angularVelocity=0;b.blocked=true;}
   }
   b.angle=Math.atan2(Math.sin(b.angle),Math.cos(b.angle));
-  if(!b.checkpoint&&beamCorners(b).every(p=>p.z<COURSE.doorwayZ-.5))b.checkpoint=true;
+  if(!b.checkpoint&&wasBeforeDoor&&beamCorners(b).every(p=>p.z<COURSE.doorwayZ-.5))b.checkpoint=true;
   const goal=COURSE.goal;
   const inside=beamCorners(b).every(p=>Math.abs(p.x-goal.x)<=goal.halfX&&Math.abs(p.z-goal.z)<=goal.halfZ);
-  b.deliveryTime=inside?b.deliveryTime+dt:0;
+  b.deliveryTime=inside&&b.checkpoint?b.deliveryTime+dt:0;
   if(b.deliveryTime>=cfg.deliveryHoldSeconds){b.delivered=true;b.vx=b.vz=b.angularVelocity=0;}
 }

@@ -4,10 +4,13 @@ import './style.css';
 import { BEAM_CONFIG, COURSE, GRIPS, gripPosition } from '../shared/beam';
 import { WHEEL_CONFIG, WHEEL_COURSE, WHEEL_OBSTACLES, WHEEL_ROUGH } from '../shared/wheelbarrow';
 import { BUILD_LABEL, PROTOCOL_VERSION } from '../shared/version';
+import {MATERIAL_CATEGORIES,MATERIALS,MATERIAL_COLORS} from '../shared/materials';
+import {FINISH_STAGING} from '../shared/wheelbarrow';
 const colors=[0xffad32,0x35b9ff,0xff5985,0x59d595,0xa38aff,0xf2ee57,0xffffff,0x965c42];
 const app=document.querySelector<HTMLDivElement>('#app')!;
-app.innerHTML=`<main id="panel"><h1>BEAM CREW</h1><p id="buildLabel">${BUILD_LABEL}</p><p>Choose Beam Carry or Wheelbarrow Race</p><label>Your name <input id="name" maxlength="18" value="Worker" autocomplete="nickname"></label><button id="create">Create room</button><div class="join"><input id="code" maxlength="5" placeholder="ROOM CODE" aria-label="Room code"><button id="join">Join</button></div><p id="status" role="status"></p><section id="room" hidden><h2 id="roomCode"></h2><button id="share">Copy join link</button><ul id="players"></ul><label id="modeLabel">Game mode <select id="mode"><option value="beam">Beam Carry</option><option value="wheel">Wheelbarrow Race</option></select></label><button id="start">Start test</button><button id="back">Return to lobby</button><button id="reset" hidden>Reset to checkpoint</button><button id="restart" hidden>Restart course</button><button id="leave">Leave room</button></section><p id="help">WASD to move · Space to grab/release<br>On phones: joystick + ACTION</p></main><div id="hud" hidden><span id="hudText"></span><div id="beamStatus" role="status"></div><button id="grab">GRAB · Space</button><div id="signals"><button data-signal="LIFT">LIFT</button><button data-signal="WAIT">WAIT</button><button data-signal="LEFT">LEFT</button><button data-signal="RIGHT">RIGHT</button></div><button id="menu">Lobby controls</button></div><div id="touch" hidden><div id="joystick" aria-label="Movement joystick"><div id="stick"></div></div><button id="action">ACTION</button></div>`;
+app.innerHTML=`<main id="panel"><h1>BEAM CREW</h1><p id="buildLabel">${BUILD_LABEL}</p><p>Choose Beam Carry or Wheelbarrow Race</p><label>Your name <input id="name" maxlength="18" value="Worker" autocomplete="nickname"></label><button id="create">Create room</button><div class="join"><input id="code" maxlength="5" placeholder="ROOM CODE" aria-label="Room code"><button id="join">Join</button></div><p id="status" role="status"></p><section id="room" hidden><h2 id="roomCode"></h2><button id="share">Copy join link</button><ul id="players"></ul><label id="modeLabel">Game mode <select id="mode"><option value="beam">Cooperative Beam Carry</option><option value="competitive">Competitive Beam Carry · pairs</option><option value="wheel">Wheelbarrow Race</option></select></label><section id="materials" hidden><h3>Choose your load</h3><p>Same cart handling. Your spill creates this hazard. Duplicates allowed; locked at countdown.</p><div id="materialGrid"></div><p id="chosenLoad" role="status"></p></section><button id="start">Start test</button><button id="back">Return to lobby</button><button id="reset" hidden>Reset to checkpoint</button><button id="restart" hidden>Restart course</button><button id="leave">Leave room</button></section><p id="help">WASD to move · Space to grab/release<br>On phones: joystick + ACTION</p></main><div id="hud" hidden><span id="hudText"></span><div id="beamStatus" role="status"></div><button id="grab">GRAB · Space</button><div id="signals"><button data-signal="LIFT">LIFT</button><button data-signal="WAIT">WAIT</button><button data-signal="LEFT">LEFT</button><button data-signal="RIGHT">RIGHT</button></div><button id="menu">Lobby controls</button></div><div id="touch" hidden><div id="joystick" aria-label="Movement joystick"><div id="stick"></div></div><button id="action">ACTION</button></div>`;
 const el=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
+for(const category of MATERIAL_CATEGORIES){const column=document.createElement('div');const heading=document.createElement('strong');heading.textContent=category.name;column.append(heading);for(const name of category.items){const m=MATERIALS.find(m=>m.name===name)!;const button=document.createElement('button');button.type='button';button.dataset.material=String(m.id);button.textContent=m.name+' · '+m.effect;button.onclick=()=>room?.send('material',m.id);column.append(button);}el('materialGrid').append(column);}
 const signalReadout=document.createElement('div');signalReadout.id='crewSignals';el('hud').append(signalReadout);
 const status=(message:string)=>{el('status').textContent=message;};
 const client=new Client(`${location.protocol==='https:'?'wss':'ws'}://${location.host}`);
@@ -57,10 +60,20 @@ function render(){const state=room?.state,playing=state?.phase==='test';el('room
   el('back').textContent=playing?'Return to lobby / change game mode':'Return to lobby';
   el('help').innerHTML=state.mode==='wheel'?'Protect the load: fewest spills wins; time breaks ties.<br>WASD / joystick to push. Follow painted arrows; brake before turns.':'WASD to move · Space to grab/release<br>On phones: joystick + ACTION';
   el('modeLabel').hidden=playing;el<HTMLSelectElement>('mode').disabled=!host;el<HTMLSelectElement>('mode').value=state.mode;
-  const me=state.players.get(room?.sessionId);renderBeamHud(state,me);el('hudText').textContent=`${state.code} · ${connected}/8 workers · ${me?.grip>=0?'GRIPPING '+(me.grip+1):'FREE'}${me?.signal?' · '+me.signal:''}`;
+  const me=state.players.get(room?.sessionId);
+  el('materials').hidden=playing||state.mode!=='wheel';el('panel').classList.toggle('selecting',!playing&&state.mode==='wheel');
+  document.querySelectorAll<HTMLButtonElement>('[data-material]').forEach(b=>{const selected=Number(b.dataset.material)===me?.materialId;b.setAttribute('aria-pressed',String(selected));b.classList.toggle('selected',selected);b.disabled=playing;});
+  el('chosenLoad').textContent='Selected: '+(MATERIALS[me?.materialId]?.name??'Bricks');
+  renderBeamHud(state,me);el('hudText').textContent=`${state.code} · ${connected}/8 workers · ${me?.grip>=0?'GRIPPING '+(me.grip+1):'FREE'}${me?.signal?' · '+me.signal:''}`;
+  if(state.mode==='competitive'){
+    el('reset').hidden=true;
+    el('hudText').textContent=state.racePhase==='countdown'?Math.ceil(state.countdown)+' · GET READY':state.racePhase==='results'?'TEAM RESULTS':state.elapsed.toFixed(1)+'s';
+    el('beamStatus').textContent=me?.team<0?'Spectating · odd worker sits out this round. Wheelbarrow supports everyone.':'Team '+(me.team+1)+' · Assigned end '+(me.end===0?'1':'2')+' · Space / ACTION to grab';
+    signalReadout.textContent=Array.from(state.teams as Iterable<any>).map((b,i)=>'Team '+(i+1)+' · '+b.members+' · '+(b.dnf?'DNF':b.delivered?'#'+b.place+' · '+b.finishTime.toFixed(2)+'s':'racing')).join(' | ');
+  }
   if(state.mode==='wheel'){renderWheelHud(state,me);el('reset').hidden=true;}
   el('grab').hidden=el('action').hidden=el('signals').hidden=state.mode==='wheel';
-  const signals:string[]=[];state.players.forEach((p:any)=>{if(p.signal)signals.push(`${p.name}: ${p.signal}`);});if(state.mode!=='wheel')signalReadout.textContent=signals.join(' · ');
+  const signals:string[]=[];state.players.forEach((p:any)=>{if(p.signal)signals.push(`${p.name}: ${p.signal}`);});if(state.mode==='beam')signalReadout.textContent=signals.join(' · ');
   if(playing&&state.mode==='wheel')status('Wheelbarrow Race — host can restart from Lobby controls.');else if(playing)status('Beam Carry active — host controls can reset or restart.');else status(connected<2?'Waiting for another worker to start.':'Ready — the host can start the test.');}
 // Render only: all gameplay positions and rotations originate on the server.
 const scene=new THREE.Scene();scene.background=new THREE.Color(0xa8d5e7);scene.fog=new THREE.Fog(0xa8d5e7,30,85);
@@ -124,9 +137,10 @@ const dragMarkers=[-1,1].map(()=>{
   skid.rotation.x=-Math.PI/2;scene.add(skid);return skid;
 });
 let displayedBeam={...COURSE.start,leftHeight:BEAM_CONFIG.groundedHeight,rightHeight:BEAM_CONFIG.groundedHeight};
+const otherBeams:THREE.Group[]=[];
 let displayedResets=-1;
 function renderBeamHud(state:any,me:any){
-  const b=state.beam;if(!b)return;
+  const b=state.mode==='competitive'?state.teams[me?.team]:state.beam;if(!b)return;
   const occupied=new Set<number>();state.players.forEach((p:any)=>{if(p.grip>=0)occupied.add(p.grip);});
   let nearest=-1,distance=BEAM_CONFIG.grabRadius;
   if(me)GRIPS.forEach((_,i)=>{const point=gripPosition(b,i),d=Math.hypot(point.x-me.x,point.z-me.z);if(!occupied.has(i)&&d<distance){nearest=i;distance=d;}});
@@ -140,8 +154,10 @@ function renderBeamHud(state:any,me:any){
   el('grab').classList.toggle('attached',attached);el('action').classList.toggle('attached',attached);
 }
 function updateBeamVisual(state:any,dt:number,now:number){
-  const b=state?.beam,playing=state?.phase==='test'&&state?.mode!=='wheel';
+  const b=state?.mode==='competitive'?state.teams[state.players.get(room?.sessionId)?.team]??state.teams[0]:state?.beam,playing=state?.phase==='test'&&state?.mode!=='wheel';
   courseVisual.visible=beamVisual.visible=playing;
+  while(otherBeams.length<(state?.teams?.length??0)){const g=new THREE.Group();box(BEAM_CONFIG.length,.4,.45,colors[otherBeams.length*2],0,0,0,g);scene.add(g);otherBeams.push(g);}
+  otherBeams.forEach((g,i)=>{const t=state?.teams?.[i];g.visible=playing&&state.mode==='competitive'&&!!t&&t!==b;if(t){g.position.set(t.x,(t.leftHeight+t.rightHeight)/2,t.z);g.rotation.y=-t.angle;}});
   for(const sprite of [startLabel,doorLabel,turnLabel,destinationLabel])sprite.visible=playing;
   for(const visual of gripVisuals){visual.ring.visible=visual.text.visible=visual.rope.visible=playing;}
   for(const skid of dragMarkers)skid.visible=playing;
@@ -152,9 +168,10 @@ function updateBeamVisual(state:any,dt:number,now:number){
   displayedBeam.leftHeight+=(b.leftHeight-displayedBeam.leftHeight)*blend;displayedBeam.rightHeight+=(b.rightHeight-displayedBeam.rightHeight)*blend;
   beamVisual.position.set(displayedBeam.x,(displayedBeam.leftHeight+displayedBeam.rightHeight)/2,displayedBeam.z);
   beamVisual.rotation.y=-displayedBeam.angle;beamTilt.rotation.z=Math.atan2(displayedBeam.rightHeight-displayedBeam.leftHeight,BEAM_CONFIG.length);
-  const occupants=new Map<number,any>();state.players.forEach((p:any)=>{if(p.grip>=0)occupants.set(p.grip,p);});
+  const occupants=new Map<number,any>();state.players.forEach((p:any)=>{if(p.grip>=0&&(state.mode!=='competitive'||state.teams[p.team]===b))occupants.set(p.grip,p);});
   const me=state.players.get(room?.sessionId);
   gripVisuals.forEach((visual,i)=>{
+    if(state.mode==='competitive'&&i!==0&&i!==7){visual.ring.visible=visual.text.visible=visual.rope.visible=false;return;}
     const point=gripPosition(displayedBeam,i),p=occupants.get(i);
     const near=me?.grip<0&&!p&&Math.hypot(me.x-point.x,me.z-point.z)<BEAM_CONFIG.grabRadius;
     (visual.ring.material as THREE.MeshBasicMaterial).color.setHex(p?colors[p.color]:near?0x7dfa91:0xffffff);
@@ -191,14 +208,16 @@ for(let x=WHEEL_ROUGH.minX;x<=WHEEL_ROUGH.maxX;x+=.65)box(.16,.13,WHEEL_ROUGH.ma
 for(const x of [WHEEL_ROUGH.minX,WHEEL_ROUGH.maxX])for(let z=WHEEL_ROUGH.minZ;z<WHEEL_ROUGH.maxZ;z+=.4)box(.3,.025,.2,Math.round(z*10)%8===0?0x27343d:0xffc137,x,.09,z,wheelCourseVisual);
 box(5,.04,.25,0x54d695,-6,.09,6,wheelCourseVisual);box(5,.04,.5,0x54d695,-3,.09,-18,wheelCourseVisual);
 for(let i=0;i<10;i++)box(.5,.025,.3,i%2?0xffffff:0x27343d,-5.25+i*.5,.12,-18,wheelCourseVisual);
+box(FINISH_STAGING.maxX-FINISH_STAGING.minX,.08,FINISH_STAGING.maxZ-FINISH_STAGING.minZ,0x53988a,(FINISH_STAGING.minX+FINISH_STAGING.maxX)/2,0,(FINISH_STAGING.minZ+FINISH_STAGING.maxZ)/2,wheelCourseVisual);
 const carts=new Map<string,{root:THREE.Group;tray:THREE.Group;load:THREE.Group;tag:THREE.Sprite}>();
 const materialMeshes:THREE.Mesh[]=[];
-const brickGeometry=new THREE.BoxGeometry(.45,.22,.45),brickMaterial=new THREE.MeshLambertMaterial({color:0xbd6549});
+const spillMaterials=MATERIAL_COLORS.map(color=>new THREE.MeshLambertMaterial({color}));
+const brickGeometry=new THREE.BoxGeometry(.45,.22,.45);
 let wheelReset=-1;
 function renderWheelHud(state:any,me:any){
   if(!me)return;
   const countdown=state.racePhase==='countdown';
-  el('hudText').textContent=countdown?String(Math.ceil(state.countdown))+' • GET READY':state.racePhase==='results'?'FINAL RESULTS':me.finishOrder?'FINISHED • waiting for other racers':'GO • '+state.elapsed.toFixed(1)+'s';
+  el('hudText').textContent=countdown?String(Math.ceil(state.countdown))+' • GET READY':state.racePhase==='results'?'FINAL RESULTS':me.finishOrder?'FINISHED · move in green staging area':'GO • '+state.elapsed.toFixed(1)+'s';
   const warning=me.reload>0?'SPILLED! Reloading '+me.reload.toFixed(1)+'s':me.finishOrder?'Finished in '+me.finishTime.toFixed(2)+'s':me.instability>.7?'CAREFUL — LOAD TIPPING!':'Follow painted arrows • ease off before turns and rough ground';
   el('beamStatus').textContent=warning+'\nLoad risk '+Math.round(me.instability*100)+'% • Spills '+me.spills+' • Speed '+Math.round(me.speed/WHEEL_CONFIG.maxSpeed*100)+'%';
   el('beamStatus').style.borderLeft=me.instability>.7?'8px solid #ff6849':'8px solid #59d595';
@@ -212,7 +231,7 @@ function updateWheelVisual(state:any,dt:number,now:number){
   for(const [id,c]of carts){c.root.visible=active&&!!state?.players.get(id)?.connected;if(!state?.players.has(id)){scene.remove(c.root);carts.delete(id);}}
   while(materialMeshes.length>(active?state.material.length:0)){scene.remove(materialMeshes.pop()!);}
   if(!active)return;
-  state.material.forEach((b:any,i:number)=>{let mesh=materialMeshes[i];if(!mesh){mesh=new THREE.Mesh(brickGeometry,brickMaterial);scene.add(mesh);materialMeshes.push(mesh);}mesh.position.set(b.x,.11,b.z);mesh.scale.y=Math.min(3,1+(b.amount-1)*.15);mesh.position.y=.11*mesh.scale.y;});
+  state.material.forEach((b:any,i:number)=>{let mesh=materialMeshes[i];if(!mesh){mesh=new THREE.Mesh(brickGeometry,spillMaterials[6]);scene.add(mesh);materialMeshes.push(mesh);}mesh.material=spillMaterials[b.materialId??6];const category=Math.floor((b.materialId??6)/2);mesh.scale.set(category===0||category===5?2.5:category===1?2:1,category===0||category===5?.2:1,category===1?.4:1);mesh.position.set(b.x,.11,b.z);mesh.scale.y*=Math.min(3,1+(b.amount-1)*.15);mesh.position.y=.11*mesh.scale.y;});
   state.players.forEach((p:any,id:string)=>{
     let c=carts.get(id);if(!c){
       const root=new THREE.Group(),tray=new THREE.Group(),load=new THREE.Group();root.add(tray);tray.add(load);scene.add(root);
@@ -221,12 +240,12 @@ function updateWheelVisual(state:any,dt:number,now:number){
       box(1.3,.45,.1,colors[p.color],0,.95,1.9,tray);
       for(const x of [-.5,.5])box(.08,.08,1.5,0x384956,x,.75,.3,root);
       const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.33,.33,.22,12),new THREE.MeshLambertMaterial({color:0x27343d}));wheel.rotation.z=Math.PI/2;wheel.position.set(0,.33,1.8);root.add(wheel);
-      for(let i=0;i<6;i++)box(.42,.22,.5,0xbd6549,(i%2-.5)*.5,1.05+Math.floor(i/2)*.23,1.15,load);
+      for(let i=0;i<6;i++)box(.42,.22,.5,MATERIAL_COLORS[p.materialId??6],(i%2-.5)*.5,1.05+Math.floor(i/2)*.23,1.15,load);
       const tag=label(id===room?.sessionId?'YOU':p.name,'#172d3c',1.6);tag.position.set(0,2.8,0);root.add(tag);
       c={root,tray,load,tag};carts.set(id,c);root.position.set(p.x,0,p.z);root.rotation.y=p.rotation;
     }
-    c.root.visible=p.connected&&!p.finishOrder;
-    const w=workers.get(id);if(w&&p.finishOrder)w.visible=false;
+    c.root.visible=p.connected;
+    const w=workers.get(id);if(w)w.visible=p.connected;
     const blend=1-Math.exp(-18*dt);c.root.position.x+=(p.x-c.root.position.x)*blend;c.root.position.z+=(p.z-c.root.position.z)*blend;c.root.rotation.y+=Math.atan2(Math.sin(p.rotation-c.root.rotation.y),Math.cos(p.rotation-c.root.rotation.y))*blend;
     c.tray.rotation.z=p.reload>0?1.15:Math.sin(now*.016+p.color)*p.instability*.22-p.lean*p.instability*.08;
     c.load.visible=p.reload<=0;c.load.position.x=Math.sin(now*.016)*p.instability*.2;
@@ -234,7 +253,7 @@ function updateWheelVisual(state:any,dt:number,now:number){
 }
 
 async function verifyServer(){
-  status('Checking Milestone 3 server…');render();
+  status('Checking Milestone 4 server…');render();
   try{const response=await fetch('/health',{cache:'no-store',signal:AbortSignal.timeout(5000)});const health=await response.json();if(!response.ok||health.protocol!==PROTOCOL_VERSION||typeof health.startedAt!=='string')throw Error('The running server is an older version. Close its window with Ctrl+C, relaunch Start-BeamCrew.cmd, then refresh both browsers.');serverCompatible=true;status(BUILD_LABEL+' server ready — create or join a room.');
     try{
       const start=health.startedAt;

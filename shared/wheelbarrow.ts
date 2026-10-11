@@ -1,3 +1,4 @@
+import {materialCategory} from './materials.js';
 export const WHEEL_CONFIG = {
   maxSpeed: 5.5, acceleration: 3.8, braking: 7, steering: 2.8,
   speedGain: .24, turnGain: .65, roughGain: 1.35, recovery: .3,
@@ -23,30 +24,33 @@ export const WHEEL_OBSTACLES=WHEEL_COURSE.slice(1).flatMap((b,i)=>{
   const a=WHEEL_COURSE[i],dx=b.x-a.x,dz=b.z-a.z,t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.z-a.z)*dz)/(dx*dx+dz*dz)));
   return Math.hypot(p.x-a.x-t*dx,p.z-a.z-t*dz)<WHEEL_CONFIG.corridorRadius-.3;
 }));
-export type Material={x:number;z:number;vx:number;vz:number;amount:number};
+export type Material={x:number;z:number;vx:number;vz:number;amount:number;materialId?:number};
 export function spillMaterial(p:Cart,material:Material[],create:(value:Material)=>void){
   for(let i=0;i<WHEEL_CONFIG.bricksPerSpill;i++){
     const forward=1.65+Math.floor(i/2)*.45,side=(i%2-.5)*.8;
     const x=p.x+Math.sin(p.rotation)*forward+Math.cos(p.rotation)*side,z=p.z+Math.cos(p.rotation)*forward-Math.sin(p.rotation)*side;
-    const value={x:onCourse(x,z)?x:p.x,z:onCourse(x,z)?z:p.z,vx:0,vz:0,amount:1};
+    const value={x:onCourse(x,z)?x:p.x,z:onCourse(x,z)?z:p.z,vx:0,vz:0,amount:1,materialId:p.materialId??6};
     if(material.length<WHEEL_CONFIG.maxMaterial){create(value);}else{
       // At the cap, retain the material as an existing movable pile, never erase it.
-      const nearest=material.reduce((a,b)=>Math.hypot(a.x-x,a.z-z)<Math.hypot(b.x-x,b.z-z)?a:b);nearest.amount++;
+      const matching=material.filter(b=>(b.materialId??6)===(p.materialId??6));
+      // Preserve existing behavior at the cap; aggregate only into the same material.
+      if(matching.length){const nearest=matching.reduce((a,b)=>Math.hypot(a.x-x,a.z-z)<Math.hypot(b.x-x,b.z-z)?a:b);nearest.amount=Math.min(9999,nearest.amount+1);}
     }
   }
 }
 export function stepMaterial(material:Material[],dt:number){
   for(const b of material){
+    const category=materialCategory(b.materialId);if(category!==1&&category!==3){b.vx=b.vz=0;continue;}
     const x=b.x+b.vx*dt,z=b.z+b.vz*dt;
     if(onCourse(x,z)&&!WHEEL_OBSTACLES.some(o=>Math.hypot(x-o.x,z-o.z)<o.radius+WHEEL_CONFIG.materialRadius)){b.x=x;b.z=z;}
     else {b.vx*=-.25;b.vz*=-.25;}
-    b.vx*=Math.exp(-5*dt);b.vz*=Math.exp(-5*dt);
+    b.vx*=Math.exp(-(materialCategory(b.materialId)===1?1.2:5)*dt);b.vz*=Math.exp(-(materialCategory(b.materialId)===1?1.2:5)*dt);
     if(Math.hypot(b.vx,b.vz)<.01)b.vx=b.vz=0;
   }
 }
 export function compareResults(a:{spills:number;time:number;finishOrder:number},b:{spills:number;time:number;finishOrder:number}){return a.spills-b.spills||a.time-b.time||a.finishOrder-b.finishOrder;}
 export function shouldEndRace(players:Cart[],elapsed:number,firstFinishAt:number,timeout=WHEEL_CONFIG.postFinishTimeoutSeconds){return players.length>0&&(players.every(p=>p.finishOrder>0)||(timeout>0&&firstFinishAt>=0&&elapsed-firstFinishAt>=timeout));}
-export type Cart = {x:number;z:number;rotation:number;speed:number;instability:number;spills:number;reload:number;checkpoint:number;finishTime:number;finishOrder:number;lean:number};
+export type Cart = {x:number;z:number;rotation:number;speed:number;instability:number;spills:number;reload:number;checkpoint:number;finishTime:number;finishOrder:number;lean:number;materialId?:number};
 export function resetCart(p:Cart,slot:number,count=8){
   Object.assign(p,{x:-6+(slot%4-(Math.min(count,4)-1)/2)*1.15,z:7+Math.floor(slot/4)*1.4,rotation:Math.PI,speed:0,instability:0,spills:0,reload:0,checkpoint:1,finishTime:0,finishOrder:0,lean:0});
 }
@@ -55,7 +59,7 @@ export function onCourse(x:number,z:number){
   return WHEEL_COURSE.slice(1).some((b,i)=>{const a=WHEEL_COURSE[i],dx=b.x-a.x,dz=b.z-a.z,t=Math.max(0,Math.min(1,((x-a.x)*dx+(z-a.z)*dz)/(dx*dx+dz*dz)));return Math.hypot(x-a.x-t*dx,z-a.z-t*dz)<=WHEEL_CONFIG.corridorRadius;});
 }
 export function stepCart(p:Cart,inputX:number,inputZ:number,dt:number,material:Material[]=[]){
-  if(p.finishOrder)return;
+  if(p.finishOrder){stepStaging(p,inputX,inputZ,dt);return;}
   if(p.reload>0){p.reload=Math.max(0,p.reload-dt);p.speed=0;if(p.reload===0){p.instability=0;p.lean=0;}return;}
   const magnitude=Math.min(1,Math.hypot(inputX,inputZ));
   const target=magnitude*WHEEL_CONFIG.maxSpeed;
@@ -70,18 +74,21 @@ export function stepCart(p:Cart,inputX:number,inputZ:number,dt:number,material:M
   const sin=Math.sin(p.rotation),cos=Math.cos(p.rotation);
   for(const o of [...WHEEL_OBSTACLES,...material]){
     const movable='amount' in o;
-    const radius=WHEEL_CONFIG.cartRadius+(movable?WHEEL_CONFIG.materialRadius:o.radius);
+    const category=movable?materialCategory(o.materialId):-1;
+    const radius=WHEEL_CONFIG.cartRadius+(movable?(category===0||category===5?.65:WHEEL_CONFIG.materialRadius):o.radius);
     const dx=p.x+sin*WHEEL_CONFIG.cartOffset-o.x,dz=p.z+cos*WHEEL_CONFIG.cartOffset-o.z,distance=Math.hypot(dx,dz);
     if(distance>=radius)continue;
+    if(category===0){p.speed*=Math.exp(-2.5*dt);continue;}
+    if(category===5||category===4){p.instability+=dt*(category===5?1.4:.85)*(p.speed/WHEEL_CONFIG.maxSpeed)**2;p.speed*=Math.exp(-.5*dt);continue;}
     const nx=distance>.0001?dx/distance:-sin,nz=distance>.0001?dz/distance:-cos;
     const severity=Math.max(0,-(sin*nx+cos*nz))*p.speed/WHEEL_CONFIG.maxSpeed;
     p.instability+=WHEEL_CONFIG.impactGain*severity**2*(movable?.6:1);
     p.speed*=1-Math.min(.8,severity*(movable?.5:.8));
     const separation=radius-distance+.001;
-    if(movable){
+    if(movable&&(category===1||category===3)){
       const pushX=o.x-nx*separation,pushZ=o.z-nz*separation;
       if(onCourse(pushX,pushZ)){o.x=pushX;o.z=pushZ;}else{p.x+=nx*separation;p.z+=nz*separation;}
-      o.vx=Math.max(-3,Math.min(3,o.vx-nx*severity*3));o.vz=Math.max(-3,Math.min(3,o.vz-nz*severity*3));
+      o.vx=Math.max(-3,Math.min(3,o.vx-nx*severity*(category===1?3:1)));o.vz=Math.max(-3,Math.min(3,o.vz-nz*severity*(category===1?3:1)));
     }else{
       const px=p.x+nx*separation,pz=p.z+nz*separation;
       if(onCourse(px,pz)){p.x=px;p.z=pz;}
@@ -96,7 +103,14 @@ export function stepCart(p:Cart,inputX:number,inputZ:number,dt:number,material:M
 export function finishCarts(players:Cart[],elapsed:number,previousOrder=0){
   let order=Math.max(previousOrder,...players.map(p=>p.finishOrder));
   // Arrival order is recorded independently from spill-first ranking.
-  for(const p of players)if(!p.finishOrder&&p.checkpoint===WHEEL_COURSE.length&&p.z<=-18){p.finishTime=elapsed;p.finishOrder=++order;p.speed=0;}
+  for(const p of players)if(!p.finishOrder&&p.checkpoint===WHEEL_COURSE.length&&p.z<=-18){p.finishTime=elapsed;p.finishOrder=++order;p.speed=0;p.x=-3+(order-1)%4;p.z=-23-Math.floor((order-1)/4);}
   return order;
 }
 
+
+// Isolated staging has no course/hazard interaction and cannot award another finish.
+export const FINISH_STAGING={minX:-6,maxX:1,minZ:-27,maxZ:-22};
+export function stepStaging(p:Cart,x:number,z:number,dt:number){
+ const n=Math.max(1,Math.hypot(x,z));p.x=Math.max(FINISH_STAGING.minX,Math.min(FINISH_STAGING.maxX,p.x+x/n*2.5*dt));p.z=Math.max(FINISH_STAGING.minZ,Math.min(FINISH_STAGING.maxZ,p.z+z/n*2.5*dt));
+ if(Math.hypot(x,z)>.05)p.rotation=Math.atan2(x,z);p.speed=0;p.lean=0;
+}

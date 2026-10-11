@@ -21,7 +21,7 @@ test('two racers synchronize countdown, independent carts, reconnect, finish and
   clearInterval(timer);timer=undefined;
   const winner=guest.state.players.get(host.sessionId);assert.ok(winner.finishTime>0);assert.equal(winner.spills,0);assert.equal(guest.state.players.get(id).finishOrder,0);assert.equal(guest.state.players.get(id).z,7);
   assert.equal(guest.state.racePhase,'racing');
-  const finishedX=winner.x,finishedZ=winner.z;host.send('input',{x:1,z:1});await pause(150);assert.equal(guest.state.players.get(host.sessionId).x,finishedX);assert.equal(guest.state.players.get(host.sessionId).z,finishedZ);
+  const finishedX=winner.x,finishedZ=winner.z;host.send('input',{x:1,z:1});await pause(150);assert.ok(guest.state.players.get(host.sessionId).x>finishedX);assert.ok(guest.state.players.get(host.sessionId).z>=finishedZ);assert.equal(guest.state.players.get(host.sessionId).finishOrder,1);assert.equal(guest.state.players.get(host.sessionId).finishTime,winner.finishTime);
   assert.equal(guest.state.results.length,1);assert.equal(guest.state.results[0].place,1);
   timer=setInterval(()=>{const p=guest!.state.players.get(id),target=WHEEL_COURSE[Math.min(p.checkpoint,WHEEL_COURSE.length-1)],dx=target.x-p.x,dz=(p.checkpoint===WHEEL_COURSE.length?-20:target.z)-p.z,len=Math.hypot(dx,dz);guest!.send('input',{x:dx/len*.55,z:dz/len*.55});},30);
   await until(()=>host!.state.racePhase==='results',35000);clearInterval(timer);timer=undefined;

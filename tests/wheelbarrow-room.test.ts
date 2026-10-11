@@ -8,7 +8,7 @@ test('server keeps unfinished racer active and reranks a slower clean finish ahe
  const room=race(),a=room.state.players.get('0')!,b=room.state.players.get('1')!;
  Object.assign(a,{x:-3,z:-19,checkpoint:WHEEL_COURSE.length,spills:1});room.state.elapsed=24;room.tick(1/30);
  assert.equal(a.finishOrder,1);assert.equal(b.finishOrder,0);assert.equal(room.state.racePhase,'racing');assert.equal(room.state.results.length,1);
- a.lastInput=Date.now();a.inputX=1;const x=a.x;room.tick(1/30);assert.equal(a.x,x);
+ a.lastInput=Date.now();a.inputX=1;const x=a.x;room.tick(1/30);assert.ok(a.x>x);assert.equal(a.finishOrder,1);
  b.connected=false;room.tick(1/30);assert.equal(room.state.racePhase,'racing');b.connected=true;
  Object.assign(b,{x:-3,z:-19,checkpoint:WHEEL_COURSE.length});room.state.elapsed=31;room.tick(1/30);
  assert.equal(b.finishOrder,2);assert.equal(room.state.racePhase,'results');assert.equal(room.state.results.find(r=>r.name===b.name)!.place,1);assert.equal(room.state.results.find(r=>r.name===a.name)!.place,2);

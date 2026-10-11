@@ -1,3 +1,29 @@
+# Current status — October 11, 2026
+
+Milestone 4 is implemented under the user's explicit authorization. Milestones 1–3 remain available; Milestone 2's previously recorded personal acceptance stands. Milestone 3/4 personal acceptance remains pending. Do not start Milestone 5 or deploy.
+
+## Milestone 4 decisions
+
+- Separate Competitive Beam Carry mode preserves the accepted cooperative eight-grip mode. Connected players are paired in lobby join order on every restart: two workers, one assigned grip at each end (indices 0 and 7), one independent server beam per team. Two players is a time trial; 4/6/8 gives 2/3/4 simultaneous teams. Odd last player spectates, explicitly directed toward Wheelbarrow for an all-player round. A disconnected teammate releases its grip and may reconnect within the existing 30-second reservation; permanent departure marks the incomplete team DNF. No substitute during a round.
+- Teams share the existing bounded doorway/column course. Beams and workers from other teams do not collide; this preserves phone performance and prevents blocking/griefing. Team name, members, arrival place and elapsed time are synchronized. Countdown prevents movement; delivered beams cannot finish twice. Equal simulation-tick deliveries use team assignment order. Host restart reassigns teams and clears results. Cooperative reset remains available only in cooperative mode.
+- Twelve loads, six category columns with two choices vertically stacked: wet cement/sand (sticky); PVC/rebar (rolling); mini barricades/drainage hose (fixed); bricks/cinder blocks (heavy pushable); scrap lumber/plywood offcuts (bumpy); gravel/concrete rubble (rough). Grid wraps to three columns under 700px, two under 380px; each category remains intact. Labels, selected state and accessible pressed state included. Default Bricks; duplicates allowed; server accepts only integer IDs 0–11 in lobby. Start locks choices through countdown/race/restart; return to lobby to change. Loads persist across reloads.
+- Base cart acceleration, speed, steering, risk and threshold are identical for all twelve materials. Server spill contact math implements six behaviors: sticky exponential braking; rolling mobile debris with low damping; immovable fixed debris; slower heavy movable debris; nonmoving bumpy risk debris; wider rough risk patches. Each pair shares behavior, with different names/colors. Lightweight box silhouettes are intentional; detailed material art and spray-painted arrow polish remain deferred. Existing simple arrows remain.
+- Hazards persist through reload/reconnect/departure, reset on restart, and cap at 192 objects. At the cap spills aggregate into nearest matching material (amount capped at 9999); a material with no existing matching pile produces no additional object at cap. No cross-material conversion, pile-pile physics or unbounded growth. Footprints never grow with aggregate count. Rendering reuses shared spill geometry and 12 materials.
+- Finishers transfer immediately to an isolated green staging area, x −6..1, z −27..−22; movement is capped at 2.5 units/sec and clamped there. Visible carts/workers remain movable during racing and final results. No hazards, course collisions, risk, spills or repeat finishes are evaluated for them. Results retain spill-first ranking and immutable finish time; unfinished racers continue without a forced timeout.
+- Wheelbarrow retains ordered checkpoints, corridor containment and shared solid edge posts. Beam delivery now requires a checkpoint earned by crossing the doorway threshold, rather than merely being beyond it. Inputs remain bounded and expire after 300 ms. Protocol 5 rejects stale servers; launcher and page identify Milestone 4.
+
+## Verification and remaining human work
+
+Production build and TypeScript pass. The existing Three.js bundle size warning remains. Automated coverage includes legacy full courses/lobby/reconnect, paired assignments for every count 2–8, odd spectators, independent team movement/results/DNF, locked/duplicate/invalid choices, identical loaded handling, six hazard behaviors, 1000 mixed spills bounded at 192, finish movement/isolation, and checkpoint bypass prevention. Final full-suite totals are recorded below after verification.
+
+Browser smoke check confirmed the Milestone 4 label, three mode choices, rendered selection states and vertically paired categories at narrow phone-sized width. This does not establish physical iPhone performance or fun. Human testing must cover four simultaneous teams, readability at common phone sizes, crowded start fairness, all material impacts, long repeated-spill phone performance, latency, and finish staging. See PLAYTEST.md.
+
+Git inspection found main tracking origin/main and existing untracked Finish-BeamCrew-PlaytestFixes.cmd, work-guest.mjs and work/. These are unrelated local artifacts and are excluded from this milestone commit. No reset, clean, deletion, history rewrite, deployment or source-mirror edits were performed.
+
+---
+
+## Historical Milestones 1–3 notes (superseded where stated above)
+
 # Beam Crew — project status
 
 Updated October 4, 2026. **Milestone 2 personal playtest PASSED on laptop + iPhone as two separate players.** Milestone 3 Wheelbarrow Race MVP is implemented and awaiting the user’s laptop + iPhone playtest; it is NOT personally approved. Public game hosting is deferred.
@@ -101,3 +127,7 @@ The user personally tested Wheelbarrow Race on laptop + iPhone, confirmed the co
 - The existing mode handler is registered in current source and worked during fresh launch/tests. The earlier unregistered-mode warning is consistent with the diagnosed pre-Milestone-3 stale process. No `ined` command exists in the launcher; its line endings are normalized to CRLF and `.gitattributes` enforces that for command files. Fresh launch and multiplayer/UI checks emitted neither reported error. The existing Vite bundle-size warning remains.
 
 Verification: TypeScript check and production build pass. **35 automated tests pass, zero skipped**, on the launcher-started production server at temporary port 2573. New coverage includes severity-dependent obstacle impacts, spatial rough risk, material pushing/persistence/cap/reset, live synchronization/reconnect of spills, independent two-racer completion, and a slower clean finish beating a faster spilled finish plus equal-spill time ties. Existing Beam Carry full-course and eight-client lifecycle tests pass. Separate headless desktop and mobile viewport checks passed Wheelbarrow selection/countdown/rendering/scoring guidance and return to Beam Carry; screenshots were inspected. This is not a replacement for the user's fresh physical iPhone playtest. Protocol is bumped to 4 to reject older running servers.
+
+## Milestone 4 final verification — October 11, 2026
+Production TypeScript/build passed. Full live suite on temporary localhost port 2574: 44 passed, zero failed/skipped, including all six network tests. Final symmetric rolling-damping correction was rebuilt and validated by 20 targeted deterministic milestone/hazard/course tests, all passed. Git diff --check passed. Physical laptop+iPhone acceptance remains pending; no deployment.
+

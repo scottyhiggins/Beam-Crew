@@ -5,7 +5,7 @@ set "BEAM_NODE=%USERPROFILE%\.cache\codex-runtimes\codex-primary-runtime\depende
 if not exist "%BEAM_NODE%" set "BEAM_NODE=node"
 if not exist "node_modules\typescript\bin\tsc" goto dependencies
 if not defined PORT set "PORT=2571"
-echo BEAM CREW - MILESTONE 3: WHEELBARROW RACE
+echo BEAM CREW - MILESTONE 4: TEAMS AND MATERIALS
 echo Repository: %CD%
 "%BEAM_NODE%" scripts\check-port.mjs %PORT%
 if errorlevel 1 goto failed
