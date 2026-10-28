@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { Client, Room } from 'colyseus.js';
 import './style.css';
 import { BEAM_CONFIG, COURSE, GRIPS, gripPosition } from '../shared/beam';
-import { WHEEL_CONFIG, WHEEL_COURSE, WHEEL_OBSTACLES, WHEEL_ROUGH, WHEEL_FENCES, WHEEL_GATES } from '../shared/wheelbarrow';
+import { rampHeight, FINISH_RAMP, WHEEL_CONFIG, WHEEL_COURSE, WHEEL_OBSTACLES, WHEEL_ROUGH, WHEEL_FENCES, WHEEL_GATES } from '../shared/wheelbarrow';
 import { BUILD_LABEL, PROTOCOL_VERSION } from '../shared/version';
 import {MATERIAL_CATEGORIES,MATERIALS,MATERIAL_COLORS} from '../shared/materials';
 import {FINISH_STAGING} from '../shared/wheelbarrow';
@@ -108,7 +108,7 @@ function worker(color:number){const g=new THREE.Group();box(.8,.9,.55,color,0,.8
 let previous=performance.now();
 function frame(now:number){requestAnimationFrame(frame);const dt=Math.min((now-previous)/1000,.1);previous=now;const state=room?.state;
   for(const [id,g]of workers){if(!state?.players?.has(id)){disposeVisual(g);workers.delete(id);}}
-  state?.players?.forEach((p:any,id:string)=>{let g=workers.get(id);if(!g){g=worker(colors[p.color]);g.position.set(p.x,0,p.z);workers.set(id,g);}const blend=1-Math.exp(-18*dt);g.position.x+=(p.x-g.position.x)*blend;g.position.z+=(p.z-g.position.z)*blend;const difference=Math.atan2(Math.sin(p.rotation-g.rotation.y),Math.cos(p.rotation-g.rotation.y));g.rotation.y+=difference*blend;g.position.y=Math.sin(now*.008+p.color)*.025;g.visible=p.connected;});
+  state?.players?.forEach((p:any,id:string)=>{let g=workers.get(id);if(!g){g=worker(colors[p.color]);g.position.set(p.x,0,p.z);workers.set(id,g);}const blend=1-Math.exp(-18*dt);g.position.x+=(p.x-g.position.x)*blend;g.position.z+=(p.z-g.position.z)*blend;const difference=Math.atan2(Math.sin(p.rotation-g.rotation.y),Math.cos(p.rotation-g.rotation.y));g.rotation.y+=difference*blend;g.position.y=(state.mode==='wheel'?rampHeight(p.x,p.z):0)+Math.sin(now*.008+p.color)*.025;g.visible=p.connected;});
   const me=room&&workers.get(room.sessionId);const target=me?.position??new THREE.Vector3();camera.position.lerp(new THREE.Vector3(target.x,15,target.z+18),1-Math.exp(-4*dt));camera.lookAt(target.x,0,target.z);updateBeamVisual(state,dt,now);updateWheelVisual(state,dt,now);renderer.render(scene,camera);
 }
 requestAnimationFrame(frame);window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
@@ -207,7 +207,7 @@ function updateBeamVisual(state:any,dt:number,now:number){
 }
 
 const wheelCourseVisual=new THREE.Group();scene.add(wheelCourseVisual);
-box(30,.3,44,0x776e5d,0,-.2,-10,wheelCourseVisual);
+box(34,.3,54,0x776e5d,0,-.2,-13,wheelCourseVisual);
 WHEEL_COURSE.slice(1).forEach((b,i)=>{
   const a=WHEEL_COURSE[i],dx=b.x-a.x,dz=b.z-a.z,length=Math.hypot(dx,dz);
   const road=box(WHEEL_CONFIG.corridorRadius*2,.05,length+WHEEL_CONFIG.corridorRadius*2,0xbfa780,(a.x+b.x)/2,.01,(a.z+b.z)/2,wheelCourseVisual);road.rotation.y=Math.atan2(dx,dz);
@@ -222,8 +222,22 @@ wheelCourseVisual.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromP
 for(const p of WHEEL_OBSTACLES){box(.3,.65,.3,0xffc137,p.x,.32,p.z,wheelCourseVisual);box(.32,.12,.32,0x27343d,p.x,.48,p.z,wheelCourseVisual);}
 for(let x=WHEEL_ROUGH.minX;x<=WHEEL_ROUGH.maxX;x+=.65)box(.16,.13,WHEEL_ROUGH.maxZ-WHEEL_ROUGH.minZ,0x7f705d,x,.1,-10,wheelCourseVisual);
 for(const x of [WHEEL_ROUGH.minX,WHEEL_ROUGH.maxX])for(let z=WHEEL_ROUGH.minZ;z<WHEEL_ROUGH.maxZ;z+=.4)box(.3,.025,.2,Math.round(z*10)%8===0?0x27343d:0xffc137,x,.09,z,wheelCourseVisual);
-box(5,.04,.25,0x54d695,-6,.09,6,wheelCourseVisual);box(5,.04,.5,0x54d695,WHEEL_GATES[WHEEL_GATES.length-1].x,.09,WHEEL_GATES[WHEEL_GATES.length-1].z,wheelCourseVisual);
-for(let i=0;i<10;i++)box(.5,.025,.3,i%2?0xffffff:0x27343d,WHEEL_GATES[WHEEL_GATES.length-1].x-2.25+i*.5,.12,WHEEL_GATES[WHEEL_GATES.length-1].z,wheelCourseVisual);
+box(5,.04,.25,0x54d695,-6,.09,6,wheelCourseVisual);
+// Decorative spikes never participate in collision. One shared invisible wedge
+// profile raises carts and its server-side lip prevents reverse course entry.
+const spikeShape=new THREE.Shape();spikeShape.moveTo(-.11,0);spikeShape.lineTo(.11,0);spikeShape.lineTo(.04,.28);spikeShape.closePath();
+const spikeGeometry=new THREE.ExtrudeGeometry(spikeShape,{depth:.08,bevelEnabled:false});
+const spikeMaterial=new THREE.MeshLambertMaterial({color:0xf5cb32});
+const boltGeometry=new THREE.CylinderGeometry(.035,.035,.025,6),boltMaterial=new THREE.MeshLambertMaterial({color:0x89949b});
+for(let section=0;section<7;section++){
+ const x=-5.8+section*.8+.4;
+ box(.77,.07,1.4,0x283039,x,.06,-17.5,wheelCourseVisual);
+ for(const dx of [-.29,.29])for(const z of [-16.95,-18.05]){const bolt=new THREE.Mesh(boltGeometry,boltMaterial);bolt.position.set(x+dx,.11,z);wheelCourseVisual.add(bolt);}
+ for(let i=0;i<3;i++){const spike=new THREE.Mesh(spikeGeometry,spikeMaterial);spike.position.set(x-.26+i*.26,.11,FINISH_RAMP.edgeZ+.18);wheelCourseVisual.add(spike);}
+}
+for(let row=0;row<3;row++)for(let i=0;i<14;i++)box(.4,.025,.13,(i+row)%2?0xffffff:row===1?0x45be7b:0x182323,-5.6+i*.4,.13,-17.85+row*.14,wheelCourseVisual);
+// Same construction surface in the yard; its far end can join a later course.
+box(16,.04,16,0xbfa780,-3,.015,-28,wheelCourseVisual);
 // Staging uses the same construction ground; no extra colored pad.
 const carts=new Map<string,{root:THREE.Group;tray:THREE.Group;load:THREE.Group;tag:THREE.Sprite}>();
 const materialMeshes:THREE.Mesh[]=[];
@@ -235,7 +249,7 @@ function renderWheelHud(state:any,me:any){
   const countdown=state.racePhase==='countdown';
   el('hudText').textContent=countdown?String(Math.ceil(state.countdown))+' • GET READY':state.racePhase==='results'?'FINAL RESULTS':me.finishOrder?'FINISHED · drive in staging':'GO • '+state.elapsed.toFixed(1)+'s';
   const warning=me.reload>0?'SPILLED! Reloading '+me.reload.toFixed(1)+'s':me.finishOrder?'Finished in '+me.finishTime.toFixed(2)+'s':me.instability>.7?'CAREFUL — LOAD TIPPING!':'Follow painted arrows • ease off before turns and rough ground';
-  el('beamStatus').textContent=warning+(me.finishOrder?'':'\nRoute '+Math.min(me.checkpoint-1,WHEEL_GATES.length-1)+'/'+(WHEEL_GATES.length-1)+' checkpoints · Next: '+(WHEEL_GATES[me.checkpoint-1]?.label??'Finish line'))+'\nLoad risk '+Math.round(me.instability*100)+'% • Spills '+me.spills+' • Speed '+Math.round(me.speed/WHEEL_CONFIG.maxSpeed*100)+'%';
+  el('beamStatus').textContent=warning+(me.finishOrder?'':'\nRoute '+Math.min(me.checkpoint-1,WHEEL_GATES.length-1)+'/'+(WHEEL_GATES.length-1)+' checkpoints · Next: '+(WHEEL_GATES[me.checkpoint-1]?.label??'Finish line'))+'\nLoad risk '+Math.round(me.instability*100)+'% • '+(me.finishOrder?'Staging spills '+Math.max(0,me.spills-([...state.results].find((r:any)=>r.finishOrder===me.finishOrder)?.spills??me.spills)):'Spills '+me.spills)+' • Speed '+Math.round(me.speed/WHEEL_CONFIG.maxSpeed*100)+'%';
   el('beamStatus').style.borderLeft=me.instability>.7?'8px solid #ff6849':'8px solid #59d595';
   const results=Array.from(state.results as Iterable<any>).sort((a,b)=>a.place-b.place);
   signalReadout.textContent='FEWEST SPILLS WINS • Time breaks ties'+(results.length?'\n'+(state.racePhase==='results'?'Final ranking: ':'Provisional ranking — others still racing: ')+results.map(p=>'#'+p.place+' '+p.name+' • '+p.spills+' spills • '+p.time.toFixed(2)+'s').join(' | '):'');
@@ -260,7 +274,7 @@ function updateWheelVisual(state:any,dt:number,now:number){
       const tag=label(id===room?.sessionId?'YOU':p.name,'#172d3c',1.6);tag.position.set(0,2.8,0);root.add(tag);
       c={root,tray,load,tag};carts.set(id,c);root.position.set(p.x,0,p.z);root.rotation.y=p.rotation;
     }
-    c.root.visible=p.connected;
+    c.root.visible=p.connected;c.root.position.y=rampHeight(p.x+Math.sin(p.rotation)*WHEEL_CONFIG.cartOffset,p.z+Math.cos(p.rotation)*WHEEL_CONFIG.cartOffset);
     const w=workers.get(id);if(w)w.visible=p.connected;
     const blend=1-Math.exp(-18*dt);c.root.position.x+=(p.x-c.root.position.x)*blend;c.root.position.z+=(p.z-c.root.position.z)*blend;c.root.rotation.y+=Math.atan2(Math.sin(p.rotation-c.root.rotation.y),Math.cos(p.rotation-c.root.rotation.y))*blend;
     c.tray.rotation.z=p.reload>0?1.15:Math.sin(now*.016+p.color)*p.instability*.22-p.lean*p.instability*.08;

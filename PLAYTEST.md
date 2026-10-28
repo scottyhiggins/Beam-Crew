@@ -1,3 +1,21 @@
+# Connected finish acceptance — BREAK TIME · Connected finish 1 (protocol 8)
+
+Refresh laptop and iPhone at https://break-time-9n1k.onrender.com and confirm this exact build label. Create a fresh room after deployment. Use laptop Wi-Fi and iPhone cellular, then swap who hosts. Previous finish/scoreboard/multiplayer acceptance passed per the user; repeat it with this geometry.
+
+1. Select two different loads, then duplicate loads. Start normally; choices lock at countdown. Finish the legal fence-line and inside-hairpin routes. Route checkpoints and ropes must still work.
+2. Approach slowly. Inspect dark segmented steel plates, bolts, close yellow triangular spikes and black/white/green checkers. The cart rises slightly over the invisible wedge. No spike individually catches the cart; no tire damage.
+3. Keep holding forward across the finish. Position, speed and direction must continue naturally into the large connected yard, with no jump or forced relocation. Time/spills are recorded exactly once at the leading-edge crossing. The other player remains racing.
+4. Immediately try reversing while partly across, then fully enter the yard and try reversing at the lip, diagonally and along both ropes. You cannot retreat onto the course. Drive around all yard edges. Confirm both devices see continuous movement and slight ramp elevation.
+5. Park the first cart in the arrival lane. The second racer can bump/push past it and finish. In staging, bump carts and steer sharply at speed until a load spills; reload works and debris stays bounded. Try each material category. Unfinished arrivals can still finish through staging debris.
+6. Official spill totals, finish times and ranking must not change after any post-finish spill. Fewest official spills wins; fastest recorded time breaks ties. When everyone finishes, the timer freezes and the same final board opens on both devices. Dismiss it and keep driving/spilling.
+7. Refresh/reconnect iPhone in staging: matching position, loads, piles and unchanged results return. Restart: empty results/piles, zero times/spills and fresh countdown. Return to lobby; complete Beam Carry with two players, then try two simultaneous teams if four devices are available. Do not change lobby behavior.
+
+Record browser/iOS version, player count, build label, network, any jump/block and screenshots. This task adds no Championship/second course. Frame-rate and ramp appearance on a physical iPhone remain human acceptance checks.
+
+---
+
+## Historical playtest plans (superseded where they describe isolated staging)
+
 # Wheelbarrow finish hotfix acceptance
 
 After the hotfix deploys, refresh both laptop and iPhone and confirm **BREAK TIME · Finish fix 1**. Start a new room at https://break-time-9n1k.onrender.com . Existing rooms end on the server restart.

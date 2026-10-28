@@ -1,3 +1,13 @@
+# Connected finish release preparation
+
+Build **BREAK TIME · Connected finish 1**, protocol **8**. Same approved service `srv-dbglagdg1s2s73bmg9u0`, workspace My Workspace, HTTPS/WSS URL https://break-time-9n1k.onrender.com . No plan/billing/resource changes. Manual deployment required after source is pushed; the previous public version remains live until verified.
+
+Local production build and full suite: **59 passed, zero failures/skips**. Local browser play passed continuous crossing, natural speed retention, yard movement, a post-finish spill with unchanged official score, and reverse blocking. Source commit/Render deploy/public verification are added when confirmed. Refresh both devices and create a new room after updating; physical iPhone acceptance remains pending.
+
+---
+
+## Previous verified deployment
+
 # Current public finish-fix release
 
 Verified October 27, 2026: https://break-time-9n1k.onrender.com . Live source **bca25d93e1558c3eafa700cafa5a6fcc9135f375**, deploy **dep-dbgmodflk1mc738vl3q0**, protocol **7**, build **BREAK TIME · Finish fix 1**. Reused the existing single approved Render service; auto-deploy off, /health configured, same corrected build command.

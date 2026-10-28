@@ -23,13 +23,15 @@ test('two racers synchronize countdown, independent carts, reconnect, finish and
   clearInterval(timer);timer=undefined;
   const winner=guest.state.players.get(host.sessionId);assert.ok(winner.finishTime>0);assert.equal(winner.spills,0);assert.equal(guest.state.players.get(id).finishOrder,0);assert.equal(guest.state.players.get(id).z,7);
   assert.equal(guest.state.racePhase,'racing');
-  host.send('input',{x:0,z:0});await pause(650);const finishedX=winner.x,finishedZ=winner.z;host.send('input',{x:1,z:1});await until(()=>guest!.state.players.get(host!.sessionId).x>finishedX+.02&&guest!.state.players.get(host!.sessionId).z>finishedZ+.02);assert.ok(guest.state.players.get(host.sessionId).x>finishedX);assert.ok(guest.state.players.get(host.sessionId).z>=finishedZ);assert.equal(guest.state.players.get(host.sessionId).finishOrder,1);assert.equal(guest.state.players.get(host.sessionId).finishTime,winner.finishTime);
+  timer=setInterval(()=>host!.send('input',{x:0,z:-.35}),30);await until(()=>guest!.state.players.get(host!.sessionId).z<-23);clearInterval(timer);timer=undefined;
+  host.send('input',{x:0,z:0});await pause(650);const finishedX=winner.x,finishedZ=winner.z;timer=setInterval(()=>host!.send('input',{x:.3,z:0}),30);await until(()=>guest!.state.players.get(host!.sessionId).x>finishedX+.1);clearInterval(timer);timer=undefined;host.send('input',{x:0,z:0});assert.ok(guest.state.players.get(host.sessionId).z<=-19.95);assert.equal(guest.state.players.get(host.sessionId).finishOrder,1);assert.equal(guest.state.players.get(host.sessionId).finishTime,winner.finishTime);
+
   assert.equal(guest.state.results.length,1);assert.equal(guest.state.results[0].place,1);
   timer=setInterval(()=>{drive(guest!,.55);},30);
   await until(()=>host!.state.racePhase==='results',35000);clearInterval(timer);timer=undefined;
   await until(()=>guest!.state.racePhase==='results'&&guest!.state.results.length===2);
   const finalElapsed=host.state.elapsed;await pause(150);assert.equal(host.state.elapsed,finalElapsed);assert.equal(guest.state.elapsed,finalElapsed);
-  const finalTime=host.state.players.get(id).finishTime;guest.send('input',{x:0,z:1});await pause(200);assert.ok(guest.state.players.get(id).z<=-22);assert.equal(guest.state.players.get(id).finishTime,finalTime);
+  const finalTime=host.state.players.get(id).finishTime;guest.send('input',{x:0,z:1});await pause(200);assert.ok(guest.state.players.get(id).z<=-16.25);assert.equal(guest.state.players.get(id).finishTime,finalTime);
   assert.equal(host.state.results.length,2);assert.equal(host.state.players.get(id).finishOrder,2);assert.ok(host.state.results[1].time>host.state.results[0].time);
   host.send('restart');await until(()=>guest!.state.raceResets===2);assert.equal(guest.state.racePhase,'countdown');assert.equal(guest.state.players.get(host.sessionId).finishOrder,0);assert.equal(guest.state.elapsed,0);assert.equal(guest.state.results.length,0);
   host.send('lobby');await until(()=>guest!.state.phase==='lobby');host.send('mode','beam');await until(()=>guest!.state.mode==='competitive');host.send('start');await until(()=>guest!.state.phase==='test');assert.equal(guest.state.teams[0].z,6);

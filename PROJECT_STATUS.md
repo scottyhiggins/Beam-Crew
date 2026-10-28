@@ -1,3 +1,15 @@
+# Connected finish update — October 27, 2026
+
+Build **BREAK TIME · Connected finish 1**, protocol **8**. Previous public finish/scoreboard/timer/ropes and laptop Wi-Fi + iPhone cellular multiplayer accepted by the user. Recoverable prior version: `backup/before-connected-finish-20261027`.
+
+Removed finish teleport and stopped resetting movement on finish. Full normal cart physics/reload/spills continue in racing and results, while official RaceResult snapshots and final elapsed time remain frozen. A shared mathematical invisible wedge provides the visible rise and a server-enforced one-way lip; decorative segmented plates/spikes/bolts have no individual colliders or tire damage. During partial crossing a finished cart cannot retreat, and after clearing it stays entirely on the staging side. No physics engine added.
+
+The original approach ropes are clipped at the strip and connected through a short neck to a 16m-wide, 16m-deep yard. No cap, separate pad or relocated spawn. Its far boundary can join a later race; no Championship logic or extra course implemented. Finished carts bump and yield to unfinished arrivals. Stage debris is ignored by unfinished carts to prevent permanent finish blocking. All 12 materials, 192-pile cap, checkpoint scoring, automatic board and Beam Carry preserved. Pair contacts are bounded O(8²); rendering reuses spike/bolt geometry and materials.
+
+Tests cover exact continuous pose/speed at finish, traversable ramp and blocked reverse, preserved approach ropes/open neck, post-finish spills/reload and immutable official scores, pushable contacts, real two-client staging spills/results/reconnect/replay, materials, eight clients and Beam Carry. Browser keyboard play verified continuous finish travel at speed, staging spill/reload with an unchanged official 27.87s/0-spill result, and reverse blocking. Final local production build and complete suite: **59 passed, zero failures/skips**. One earlier Beam Carry network run timed out while browser QA was active; the unchanged Beam test passed in the clean final suite. Deployment remains pending until GitHub push and Render/public verification. Physical laptop+iPhone acceptance of this update remains pending; see PLAYTEST.md.
+
+---
+
 # Finish hotfix verified publicly — October 27, 2026
 
 Live URL: https://break-time-9n1k.onrender.com . Render deploy dep-dbgmodflk1mc738vl3q0 is live with source **bca25d93e1558c3eafa700cafa5a6fcc9135f375**, build **BREAK TIME · Finish fix 1**, protocol **7**. The source fix is pushed to GitHub. Existing approved service/plan/ropes/course/modes are unchanged.

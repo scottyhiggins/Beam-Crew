@@ -3,7 +3,7 @@ import { randomInt } from 'node:crypto';
 import { CrewState, Player, RaceResult, SpilledMaterial, BeamTeam } from './state.js';
 import { CONFIG, movement } from '../shared/movement.js';
 import { GRIPS, gripPosition, nearestGrip, resetBeam, stepBeam, workerCollides } from '../shared/beam.js';
-import { WHEEL_CONFIG, resetCart, stepCart, finishCarts, spillMaterial, stepMaterial, compareResults, shouldEndRace } from '../shared/wheelbarrow.js';
+import { collideStagingCarts, WHEEL_CONFIG, resetCart, stepCart, finishCarts, spillMaterial, stepMaterial, compareResults, shouldEndRace } from '../shared/wheelbarrow.js';
 import {validMaterial} from '../shared/materials.js';
 export const roomsByCode=new Map<string,CrewRoom>();
 const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -101,15 +101,15 @@ export class CrewRoom extends Room<CrewState> {
     }
     if(this.state.phase==='test'&&this.state.mode==='wheel'){
       if(this.state.racePhase==='countdown'){this.state.countdown=Math.max(0,this.state.countdown-dt);if(this.state.countdown===0)this.state.racePhase='racing';return;}
-      if(this.state.racePhase==='results'){for(const p of this.state.players.values())if(p.finishOrder)stepCart(p,p.connected&&now-p.lastInput<300?p.inputX:0,p.connected&&now-p.lastInput<300?p.inputZ:0,dt);return;}
-      if(this.state.racePhase!=='racing')return;
-      this.state.elapsed+=dt;
+      if(this.state.racePhase!=='racing'&&this.state.racePhase!=='results')return;
+      if(this.state.racePhase==='racing')this.state.elapsed+=dt;
       const players=Array.from(this.state.players.values());
       const material=Array.from(this.state.material);
       stepMaterial(material,dt);
       for(const p of players){const active=p.connected&&now-p.lastInput<300,spills=p.spills;stepCart(p,active?p.inputX:0,active?p.inputZ:0,dt,material);
         if(p.spills>spills)spillMaterial(p,material,value=>{const brick=new SpilledMaterial();Object.assign(brick,value);this.state.material.push(brick);material.push(brick);});
       }
+      collideStagingCarts(players);
       this.state.finishCount=finishCarts(players,this.state.elapsed,this.state.finishCount);
       if(this.state.finishCount&&this.state.firstFinishAt<0)this.state.firstFinishAt=this.state.elapsed;
       this.reconcileWheelResults();
