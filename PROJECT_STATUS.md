@@ -1,3 +1,21 @@
+# BREAK TIME is public — October 27, 2026
+
+**Verified playable URL: https://break-time-9n1k.onrender.com**
+
+Render service srv-dbglagdg1s2s73bmg9u0 is live in the confirmed My Workspace, Oregon, one 0.5c-512mb instance on the explicitly approved approximately $7/month base plan. User reported $0 credits and added payment details directly to Render. Budget remains $10/month; no extra services were created. Auto-deploy off; /health configured. Live deploy dep-dbglie6gekts73897epg serves gameplay commit e57c254d04de9cdd195712e6419e910321ce2aa4.
+
+Production build/TypeScript passed on Render. HTTPS/WSS public smoke passed. **Full public-server suite: 49 passed, zero failed/skipped**. Browser smoke also verified two clients, room invite link, material selection, countdown and rendered carts/course/rope. Runtime error query was empty; observed small-load CPU/memory usage remained well inside the approved plan. Details, deployment fix, service settings and repeatable verification commands are in DEPLOYMENT.md.
+
+Public-network testing exposed assumptions in local test scripts: initial/reconnect state was read too early, one-sided resets were asserted before the other peer synchronized, and a beam driver braked too late with WAN latency. Tests now wait for both peers and use feedback braking. Production gameplay logic was unchanged during these test refinements.
+
+Remaining human checks: physical iPhone portrait/landscape, cellular joining while laptop server is off, simultaneous-team readability, long-run touch performance and fun/balance. Browser smoke observed the existing explicit Leave sometimes showing a reconnect message; refresh returns to the lobby. No lobby behavior changes were made; record this for a focused follow-up rather than mixing it into deployment. No Milestone 5, championships, briefing, new courses, trivia, crane or economy implementation.
+
+Backup branch and external recovery bundle remain intact. Gameplay source e57c254 is pushed; follow-up deployment/test/docs commits may require GitHub Desktop Push origin if CLI authentication remains unavailable. Keep the existing untracked helpers/work folder untouched. Updating docs/test files does not require restarting the live server.
+
+---
+
+## Historical implementation and preparation notes (superseded above)
+
 # BREAK TIME — October 27, 2026 competition preparation
 
 This section supersedes historical milestone restrictions below. The user explicitly authorized gameplay fixes, the BREAK TIME title and public deployment preparation. Public service activation is still pending account access/credit inspection and the user's explicit paid-service approval. Budget up to $10/month, use credits first. No service was activated; no public URL is verified.

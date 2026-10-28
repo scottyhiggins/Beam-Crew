@@ -1,6 +1,6 @@
 # BREAK TIME — competition readiness checklist
 
-Close the previous server, relaunch Start-BeamCrew.cmd, confirm BREAK TIME and refresh both browsers. Laptop http://localhost:2571; iPhone on the same Wi-Fi at http://<current-laptop-IPv4>:2571. For public testing use only the verified HTTPS service URL from Render. Record device/iOS/browser, network, player count and any error text.
+Close the previous server, relaunch Start-BeamCrew.cmd, confirm BREAK TIME and refresh both browsers. Laptop http://localhost:2571; iPhone on the same Wi-Fi at http://<current-laptop-IPv4>:2571. Public play URL: https://break-time-9n1k.onrender.com . The full 49-test suite passed against this public server; physical iPhone acceptance remains pending. Record device/iOS/browser, network, player count and any error text.
 
 ## Wheelbarrow fixes
 
@@ -22,10 +22,12 @@ Close the previous server, relaunch Start-BeamCrew.cmd, confirm BREAK TIME and r
 2. Compare aggressive versus careful laps for each hazard pair. Sticky slows, rolling coasts, fixed blocks, heavy pushes, bumpy adds risk, rough raises spill risk over an area. Identical base steering/stability/speed. Verify piles remain bounded after repeated spills.
 3. Race/restart for at least 10 minutes on physical iPhone, including an eight-player room. Watch frame rate, input latency, heat and memory/resource accumulation. Test app backgrounding, rejoin within 30 seconds and stale-server rejection after relaunch. Automated geometry/network success does not establish phone performance or fun.
 
-## Public competition gate (once deployed)
+## Public competition gate (deployed)
 
 1. Verify actual HTTPS URL and /health protocol 6; run pnpm smoke:public with that URL. Room codes and links must work over secure WebSockets.
 2. Turn off the laptop game server. Join from iPhone cellular and another device/network; complete both modes, results and replay. This proves the public game runs independently of the laptop.
 3. Verify Render single instance, credits/actual bill and no unapproved paid add-ons. Avoid deployment/restart during a match; rooms/results are in-memory. Record the exact successful public URL and deployed commit.
 
 Mark pass/fail and report screenshots/errors, device model, delay, most confusing action and whether another round feels fun. Graphics polish, championships, briefing, trivia, crane and rewards remain future work.
+
+Observed browser recovery quirk: after explicitly leaving, a reconnect message may appear. Refresh to start from a clean lobby; record whether the same occurs on iPhone. This pre-existing behavior was not changed in the deployment pass.

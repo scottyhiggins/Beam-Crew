@@ -9,19 +9,19 @@ test('two racers synchronize countdown, independent carts, reconnect, finish and
  const client=new Client(endpoint!.replace(/^http/,'ws'));let host:Room|undefined,guest:Room|undefined,timer:ReturnType<typeof setInterval>|undefined;
  try{
   host=await client.create('crew',{name:'Cart host'});guest=await client.joinById(host.roomId,{name:'Cart guest'});
-  await until(()=>host!.state.players.size===2);guest.send('mode','wheel');await pause(120);assert.equal(host.state.mode,'competitive');
-  host.send('mode','wheel');await until(()=>guest!.state.mode==='wheel');host.send('start');await until(()=>guest!.state.racePhase==='countdown');
+  await until(()=>host!.state.players?.size===2);guest.send('mode','wheel');await pause(120);assert.equal(host.state.mode,'competitive');
+  host.send('mode','wheel');await until(()=>guest!.state.mode==='wheel');host.send('start');await until(()=>guest!.state.racePhase==='countdown'&&host!.state.racePhase==='countdown');
   const hx=host.state.players.get(host.sessionId).x,gx=host.state.players.get(guest.sessionId).x;assert.notEqual(hx,gx);
   host.send('input',{x:1,z:0});await pause(250);assert.equal(host.state.players.get(host.sessionId).x,hx);
   guest.send('restart');await pause(100);assert.equal(host.state.raceResets,1);
   await until(()=>guest!.state.racePhase==='racing');
-  const id=guest.sessionId,token=guest.reconnectionToken;guest.connection.close();await until(()=>!host!.state.players.get(id).connected);guest=await client.reconnect(token);await until(()=>host!.state.players.get(id).connected);assert.equal(guest.sessionId,id);
+  const id=guest.sessionId,token=guest.reconnectionToken;guest.connection.close();await until(()=>!host!.state.players.get(id).connected);guest=await client.reconnect(token);await until(()=>host!.state.players.get(id).connected&&guest!.state.players?.has(id));assert.equal(guest.sessionId,id);
   timer=setInterval(()=>{const p=host!.state.players.get(host!.sessionId),target=WHEEL_COURSE[Math.min(p.checkpoint,WHEEL_COURSE.length-1)],dx=target.x-p.x,dz=(p.checkpoint===WHEEL_COURSE.length?-20:target.z)-p.z,len=Math.hypot(dx,dz);host!.send('input',{x:dx/len*.55,z:dz/len*.55});},30);
   await until(()=>guest!.state.players.get(host!.sessionId).finishOrder===1,35000);
   clearInterval(timer);timer=undefined;
   const winner=guest.state.players.get(host.sessionId);assert.ok(winner.finishTime>0);assert.equal(winner.spills,0);assert.equal(guest.state.players.get(id).finishOrder,0);assert.equal(guest.state.players.get(id).z,7);
   assert.equal(guest.state.racePhase,'racing');
-  const finishedX=winner.x,finishedZ=winner.z;host.send('input',{x:1,z:1});await pause(150);assert.ok(guest.state.players.get(host.sessionId).x>finishedX);assert.ok(guest.state.players.get(host.sessionId).z>=finishedZ);assert.equal(guest.state.players.get(host.sessionId).finishOrder,1);assert.equal(guest.state.players.get(host.sessionId).finishTime,winner.finishTime);
+  host.send('input',{x:0,z:0});await pause(650);const finishedX=winner.x,finishedZ=winner.z;host.send('input',{x:1,z:1});await until(()=>guest!.state.players.get(host!.sessionId).x>finishedX+.02&&guest!.state.players.get(host!.sessionId).z>finishedZ+.02);assert.ok(guest.state.players.get(host.sessionId).x>finishedX);assert.ok(guest.state.players.get(host.sessionId).z>=finishedZ);assert.equal(guest.state.players.get(host.sessionId).finishOrder,1);assert.equal(guest.state.players.get(host.sessionId).finishTime,winner.finishTime);
   assert.equal(guest.state.results.length,1);assert.equal(guest.state.results[0].place,1);
   timer=setInterval(()=>{const p=guest!.state.players.get(id),target=WHEEL_COURSE[Math.min(p.checkpoint,WHEEL_COURSE.length-1)],dx=target.x-p.x,dz=(p.checkpoint===WHEEL_COURSE.length?-20:target.z)-p.z,len=Math.hypot(dx,dz);guest!.send('input',{x:dx/len*.55,z:dz/len*.55});},30);
   await until(()=>host!.state.racePhase==='results',35000);clearInterval(timer);timer=undefined;
@@ -45,6 +45,6 @@ test('spilled material synchronizes to both racers and survives reload and recon
   await until(()=>host!.state.players.get(host!.sessionId).reload===0);assert.equal(host.state.material.length,count);
   const token=guest.reconnectionToken;guest.connection.close();await until(()=>!host!.state.players.get(guest!.sessionId).connected);guest=await client.reconnect(token);await until(()=>guest!.state.material?.length===count);
   assert.deepEqual(Array.from(guest.state.material,(b:any)=>[b.x,b.z,b.amount]),Array.from(host.state.material,(b:any)=>[b.x,b.z,b.amount]));
-  host.send('restart');await until(()=>guest!.state.racePhase==='countdown'&&guest!.state.material.length===0);assert.equal(host.state.material.length,0);
+  host.send('restart');await until(()=>guest!.state.racePhase==='countdown'&&guest!.state.material.length===0&&host!.state.material.length===0);assert.equal(host.state.material.length,0);
  }finally{if(timer)clearInterval(timer);await Promise.allSettled([host,guest].filter((r):r is Room=>!!r&&r.connection.isOpen).map(r=>r.leave()));}
 });

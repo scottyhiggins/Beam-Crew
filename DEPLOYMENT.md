@@ -1,3 +1,28 @@
+# Verified live BREAK TIME — October 27, 2026
+
+**Public play URL: https://break-time-9n1k.onrender.com**
+
+- Render workspace: My Workspace (tea-dbgkg8sipgvc73dr3rtg), explicitly confirmed by the user.
+- Service: srv-dbglagdg1s2s73bmg9u0; one Oregon Node instance, 0.5c-512mb (formerly Starter), approximately $7/month base. User approved this paid service within a $10/month budget, reported $0 credits, and added a payment method. No other resources were created.
+- Dashboard: https://dashboard.render.com/web/srv-dbglagdg1s2s73bmg9u0
+- Live deploy: dep-dbglie6gekts73897epg, source e57c254d04de9cdd195712e6419e910321ce2aa4. Render reported live at 2026-10-28T02:09:30Z (October 27 in America/Denver).
+- Build: corepack pnpm install --frozen-lockfile --prod=false && corepack pnpm run build
+- Start: node build/server/index.js; Node 24.22.1; NODE_ENV=production; HTTP health check /health; protocol 6. Auto-deploy is off to prevent interrupting matches.
+- The first build failed at corepack enable because /usr/bin/pnpm is read-only. The corrected direct corepack command succeeded. The user saved the build command and /health in Dashboard; render.yaml now matches.
+- Public smoke passed: HTTPS/title/health/protocol, WSS, two-client room-code lookup/join, assigned beam ends and Wheelbarrow countdown.
+- Full suite against TEST_URL=https://break-time-9n1k.onrender.com: **49 passed, zero failed/skipped**. Automated drivers now wait for both clients' synchronized state and brake using feedback to handle public-network latency. No game physics or controls changed for those test refinements.
+- Public browser smoke passed creating a room, following its invite link with a second client, selecting materials, and showing synchronized Wheelbarrow countdown/course/carts/rope. Preview saved outside the repo as BREAK-TIME-public-race.png in the chat workspace.
+- Runtime error-log query after launch returned no errors. Observed one-minute CPU samples stayed below .03 CPU and memory below about 56 MB during these tests, versus .5 CPU/512 MB allocated. This is a small functional load check, not a production capacity guarantee.
+- Physical iPhone/cellular performance and fun acceptance remain human tests. Browser smoke also observed a pre-existing Leave-room reconnect-message quirk; refreshing returns to a clean lobby. Lobby behavior was not changed in this release. Track that small client recovery issue separately.
+
+Run pnpm smoke:public https://break-time-9n1k.onrender.com for a short recheck. Avoid deploying/restarting during a race: rooms/results are in-memory. For an intentional new release, push the tested source and trigger exactly one manual deploy for this same service, then verify its deploy ID, /health and multiplayer. Code for this game does not run on the laptop in production.
+
+The ready production gameplay commit e57c254 is already on GitHub. Local follow-up commits contain the build recipe, network-test refinements and this record; if CLI authentication fails, GitHub Desktop → Beam-Crew → main → Push origin publishes them. Auto-deploy remains off, so documentation/test-only pushes do not restart the live game.
+
+---
+
+## Historical preparation and account handoff (superseded above)
+
 # BREAK TIME — public hosting handoff
 
 Status October 27, 2026: source/build/test preparation complete; **no service activated and no verified public play URL**. Do not call deployment finished until the checks below pass.
