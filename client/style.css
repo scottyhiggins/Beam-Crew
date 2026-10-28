@@ -19,3 +19,7 @@ h1{font-size:43px;line-height:1;letter-spacing:-2px;font-weight:950;color:var(--
 #panel.connected>label,#panel.connected>#create,#panel.connected>.join,#panel.connected>.eyebrow,#panel.connected>.eyebrow+p{display:none}#panel.connected h1{font-size:32px}#panel.connected #status{margin:8px 0}#panel.connected #room h2{margin:12px 0}#panel.connected #players{display:flex;gap:5px;flex-wrap:wrap}#panel.connected #players li{font-size:13px;margin:3px 0;padding:7px}#panel.connected #help{margin-bottom:0}
 
 #panel{z-index:2}#menu{z-index:3}#hud.menu-open>*:not(#menu){visibility:hidden}
+
+/* The drawing buffer follows this exact display size; UI remains native DOM text. */
+body>canvas{position:fixed;inset:0;width:100%;height:100dvh;display:block;transform:none;filter:none}
+#raceResults{left:12px;right:12px;margin-inline:auto;transform:none}

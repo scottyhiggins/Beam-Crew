@@ -1,5 +1,7 @@
 import {makeWorker,animateWorker,scenery,paintArrow} from './polish';
-import {createSpillVisual} from './spill-visual';
+import {createSpillVisual,spillSignature,updateSpillVisual} from './spill-visual';
+import {planSpills} from './spill-plan';
+import {renderRatio,ResolutionGovernor} from './render-resolution';
 import {createLoadVisual} from './load-visual';
 import * as THREE from 'three';
 import { Client, Room } from 'colyseus.js';
@@ -95,7 +97,16 @@ const scene=new THREE.Scene();scene.background=new THREE.Color(0xb8e1e4);scene.f
 const camera=new THREE.PerspectiveCamera(50,innerWidth/innerHeight,.1,100);camera.position.set(0,15,18);
 let renderer:THREE.WebGLRenderer;
 try{renderer=new THREE.WebGLRenderer({antialias:true});}catch{status('This browser cannot start 3D graphics. Try a browser with WebGL enabled.');throw Error('WebGL unavailable');}
-renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(innerWidth,innerHeight);document.body.prepend(renderer.domElement);
+document.body.prepend(renderer.domElement);
+const resolution=new ResolutionGovernor();let displayDpr=devicePixelRatio;
+function resizeRenderer(){
+ const width=Math.max(1,renderer.domElement.clientWidth),height=Math.max(1,renderer.domElement.clientHeight);
+ displayDpr=devicePixelRatio;const ratio=renderRatio(width,height,displayDpr,matchMedia('(pointer:coarse)').matches,resolution.scale);
+ renderer.setPixelRatio(ratio);renderer.setSize(width,height,false);
+ camera.aspect=width/height;camera.updateProjectionMatrix();
+}
+resizeRenderer();new ResizeObserver(resizeRenderer).observe(renderer.domElement);
+window.visualViewport?.addEventListener('resize',resizeRenderer);
 scene.add(new THREE.HemisphereLight(0xffffff,0x728f8b,2.2));const sun=new THREE.DirectionalLight(0xffebc5,2.3);sun.position.set(8,20,10);scene.add(sun);
 scenery(scene);
 renderer.outputColorSpace=THREE.SRGBColorSpace;
@@ -113,12 +124,12 @@ for(let i=0;i<2;i++){const mascot=makeWorker(colors[i]);mascot.position.set(2+i*
 const workers=new Map<string,THREE.Group>();
 function worker(color:number){const g=makeWorker(color);scene.add(g);return g;}
 let previous=performance.now();
-function frame(now:number){requestAnimationFrame(frame);const dt=Math.min((now-previous)/1000,.1);previous=now;const state=room?.state;lobbyCrew.visible=!room;
+function frame(now:number){requestAnimationFrame(frame);const frameMs=now-previous;const dt=Math.min(frameMs/1000,.1);previous=now;if(resolution.sample(frameMs,!document.hidden)||displayDpr!==devicePixelRatio)resizeRenderer();const state=room?.state;lobbyCrew.visible=!room;
   for(const [id,g]of workers){if(!state?.players?.has(id)){disposeVisual(g);workers.delete(id);}}
   state?.players?.forEach((p:any,id:string)=>{let g=workers.get(id);if(!g){g=worker(colors[p.color]);g.position.set(p.x,0,p.z);workers.set(id,g);}animateWorker(g,Math.hypot(p.x-g.position.x,p.z-g.position.z)*8,state.mode==='wheel'||p.grip>=0,now);const blend=1-Math.exp(-18*dt);g.position.x+=(p.x-g.position.x)*blend;g.position.z+=(p.z-g.position.z)*blend;const difference=Math.atan2(Math.sin(p.rotation-g.rotation.y),Math.cos(p.rotation-g.rotation.y));g.rotation.y+=difference*blend;g.position.y=(state.mode==='wheel'?rampHeight(p.x,p.z):0)+Math.sin(now*.008+p.color)*.025;g.visible=p.connected;});
   const me=room&&workers.get(room.sessionId);const target=me?.position??new THREE.Vector3();camera.position.lerp(new THREE.Vector3(target.x,15,target.z+18),1-Math.exp(-4*dt));camera.lookAt(target.x,0,target.z);updateBeamVisual(state,dt,now);updateWheelVisual(state,dt,now);renderer.render(scene,camera);
 }
-requestAnimationFrame(frame);window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+requestAnimationFrame(frame);window.addEventListener('resize',resizeRenderer);
 
 
 function label(text:string,color='#172d3c',width=3,square=false){
@@ -247,7 +258,7 @@ for(let row=0;row<3;row++)for(let i=0;i<14;i++)box(.4,.025,.13,(i+row)%2?0xfffff
 box(16,.04,16,0xbfa780,-3,.015,-28,wheelCourseVisual);
 // Staging uses the same construction ground; no extra colored pad.
 const carts=new Map<string,{root:THREE.Group;tray:THREE.Group;load:THREE.Group;tag:THREE.Sprite}>();
-const materialMeshes:THREE.Mesh[]=[];
+const materialMeshes:THREE.Group[]=[];
 let wheelReset=-1;
 function renderWheelHud(state:any,me:any){
   if(!me)return;
@@ -266,7 +277,15 @@ function updateWheelVisual(state:any,dt:number,now:number){
   for(const [id,c]of carts){c.root.visible=active&&!!state?.players.get(id)?.connected;if(!state?.players.has(id)){disposeVisual(c.root);carts.delete(id);}}
   while(materialMeshes.length>(active?state.material.length:0)){scene.remove(materialMeshes.pop()!);}
   if(!active)return;
-  state.material.forEach((b:any,i:number)=>{let mesh=materialMeshes[i];const id=b.materialId??6;if(!mesh||mesh.userData.materialId!==id){if(mesh)scene.remove(mesh);mesh=createSpillVisual(id);mesh.userData.materialId=id;mesh.userData.born=now;scene.add(mesh);materialMeshes[i]=mesh;}const age=(now-mesh.userData.born)/1000;const bounce=age<.55?Math.sin(age/.55*Math.PI)*.35:0;mesh.position.set(b.x,.035+bounce,b.z);mesh.rotation.y=i*2.399;mesh.rotation.z=age<.55?Math.sin(age*12)*.2:0;mesh.scale.y=Math.min(2,1+(b.amount-1)*.08);});
+  const spillPlans=planSpills(state.material);
+  state.material.forEach((b:any,i:number)=>{const plan=spillPlans[i];let visual=materialMeshes[i];
+    if(!visual||visual.userData.signature!==spillSignature(plan)){
+      const born=visual?.userData.born??now;if(visual)scene.remove(visual);
+      visual=createSpillVisual(plan);visual.userData.born=born;scene.add(visual);materialMeshes[i]=visual;
+    }
+    visual.position.set(b.x,.045,b.z);visual.rotation.y=i*2.399;
+    updateSpillVisual(visual,plan,(now-visual.userData.born)/1000);
+  });
   state.players.forEach((p:any,id:string)=>{
     let c=carts.get(id);if(!c){
       const root=new THREE.Group(),tray=new THREE.Group(),load=new THREE.Group();root.add(tray);tray.add(load);scene.add(root);

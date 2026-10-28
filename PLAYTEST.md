@@ -1,3 +1,13 @@
+# Visual polish 2 public acceptance
+
+1. Refresh laptop and iPhone at https://break-time-9n1k.onrender.com . Confirm **BREAK TIME · Visual polish 2**, then create a fresh room (use separate networks for one run).
+2. Compare hard-hat edges, pipes, ropes and ground arrows while still and driving. Menu/HUD text should remain crisp. Check portrait/landscape and browser zoom; canvas should fill the view without stretching. Play for 5–10 minutes on iPhone, including a busy spill area; report device/browser, smoothness, heat and any sustained blur. Adaptive resolution can soften the 3D scene under sustained load, while DOM text stays crisp.
+3. Choose each material and make one spill. Across both clients, a spill totals 2 barricades or hose coils; 5 PVC pipes or rebar rods; 6 bricks or cinder blocks; 4 lumber boards or plywood offcuts; 12 gravel/rubble pieces. Cement/sand spread one load across smaller patches. Additional ground spill marks remain hazardous; they are not additional complete loads.
+4. Confirm cylinders stay round/hollow, rebar ribbed, cinder blocks open, boards flat, piles recognizable. Check repeated spills, reload and reconnect: debris persists and quantities agree between clients.
+5. Repeat Beam Carry, normal Wheelbarrow race, spike-strip finish, staging, reverse blocking, bumps/spills and final-score freezing. Championship/Crane/Trivia are not available in this release.
+
+---
+
 # Visual polish 1 acceptance
 
 Refresh both devices and confirm **Visual polish 1**, then create a fresh room.

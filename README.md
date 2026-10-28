@@ -1,3 +1,9 @@
+# BREAK TIME — Visual polish 2
+
+Play: https://break-time-9n1k.onrender.com . Focused fixes for adaptive rendering sharpness and one-load spill quantities; network protocol remains 8. Production build and **64 local automated tests passed**, zero failures/skips. Physical iPhone sharpness/frame-rate/heat acceptance is in PLAYTEST.md. Championship is **planning only** in [CHAMPIONSHIP_PLAN.md](CHAMPIONSHIP_PLAN.md); no new modes/courses were added. Deployment/public verification is recorded in DEPLOYMENT.md after release.
+
+---
+
 # BREAK TIME — Visual polish 1
 
 Play: https://break-time-9n1k.onrender.com . Verified public release: **ca5ec181e53453a075910ceb356d310001386c57**, Render deploy **dep-dbh3fbsipgvc73dm2ju0** live October 28, 2026. Public HTTPS/WSS smoke passed; **60 tests passed against Render**, zero failures/skips. Public browser shows Visual polish 1 and no console errors; Render post-deploy error query returned no entries. GitHub Desktop published the release successfully after CLI push stalled. Refresh both devices and create a fresh room for physical iPhone visual/performance acceptance. This documentation follow-up needs no deployment; auto-deploy remains off.

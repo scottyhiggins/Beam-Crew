@@ -1,3 +1,29 @@
+# Visual polish 2 — focused sharpness and spill quantity fixes
+
+Build **BREAK TIME · Visual polish 2**, protocol **8**. October 28, 2026. The accepted Visual polish 1 remains recoverable: branch `codex/pre-visual-polish2-20261028` at `034a68f`, existing `codex/pre-graphics-20261028` untouched, external `Beam-Crew-pre-visual-polish2-20261028.bundle` in the ChatGPT project workspace. Previous live deploy `dep-dbh3fbsipgvc73dm2ju0` used gameplay source `ca5ec18`.
+
+## Sharpness
+
+The old renderer capped device pixel ratio at 1.5 and only resized its buffer on a window resize. Antialiasing was already enabled. The canvas now uses an explicit fixed viewport display size, matching drawing-buffer dimensions, with no CSS transform/filter; resize observation handles orientation/address-bar changes and DPR changes handle zoom/display moves. HUD and menus stay native DOM text, outside the adaptive 3D buffer. The results panel no longer uses a centering transform.
+
+Start at up to 2x DPR, capped at 2 million drawing-buffer pixels on coarse-pointer devices and 5 million on desktop. Two sustained slow 3-second windows lower the resolution multiplier, while thirty seconds of frame-rate headroom raises it gradually. Background gaps reset sampling. Normal laptop rendering never drops below one buffer pixel per CSS pixel; on very large displays the explicit pixel budget still applies. No postprocessing, extra lighting, high-performance GPU request, or native 3x iPhone full-resolution rendering was added. Physical iPhone sharpness, sustained frame rate and heat need acceptance testing; browser viewport tests cannot establish thermal behavior.
+
+## Spill quantities and unchanged difficulty
+
+Root cause: the server correctly emits six hazard records per spill, but Visual polish 1 rendered a whole loaded arrangement for each record. The fix distributes one load across those six unchanged records. Counts: PVC/rebar 5, mini barricades/hose 2, bricks/blocks 6, lumber/plywood 4, gravel/rubble 12. Cement/sand use six smaller patches whose combined modeled volume is one load.
+
+Client allocation is deterministic from ordered synchronized records and `amount`. Each solid object's original mesh parts, shape and colors are retained; cached baked pieces use at most one draw call per record. Empty fractional-object slots have a visible ground spill mark, so their existing collision/effect zones do not become invisible. All six server hazards, radii, material effects, permanent persistence, scoring and synchronization are unchanged. Repeated spills and existing cap aggregation retain quantities; extreme aggregated piles retain a bounded visual representation (up to 12 visible pieces per record), with unchanged server amounts/effects.
+
+All twelve materials were visually inspected loaded versus a complete six-record spill. Automated checks compare total object counts, geometry vertex totals, color histograms, loose volume, cache reuse and capped mixed-material aggregation. A new real two-client test spills every material, compares deterministic presentation on both clients, and verifies reload persistence/reconnect. Initial test-driver fence stopping and stale previous-round reads were corrected in tests only.
+
+## Championship planning only
+
+See CHAMPIONSHIP_PLAN.md: ten distinct modules, unique randomized 3/5/10-course routes, standardized continuous connectors/shared yards, no teleports/loading screens, last-finisher synchronized 3-second countdown, material persistence, cumulative spills/time and champion/most-spills/slowest awards. It covers a finite city construction corridor, instancing/culling/fog and mobile budgets. Implementation gates are two connected courses first, then ordering/scoring, then expansion toward ten. No courses, Championship runtime, Crane Challenge, Trivia or new city scenery were implemented.
+
+Final production build and all **64 local tests passed**, zero failures/skips, including all twelve materials across two connected clients. Canvas buffer/display dimensions matched at desktop and phone viewport sizes with no CSS transform/filter. Public deployment verification is pending.
+
+---
+
 # Milestone 5 — Visual polish 1 — October 28, 2026
 
 Build **BREAK TIME · Visual polish 1**, protocol **8**. Connected finish 1 passed the user's five-check acceptance gate. This release changes presentation only: rounded hard hats, faces, reflective vests, boots and walk/carry poses; cart rims, grips, supports and hubs; Beam Carry fasteners; site office, excavator, scaffolding, lumber and trees; grounded scenery, warm lighting, contact shadows and worn ground-painted arrows; compact connected lobby, title, HUD and results styling.
