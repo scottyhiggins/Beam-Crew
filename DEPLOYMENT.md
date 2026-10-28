@@ -16,7 +16,7 @@ The ready Blueprint is render.yaml:
 
 - Name break-time (Render may assign a suffix if taken); source https://github.com/scottyhiggins/Beam-Crew, branch main; Oregon region.
 - Node 24.22.1; NODE_ENV=production; one instance. Rooms live in memory, so replicas would split room lookup and joins.
-- Build: corepack enable && pnpm install --frozen-lockfile --prod=false && pnpm run build
+- Build: corepack pnpm install --frozen-lockfile --prod=false && corepack pnpm run build
 - Start: node build/server/index.js
 - Health check: /health
 - Auto-deploy off. Publish only a tested commit between matches; a server restart/deploy destroys in-memory rooms and results.
