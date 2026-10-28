@@ -30,7 +30,7 @@ export class CrewRoom extends Room<CrewState> {
       p.grip=grip;p.vx=p.vz=0;this.positionCarrier(p);this.feedback(p,`Gripping ${grip+1} — press again to release`);
     });
     this.onMessage('signal',(c,value)=>{const p=this.state.players.get(c.sessionId);if(p&&['LIFT','WAIT','LEFT','RIGHT'].includes(value)&&Date.now()-p.lastSignal>500){p.signal=value;p.lastSignal=Date.now();p.signalUntil=Date.now()+2000;}});
-    this.onMessage('mode',(c,value)=>{if(c.sessionId===this.state.host&&this.state.phase==='lobby'&&['beam','wheel','competitive'].includes(value))this.state.mode=value;});
+    this.onMessage('mode',(c,value)=>{if(c.sessionId===this.state.host&&this.state.phase==='lobby'&&['beam','wheel','competitive'].includes(value))this.state.mode=value==='beam'?'competitive':value;});
     this.onMessage('material',(c,id)=>{const p=this.state.players.get(c.sessionId);if(p&&this.state.phase==='lobby'&&validMaterial(id))p.materialId=id;});
     this.onMessage('start',c=>{if(c.sessionId===this.state.host&&this.state.phase==='lobby'&&this.clients.length>=2){this.restart(false);this.state.phase='test';this.lock();}});
     this.onMessage('reset',c=>{if(c.sessionId===this.state.host&&this.state.phase==='test'&&Date.now()-this.lastReset>1000){this.restart(true);}});
@@ -42,11 +42,11 @@ export class CrewRoom extends Room<CrewState> {
   restart(checkpoint:boolean){
     this.lastReset=Date.now();
     if(this.state.mode==='competitive'){
-      this.state.teams.clear();this.state.elapsed=0;this.state.racePhase='countdown';this.state.countdown=3;
+      this.state.teams.clear();this.state.raceResets++;this.state.elapsed=0;this.state.racePhase='countdown';this.state.countdown=3;
       const players=[...this.state.players.entries()].filter(([,p])=>p.connected);
       for(const p of this.state.players.values()){p.team=p.end=p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;}
-      for(let i=0;i+1<players.length;i+=2){const b=new BeamTeam();b.name='Team '+(i/2+1);b.members=players[i][1].name+' + '+players[i+1][1].name;this.state.teams.push(b);
-        for(let end=0;end<2;end++){const p=players[i+end][1];p.team=i/2;p.end=end===0?0:7;const point=gripPosition(b,p.end);p.x=point.x;p.z=point.z;}}
+      for(let i=0;i+1<players.length;i+=2){const b=new BeamTeam();b.resets=this.state.raceResets;b.name='Team '+(i/2+1);b.members=players[i][1].name+' + '+players[i+1][1].name;this.state.teams.push(b);
+        for(let end=0;end<2;end++){const p=players[i+end][1];p.team=i/2;p.end=end===0?0:7;p.rotation=b.angle-GRIPS[p.end].side*Math.PI/2;const point=gripPosition(b,p.end);p.x=point.x;p.z=point.z;}}
       for(const [,p] of players)if(p.team<0){p.x=8;p.z=7;this.feedback(p,'Spectating this round — Wheelbarrow supports odd counts');}
       return;
     }
@@ -70,11 +70,19 @@ export class CrewRoom extends Room<CrewState> {
     const p=this.state.players.get(c.sessionId);if(!p)return;
     p.connected=false;p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;this.transferHost(c.sessionId);
     try{if(consented)throw Error('left');await this.allowReconnection(c,CONFIG.reconnectSeconds);p.connected=true;p.lastInput=Date.now();this.feedback(p,this.state.mode==='wheel'?'Reconnected — continue racing':'Reconnected — grab again when ready');if(!this.state.host)this.state.host=c.sessionId;}
-    catch{this.state.players.delete(c.sessionId);this.transferHost(c.sessionId);}
+    catch{this.state.players.delete(c.sessionId);this.transferHost(c.sessionId);this.reconcileWheelResults();}
+  }
+  reconcileWheelResults(){
+    if(this.state.phase!=='test'||this.state.mode!=='wheel'||this.state.racePhase!=='racing')return;
+    const players=[...this.state.players.values()];
+    for(const p of players)if(p.finishOrder&&!this.state.results.some(r=>r.finishOrder===p.finishOrder)){const result=new RaceResult();Object.assign(result,{name:p.name,color:p.color,spills:p.spills,time:p.finishTime,finishOrder:p.finishOrder});this.state.results.push(result);}
+    [...this.state.results].sort(compareResults).forEach((r,i)=>{r.place=i+1;});
+    if(shouldEndRace(players,this.state.elapsed,this.state.firstFinishAt))this.state.racePhase='results';
   }
   transferHost(id:string){if(this.state.host===id)this.state.host=Array.from(this.state.players.entries()).find(([key,p])=>key!==id&&p.connected)?.[0]??'';}
   tick(dt:number){
     const now=Date.now();
+    for(const p of this.state.players.values()){if(p.signalUntil<now)p.signal='';if(p.feedbackUntil<now)p.feedback='';}
     if(this.state.phase==='test'&&this.state.mode==='competitive'){
       if(this.state.racePhase==='countdown'){this.state.countdown=Math.max(0,this.state.countdown-dt);if(!this.state.countdown)this.state.racePhase='racing';return;}
       if(this.state.racePhase!=='racing')return;
@@ -104,9 +112,7 @@ export class CrewRoom extends Room<CrewState> {
       }
       this.state.finishCount=finishCarts(players,this.state.elapsed,this.state.finishCount);
       if(this.state.finishCount&&this.state.firstFinishAt<0)this.state.firstFinishAt=this.state.elapsed;
-      for(const p of players)if(p.finishOrder&&!this.state.results.some(r=>r.finishOrder===p.finishOrder)){const result=new RaceResult();Object.assign(result,{name:p.name,color:p.color,spills:p.spills,time:p.finishTime,finishOrder:p.finishOrder});this.state.results.push(result);}
-      [...this.state.results].sort(compareResults).forEach((r,i)=>{r.place=i+1;});
-      if(shouldEndRace(players,this.state.elapsed,this.state.firstFinishAt))this.state.racePhase='results';
+      this.reconcileWheelResults();
       return;
     }
     for(const p of this.state.players.values()){

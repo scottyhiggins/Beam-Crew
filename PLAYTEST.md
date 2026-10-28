@@ -1,37 +1,31 @@
-# Milestone 4 — laptop + iPhone acceptance
+# BREAK TIME — competition readiness checklist
 
-## Setup and record
+Close the previous server, relaunch Start-BeamCrew.cmd, confirm BREAK TIME and refresh both browsers. Laptop http://localhost:2571; iPhone on the same Wi-Fi at http://<current-laptop-IPv4>:2571. For public testing use only the verified HTTPS service URL from Render. Record device/iOS/browser, network, player count and any error text.
 
-Close the older server with Ctrl+C, launch Start-BeamCrew.cmd, confirm MILESTONE 4 and refresh both devices. Laptop http://localhost:2571; iPhone Safari on same non-guest Wi-Fi at http://<laptop-Wi-Fi-IPv4>:2571. Use ipconfig for today's address. Record iPhone model/iOS/browser, laptop/browser, network, names, player count and any error text. Use separate devices/tabs with distinct names. Extra tabs simulate workers but cannot substitute for physical phone performance testing.
+## Wheelbarrow fixes
 
-## Regression (two devices)
+1. Inspect all 12 loads. Cement/sand should look like slurry/heap; PVC/rebar like tubes/rods; barricade/hose like barriers/coils; bricks/blocks like bricks/hollow blocks; lumber/plywood like boards/sheets; gravel/rubble like small/large stones. Reload keeps the selected load. Loaded handling remains equal. Six paired categories and duplicates still work.
+2. Drive into gaps between every pair of yellow pylons, at corners and at full speed. The visible rope must block the worker/cart; bends remain traversable. Try reaching finish from the wrong side or missing any ordered checkpoint: no result. Reverse/turn to recover after hitting a fence.
+3. Finish one player while another races. The finished worker/cart remains visible and freely moves around staging. Drive backward and in every direction for 30 seconds: never cross the finish line, reach active racers, push hazards, spill or finish twice. Construction ground continues through staging with no blue/green pad. Phone and laptop agree on position.
+4. Finish everyone. The main elapsed timer must stop on both screens. A final-results panel must open automatically on laptop and iPhone without opening Lobby controls. Score fewest spills first, then fastest time. Dismiss with Keep driving in staging; movement remains available. Refresh phone after results: the final panel and unchanged timer reappear. Restart: fresh countdown, zero clock, empty results/piles, no stale final panel.
+5. Finish one racer, disconnect the unfinished phone, reconnect within 30 seconds and continue. Repeat with permanent Leave room: remaining completed results should become final. Finished-player departure preserves recorded results; host transfer/restart remains available. A connected unfinished racer is never timed out prematurely.
 
-1. Create/join by code, share link, quick signals, host controls and leave. Refresh phone during play and reconnect within 30 seconds. Verify host transfers after the host leaves and recovery controls still work.
-2. Cooperative Beam Carry: each grabs/releases, both carry through doorway, turn around column and deliver. One end dragging feels slower. Reset checkpoint, restart, replay; compare against accepted Milestone 2. Check camera and touch controls remain usable.
-3. Wheelbarrow default Bricks: countdown, careful versus aggressive driving, independent spills/reload, persistent pushable bricks, spatial rough strips, complete route, spill-first scoring, restart and switch back to cooperative mode.
+## Beam Carry regression
 
-## Competitive Beam Carry
+1. There is one Beam Carry option: two-worker teams. With two workers verify opposite assigned ends, Space/ACTION grab/release, matching movement, deliberate rotation, lowered unsupported end/drag, doorway/column and delivery. Team time/place appears once. Restart and replay.
+2. Repeat with 4/6/8 workers: independent simultaneous beams, exactly two workers per beam and a unique end per worker. Non-host cannot restart/start/switch modes. Other teams cannot block/grab your beam. With 3/5/7 workers, one spectator; select Wheelbarrow for everyone to race.
+3. Refresh/disconnect while gripping: end drops, reconnect resumes the same team, re-grab required. Permanent departure produces DNF. Host departure transfers controls. Watch overlapping teams for readability and phone smoothness; no course expansion should be present.
 
-1. Select Competitive Beam Carry. With two workers verify one team/time trial and assigned opposite ends. Countdown freezes motion. Each can grab only its own end; repeated presses release. Complete the doorway and turn, then deliver. Verify team time/place and no duplicate result.
-2. Repeat with 4, 6 and 8 workers (2, 3 and 4 teams). Compare team/member labels on all screens. Drive only one team: other beams stay still. Each team can finish independently; last finish produces final results. Other teams cannot push/block your beam. Inspect overlapping beams for readability.
-3. Repeat with 3, 5 and 7 workers: exactly one spectator, all beams have exactly two workers. Spectator input/ACTION cannot affect any beam. Return to lobby and choose Wheelbarrow: everyone races. Restart after someone leaves to verify new pairing.
-4. Disconnect a teammate while gripping: end drops, other teams continue. Reconnect within 30 seconds, grab assigned end again. Permanently leave: that team becomes DNF; other teams can finish. Test host departure and replay.
-5. Try pushing through every wall/platform edge and approaching delivery from the wrong side. No beam passes barriers or finishes without crossing the doorway. Try checkpoint reset in cooperative mode and verify it remains usable.
+## Lobby, mobile and long-run regression
 
-## Selection and six spill behaviors
+1. Create, code join, share-link join, material selection, start, Lobby controls, restart, return and leave behave as before. Joystick still hides when the lobby/menu is open; menus are reachable in portrait/landscape. No change to lobby auto-opening/closing behavior.
+2. Compare aggressive versus careful laps for each hazard pair. Sticky slows, rolling coasts, fixed blocks, heavy pushes, bumpy adds risk, rough raises spill risk over an area. Identical base steering/stability/speed. Verify piles remain bounded after repeated spills.
+3. Race/restart for at least 10 minutes on physical iPhone, including an eight-player room. Watch frame rate, input latency, heat and memory/resource accumulation. Test app backgrounding, rejoin within 30 seconds and stale-server rejection after relaunch. Automated geometry/network success does not establish phone performance or fun.
 
-1. Laptop: six columns, two same-category choices vertically stacked. Phone portrait/landscape: categories wrap without separating pairs; scroll the panel to reach every choice and Start. Verify no clipped names/buttons or horizontal overflow. Touch a choice: highlighted name and Selected text agree on both local updates and reconnect. Default is Bricks.
-2. Both choose the same load: duplicates accepted. Choose different loads; start, then attempt changes during countdown/race. Choices stay locked. Restart keeps choices; return to lobby permits changes. Non-host can choose its own load but cannot change mode/start.
-3. Repeat one careful and one aggressive run for each of the 12 loads. Loaded handling should feel identical; tipping/reload thresholds do not vary. Spill the selected load; compare its color and behavior on both screens. Load remains the same after reload.
-4. Wet cement/Sand: drive through patches; sticky slowdown without pushing them. PVC/Rebar: hit gently and fast; debris rolls/moves and coasts farther than heavy debris. Mini barricades/Hose: stay fixed, brake/deflect on impact. Bricks/Cinder blocks: heavy movable piles. Lumber/Plywood: bumpy contacts add risk. Gravel/Rubble: broader risk patches, more dangerous at speed. Compare slow/fast contacts for fairness; stopping recovers risk.
-5. Spill repeatedly with multiple racers for at least 10 minutes on physical iPhone. Debris persists through reload, refresh and a worker leaving. Existing piles never change material; new spill objects stop growing at 192 and aggregate as documented. Confirm stable touch response, no progressive slowdown/heat problems and readable route. Restart clears every hazard.
+## Public competition gate (once deployed)
 
-## Finish, route and scoring
+1. Verify actual HTTPS URL and /health protocol 6; run pnpm smoke:public with that URL. Room codes and links must work over secure WebSockets.
+2. Turn off the laptop game server. Join from iPhone cellular and another device/network; complete both modes, results and replay. This proves the public game runs independently of the laptop.
+3. Verify Render single instance, credits/actual bill and no unapproved paid add-ons. Avoid deployment/restart during a match; rooms/results are in-memory. Record the exact successful public URL and deployed commit.
 
-1. Finish laptop while phone is midway. Laptop cart/worker remains visible in separate green staging, can move and rotate, cannot leave bounds, reach racers, push piles, spill or finish twice. Phone continues. Repeat with devices reversed. Verify movement still works after final results.
-2. Compare faster spilled finish against slower clean finish: clean ranks first. Equal spills use time; arrival order breaks exact ties. Results remain when a finisher leaves. Restart clears staging/places/countdown; returning to lobby makes selection available again.
-3. Try cutting each bend, crossing course edges and going directly to finish from start. Ordered checkpoints prevent early result. Hit solid posts at speed and slowly. All visible barriers should match collisions. Route remains traversable even after spills; host restart recovers a blocked round.
-
-## Acceptance report
-
-Report pass/fail by section, screenshots/error text for failures, phone smoothness after 10 minutes, touch/menu overlap, start fairness at 8 players, confusing labels, most/least fun hazard, whether teamwork communicates clearly and whether another race feels appealing. Physical iPhone acceptance, balancing and fun are still human decisions. Do not deploy or begin Milestone 5.
+Mark pass/fail and report screenshots/errors, device model, delay, most confusing action and whether another round feels fun. Graphics polish, championships, briefing, trivia, crane and rewards remain future work.

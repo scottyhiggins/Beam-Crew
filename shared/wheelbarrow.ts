@@ -1,3 +1,4 @@
+import {corridorFences,fenceContact} from './fences.js';
 import {materialCategory} from './materials.js';
 export const WHEEL_CONFIG = {
   maxSpeed: 5.5, acceleration: 3.8, braking: 7, steering: 2.8,
@@ -13,6 +14,7 @@ export const WHEEL_COURSE = [
   {x:-6,z:7}, {x:-6,z:-2}, {x:2,z:-6},
   {x:4,z:-10}, {x:-3,z:-10}, {x:-3,z:-19},
 ];
+export const WHEEL_FENCES=corridorFences(WHEEL_COURSE,WHEEL_CONFIG.corridorRadius);
 export const WHEEL_ROUGH={minX:-2,maxX:2,minZ:-11.5,maxZ:-8.5};
 // Shared posts are both rendered and collided with; no separate visual walls.
 export const WHEEL_OBSTACLES=WHEEL_COURSE.slice(1).flatMap((b,i)=>{
@@ -70,8 +72,10 @@ export function stepCart(p:Cart,inputX:number,inputZ:number,dt:number,material:M
   const rough=p.x>WHEEL_ROUGH.minX&&p.x<WHEEL_ROUGH.maxX&&p.z>WHEEL_ROUGH.minZ&&p.z<WHEEL_ROUGH.maxZ;
   p.instability=Math.max(0,p.instability+dt*(WHEEL_CONFIG.speedGain*ratio**3+WHEEL_CONFIG.turnGain*Math.abs(p.lean)*ratio**2+(rough?WHEEL_CONFIG.roughGain*ratio**2:0)-WHEEL_CONFIG.recovery));
   const x=p.x+Math.sin(p.rotation)*p.speed*dt,z=p.z+Math.cos(p.rotation)*p.speed*dt;
-  if(onCourse(x,z)){p.x=x;p.z=z;}else{p.instability+=WHEEL_CONFIG.impactGain*ratio**2;p.speed*=.15;}
+  if(onCourse(x,z)&&!fenceContact({x,z},WHEEL_CONFIG.cartRadius,WHEEL_FENCES)){p.x=x;p.z=z;}else{p.instability+=WHEEL_CONFIG.impactGain*ratio**2;p.speed*=.15;}
   const sin=Math.sin(p.rotation),cos=Math.cos(p.rotation);
+  const contact=fenceContact({x:p.x+sin*WHEEL_CONFIG.cartOffset,z:p.z+cos*WHEEL_CONFIG.cartOffset},WHEEL_CONFIG.cartRadius,WHEEL_FENCES,onCourse);
+  if(contact){const px=p.x+contact.x,pz=p.z+contact.z;if(onCourse(px,pz)){p.x=px;p.z=pz;}p.instability+=WHEEL_CONFIG.impactGain*ratio**2;p.speed*=.15;}
   for(const o of [...WHEEL_OBSTACLES,...material]){
     const movable='amount' in o;
     const category=movable?materialCategory(o.materialId):-1;
@@ -103,7 +107,7 @@ export function stepCart(p:Cart,inputX:number,inputZ:number,dt:number,material:M
 export function finishCarts(players:Cart[],elapsed:number,previousOrder=0){
   let order=Math.max(previousOrder,...players.map(p=>p.finishOrder));
   // Arrival order is recorded independently from spill-first ranking.
-  for(const p of players)if(!p.finishOrder&&p.checkpoint===WHEEL_COURSE.length&&p.z<=-18){p.finishTime=elapsed;p.finishOrder=++order;p.speed=0;p.x=-3+(order-1)%4;p.z=-23-Math.floor((order-1)/4);}
+  for(const p of players)if(!p.finishOrder&&p.checkpoint===WHEEL_COURSE.length&&p.z<=-18){p.finishTime=elapsed;p.finishOrder=++order;p.speed=0;p.instability=0;p.lean=0;p.reload=0;p.x=-3+(order-1)%4;p.z=-23-Math.floor((order-1)/4);}
   return order;
 }
 

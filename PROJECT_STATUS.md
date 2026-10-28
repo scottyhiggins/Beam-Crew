@@ -1,3 +1,33 @@
+# BREAK TIME — October 27, 2026 competition preparation
+
+This section supersedes historical milestone restrictions below. The user explicitly authorized gameplay fixes, the BREAK TIME title and public deployment preparation. Public service activation is still pending account access/credit inspection and the user's explicit paid-service approval. Budget up to $10/month, use credits first. No service was activated; no public URL is verified.
+
+## Recovery point and scope
+
+Before editing: main at 31e85bf, no tracked changes. Preserved branch backup/pre-break-time-20261027 and an external Git bundle at C:\Users\higgi\.codex\.chatgpt-projects\g-p-6ac291cf8ecc81919bbc636308fbf05d\Beam-Crew-pre-break-time-20261027.bundle. Existing untracked Finish-BeamCrew-PlaytestFixes.cmd, work-guest.mjs and work/ were left untouched. No reset, clean, history rewrite or folder/repository rename.
+
+## Implemented decisions
+
+- Public Beam Carry now exposes only two-worker teams. Legacy mode value beam maps to competitive; no more shared eight-worker beam option. Accepted movement/turn/support/drag math and the current doorway/column course are unchanged. Multiple teams, assigned opposite ends, odd-player spectator, disconnect reservation, DNF, team places and replay remain. Restart increments synchronized race generation so clients reset interpolation/input reliably.
+- Twelve material choices now produce real low-cost load silhouettes: slurry/heap, cylinders, mini barricades, coiled torus hose, bricks/hollow blocks, boards/sheets and polygon stones. Generated geometry bounds and shape types are tested. Shared cart tuning and all six spill behaviors are preserved. Cart/worker geometry, materials and label textures are disposed when removed/restarted to prevent GPU resource accumulation.
+- Continuous rope follows the exterior of the existing corridor, including curved joins/caps; interior bend edges are clipped away. Rendering uses a single line-segment object. The same bounded 139 fence segments enforce server body/tray collision, alongside existing pylons, corridor and ordered checkpoint validation. No new course was added.
+- Finished workers/carts remain visible and movable before and after final results. Server staging x −6..1, z −27..−22 keeps the complete cart strictly behind the finish at z −18 in every direction. Finish identity/time never changes, no course hazards interact with finishers, and finished loads settle. Removed the extra colored pad; expanded the normal construction ground to cover staging.
+- Result reconciliation publishes finish/ranking/round state in the same server tick and after permanent departures. Reserved disconnects still have 30 seconds to resume. Final race elapsed time freezes when the last remaining racer finishes (or an unfinished racer permanently departs). Fewest spills wins; elapsed finish time breaks ties.
+- A separate responsive final-results panel opens from synchronized state automatically for every client, including iPhone, and after reconnect. Dismiss it to keep driving in staging. No lobby-panel/menu-open behavior was changed. A new round clears the panel dismissal. Players' names are rendered as text, not inserted HTML.
+- BREAK TIME title in browser/game/launcher; repository and folder unchanged. Protocol 6 rejects stale builds. Earn & Unlock and all requested future modes/briefing/championship/art are documentation only in FUTURE_FEATURES.md.
+- Ready Render configuration: single always-on Node Web Service, current 0.5c-512mb compute, Node 24.22.1, /health, native PORT, auto-deploy disabled. HTTPS/wss origin logic was already correct. No database, tunnel, laptop dependency or extra replicas. DEPLOYMENT.md records account/budget/credit blockers and exact deployment/verification steps.
+- pnpm test:all now builds, starts an isolated production server, runs the entire test suite and stops it. GitHub CI uses that same command. pnpm smoke:public checks a real supplied HTTPS URL and two-client secure WebSockets after deployment; it must not be reported passed before a public host exists.
+
+## Verification
+
+Baseline: 38 tests passed, six network tests skipped without a server. New deterministic checks cover actual load meshes, fence gaps, all staging directions, frozen time, result ordering and permanent departure. Final full-suite outcome and Git status are recorded in the completion section below. Build retains the existing Three.js bundle-size warning.
+
+No physical iPhone acceptance or account credit balance has been claimed. Native Windows browser inspection stopped because its helper could not verify the current browser URL; that session was left alone. The in-app Render login required GitHub sign-in. Complete Render account connection, inspect credits and obtain paid activation approval before deployment. Use PLAYTEST.md for physical-device acceptance and DEPLOYMENT.md for public verification.
+
+---
+
+## Historical project notes (superseded by the current section)
+
 # Current status — October 11, 2026
 
 Milestone 4 is implemented under the user's explicit authorization. Milestones 1–3 remain available; Milestone 2's previously recorded personal acceptance stands. Milestone 3/4 personal acceptance remains pending. Do not start Milestone 5 or deploy.
@@ -130,4 +160,12 @@ Verification: TypeScript check and production build pass. **35 automated tests p
 
 ## Milestone 4 final verification — October 11, 2026
 Production TypeScript/build passed. Full live suite on temporary localhost port 2574: 44 passed, zero failed/skipped, including all six network tests. Final symmetric rolling-damping correction was rebuilt and validated by 20 targeted deterministic milestone/hazard/course tests, all passed. Git diff --check passed. Physical laptop+iPhone acceptance remains pending; no deployment.
+
+
+## Competition-pass final verification — October 27, 2026
+- pnpm test:all: build and TypeScript passed; 49 tests passed, zero failed/skipped, including all six live network tests on an isolated local production server. Test server stopped automatically.
+- Full beam course/drag/rotation/reconnect/replay, eight-client lifecycle, Wheelbarrow finish/results/timer/staging/replay, persistent spills and all new geometry/fence/result checks passed.
+- Deployment helper syntax checks and git diff --check passed. External recovery bundle verified complete history.
+- Existing Three.js bundle-size warning remains. Physical iPhone rendering/performance and public HTTPS/WSS verification are pending.
+- Render service not activated. Authenticated workspace/credit inspection and explicit paid activation approval still required. Windows browser automation stopped because the helper could not establish the current URL with enough confidence. No credit eligibility or public URL claimed.
 

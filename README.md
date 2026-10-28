@@ -1,17 +1,21 @@
-# Beam Crew — Milestone 4
+# BREAK TIME
 
-Browser multiplayer construction game for 2–8 workers. Cooperative Beam Carry, Competitive Beam Carry (two workers per beam), and individual Wheelbarrow Race. No deployment or Milestone 5 work is included.
+Construction party multiplayer for 2–8 players. Wheelbarrow Race and Beam Carry (exactly two workers per team/beam). The repository and Windows folder remain Beam-Crew.
 
-## Laptop + iPhone
+Public deployment: **prepared, not yet verified live**. Account access, credits and explicit paid-service approval are pending. See DEPLOYMENT.md; do not advertise a guessed URL.
 
-Close the previous server window with Ctrl+C. Double-click **Start-BeamCrew.cmd** in this folder; confirm **MILESTONE 4**. Laptop: http://localhost:2571. iPhone: same Wi-Fi, http://<laptop-Wi-Fi-IPv4>:2571 (find the address with ipconfig). Create a room, join with its code, choose a mode, and Start test. Allow Private network access if Windows asks; keep the launcher window open.
+## Play locally
 
-WASD / joystick moves; Space / ACTION grabs or releases in beam modes. Host uses Lobby controls to restart or return to lobby. Competitive teams are assigned by connected lobby join order, one worker per end. Odd worker spectates; Wheelbarrow lets all workers race. Two players is a team time trial. Team beams share the course but do not collide with each other.
+Close the old server with Ctrl+C, then double-click Start-BeamCrew.cmd. Confirm BREAK TIME. Laptop: http://localhost:2571. iPhone: same Wi-Fi, http://<laptop-Wi-Fi-IPv4>:2571 (find the current address with ipconfig). Keep the launcher open. Create a room, join by code/link, choose mode, Start test. The lobby panel/menu behavior is preserved.
 
-Wheelbarrow: choose one of 12 loads before the host starts. Six category columns contain two vertically stacked choices; columns wrap on phones. Choices lock at countdown, duplicates allowed, Bricks is the default. Loaded handling is identical. Only spilled hazards differ. Fewest spills wins, then time. Finished racers remain visible and can move only in the separate green staging area.
+WASD / joystick moves. Space / ACTION grabs/releases your assigned beam end. Beam Carry pairs connected workers in join order; an odd worker spectates. Two workers is a team time trial. Multiple teams race simultaneously without beam-to-beam blocking. The existing doorway and turn course is unchanged.
 
-## Development
+Wheelbarrow has 12 material choices in six paired categories. Loaded handling is identical; spills create different hazards. Loads now look like cement/sand, pipes/rebar, barricades/coiled hose, bricks/hollow blocks, boards/offcuts, gravel/rubble. Choices lock at countdown. Fewest spills wins; fastest finish time breaks ties. Follow arrows inside continuous rope barriers and ordered server checkpoints.
 
-Node 24, pnpm 11.25.0. Run pnpm install --frozen-lockfile, pnpm build, pnpm test. Development: pnpm dev. Production local LAN: Start-BeamCrew.cmd. For network coverage, run a fresh server separately and set TEST_URL=http://localhost:2571 before pnpm test; otherwise six network tests skip.
+Finishers stay visible and can drive within the staging bounds, strictly beyond the finish line. They cannot re-enter the course, interact with active hazards or finish twice. There is no colored staging pad. Final results open automatically for all clients, with the timer stopped; dismiss results to keep driving. Host uses the unchanged Lobby controls to restart or return.
 
-Server-authoritative custom math, 30 Hz simulation, 20 Hz patches. No physics engine. Material definitions: shared/materials.ts. Handling/hazard tuning: shared/wheelbarrow.ts. Beam math/course: shared/beam.ts. Room flow: server/room.ts. Detailed decisions and limitations: PROJECT_STATUS.md. Human acceptance checklist: PLAYTEST.md.
+## Build and verify
+
+Node 24.19–24.x, pnpm 11.25.0. Run pnpm install --frozen-lockfile, then pnpm test:all. This builds the client/server, starts an isolated local production server, runs every test including multiplayer, and stops that server. pnpm test alone skips six network tests without TEST_URL. pnpm dev starts development. pnpm smoke:public https://<actual-host> checks HTTPS/WSS, room-code joining and both modes after deployment.
+
+Authoritative custom math at 30 Hz, patches at 20 Hz; no physics engine. Hazards cap at 192. Shared rules: shared/wheelbarrow.ts, shared/fences.ts, shared/beam.ts. Rendering: client/main.ts and client/load-visual.ts. Decisions/verification: PROJECT_STATUS.md. Physical device acceptance: PLAYTEST.md.

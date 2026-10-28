@@ -1,2 +1,2 @@
-export const BUILD_LABEL = 'Milestone 4 · Teams and materials';
-export const PROTOCOL_VERSION = 5;
+export const BUILD_LABEL = 'BREAK TIME · Competition release';
+export const PROTOCOL_VERSION = 6;

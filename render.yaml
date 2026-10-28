@@ -1,13 +1,17 @@
 services:
   - type: web
-    name: beam-crew
+    name: break-time
     runtime: node
-    plan: free
+    plan: 0.5c-512mb
+    numInstances: 1
+    region: oregon
+    branch: main
+    autoDeployTrigger: 'off'
     buildCommand: corepack enable && pnpm install --frozen-lockfile --prod=false && pnpm run build
-    startCommand: pnpm start
+    startCommand: node build/server/index.js
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
       - key: NODE_VERSION
-        value: 24.19.0
+        value: 24.22.1

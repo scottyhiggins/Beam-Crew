@@ -9,7 +9,7 @@ test('two racers synchronize countdown, independent carts, reconnect, finish and
  const client=new Client(endpoint!.replace(/^http/,'ws'));let host:Room|undefined,guest:Room|undefined,timer:ReturnType<typeof setInterval>|undefined;
  try{
   host=await client.create('crew',{name:'Cart host'});guest=await client.joinById(host.roomId,{name:'Cart guest'});
-  await until(()=>host!.state.players.size===2);guest.send('mode','wheel');await pause(120);assert.equal(host.state.mode,'beam');
+  await until(()=>host!.state.players.size===2);guest.send('mode','wheel');await pause(120);assert.equal(host.state.mode,'competitive');
   host.send('mode','wheel');await until(()=>guest!.state.mode==='wheel');host.send('start');await until(()=>guest!.state.racePhase==='countdown');
   const hx=host.state.players.get(host.sessionId).x,gx=host.state.players.get(guest.sessionId).x;assert.notEqual(hx,gx);
   host.send('input',{x:1,z:0});await pause(250);assert.equal(host.state.players.get(host.sessionId).x,hx);
@@ -25,9 +25,12 @@ test('two racers synchronize countdown, independent carts, reconnect, finish and
   assert.equal(guest.state.results.length,1);assert.equal(guest.state.results[0].place,1);
   timer=setInterval(()=>{const p=guest!.state.players.get(id),target=WHEEL_COURSE[Math.min(p.checkpoint,WHEEL_COURSE.length-1)],dx=target.x-p.x,dz=(p.checkpoint===WHEEL_COURSE.length?-20:target.z)-p.z,len=Math.hypot(dx,dz);guest!.send('input',{x:dx/len*.55,z:dz/len*.55});},30);
   await until(()=>host!.state.racePhase==='results',35000);clearInterval(timer);timer=undefined;
+  await until(()=>guest!.state.racePhase==='results'&&guest!.state.results.length===2);
+  const finalElapsed=host.state.elapsed;await pause(150);assert.equal(host.state.elapsed,finalElapsed);assert.equal(guest.state.elapsed,finalElapsed);
+  const finalTime=host.state.players.get(id).finishTime;guest.send('input',{x:0,z:1});await pause(200);assert.ok(guest.state.players.get(id).z<=-22);assert.equal(guest.state.players.get(id).finishTime,finalTime);
   assert.equal(host.state.results.length,2);assert.equal(host.state.players.get(id).finishOrder,2);assert.ok(host.state.results[1].time>host.state.results[0].time);
   host.send('restart');await until(()=>guest!.state.raceResets===2);assert.equal(guest.state.racePhase,'countdown');assert.equal(guest.state.players.get(host.sessionId).finishOrder,0);assert.equal(guest.state.elapsed,0);assert.equal(guest.state.results.length,0);
-  host.send('lobby');await until(()=>guest!.state.phase==='lobby');host.send('mode','beam');await until(()=>guest!.state.mode==='beam');host.send('start');await until(()=>guest!.state.phase==='test');assert.equal(guest.state.beam.z,6);
+  host.send('lobby');await until(()=>guest!.state.phase==='lobby');host.send('mode','beam');await until(()=>guest!.state.mode==='competitive');host.send('start');await until(()=>guest!.state.phase==='test');assert.equal(guest.state.teams[0].z,6);
  }finally{if(timer)clearInterval(timer);await Promise.allSettled([host,guest].filter((r):r is Room=>!!r&&r.connection.isOpen).map(r=>r.leave()));}
 });
 
@@ -36,7 +39,7 @@ test('spilled material synchronizes to both racers and survives reload and recon
  try{
   host=await client.create('crew',{name:'Spill host'});guest=await client.joinById(host.roomId,{name:'Spill guest'});await until(()=>guest!.state.players?.size===2&&host!.state.players?.size===2);
   host.send('mode','wheel');await until(()=>guest!.state.mode==='wheel');host.send('start');await until(()=>guest!.state.racePhase==='racing');
-  let ticks=0;timer=setInterval(()=>{ticks++;host!.send('input',{x:Math.floor(ticks/15)%2?1:-1,z:0});},30);
+  timer=setInterval(()=>{const p=host!.state.players.get(host!.sessionId),target=WHEEL_COURSE[Math.min(p.checkpoint,WHEEL_COURSE.length-1)],dx=target.x-p.x,dz=target.z-p.z,len=Math.hypot(dx,dz)||1;host!.send('input',{x:dx/len,z:dz/len});},30);
   await until(()=>guest!.state.material?.length>=6,10000);clearInterval(timer);timer=undefined;host.send('input',{x:0,z:0});
   await until(()=>host!.state.material.length===guest!.state.material.length);const count=guest.state.material.length;
   await until(()=>host!.state.players.get(host!.sessionId).reload===0);assert.equal(host.state.material.length,count);

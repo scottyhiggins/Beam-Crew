@@ -1,14 +1,15 @@
+import {createLoadVisual} from './load-visual';
 import * as THREE from 'three';
 import { Client, Room } from 'colyseus.js';
 import './style.css';
 import { BEAM_CONFIG, COURSE, GRIPS, gripPosition } from '../shared/beam';
-import { WHEEL_CONFIG, WHEEL_COURSE, WHEEL_OBSTACLES, WHEEL_ROUGH } from '../shared/wheelbarrow';
+import { WHEEL_CONFIG, WHEEL_COURSE, WHEEL_OBSTACLES, WHEEL_ROUGH, WHEEL_FENCES } from '../shared/wheelbarrow';
 import { BUILD_LABEL, PROTOCOL_VERSION } from '../shared/version';
 import {MATERIAL_CATEGORIES,MATERIALS,MATERIAL_COLORS} from '../shared/materials';
 import {FINISH_STAGING} from '../shared/wheelbarrow';
 const colors=[0xffad32,0x35b9ff,0xff5985,0x59d595,0xa38aff,0xf2ee57,0xffffff,0x965c42];
 const app=document.querySelector<HTMLDivElement>('#app')!;
-app.innerHTML=`<main id="panel"><h1>BEAM CREW</h1><p id="buildLabel">${BUILD_LABEL}</p><p>Choose Beam Carry or Wheelbarrow Race</p><label>Your name <input id="name" maxlength="18" value="Worker" autocomplete="nickname"></label><button id="create">Create room</button><div class="join"><input id="code" maxlength="5" placeholder="ROOM CODE" aria-label="Room code"><button id="join">Join</button></div><p id="status" role="status"></p><section id="room" hidden><h2 id="roomCode"></h2><button id="share">Copy join link</button><ul id="players"></ul><label id="modeLabel">Game mode <select id="mode"><option value="beam">Cooperative Beam Carry</option><option value="competitive">Competitive Beam Carry · pairs</option><option value="wheel">Wheelbarrow Race</option></select></label><section id="materials" hidden><h3>Choose your load</h3><p>Same cart handling. Your spill creates this hazard. Duplicates allowed; locked at countdown.</p><div id="materialGrid"></div><p id="chosenLoad" role="status"></p></section><button id="start">Start test</button><button id="back">Return to lobby</button><button id="reset" hidden>Reset to checkpoint</button><button id="restart" hidden>Restart course</button><button id="leave">Leave room</button></section><p id="help">WASD to move · Space to grab/release<br>On phones: joystick + ACTION</p></main><div id="hud" hidden><span id="hudText"></span><div id="beamStatus" role="status"></div><button id="grab">GRAB · Space</button><div id="signals"><button data-signal="LIFT">LIFT</button><button data-signal="WAIT">WAIT</button><button data-signal="LEFT">LEFT</button><button data-signal="RIGHT">RIGHT</button></div><button id="menu">Lobby controls</button></div><div id="touch" hidden><div id="joystick" aria-label="Movement joystick"><div id="stick"></div></div><button id="action">ACTION</button></div>`;
+app.innerHTML=`<main id="panel"><h1>BREAK TIME</h1><p id="buildLabel">${BUILD_LABEL}</p><p>Choose Beam Carry or Wheelbarrow Race</p><label>Your name <input id="name" maxlength="18" value="Worker" autocomplete="nickname"></label><button id="create">Create room</button><div class="join"><input id="code" maxlength="5" placeholder="ROOM CODE" aria-label="Room code"><button id="join">Join</button></div><p id="status" role="status"></p><section id="room" hidden><h2 id="roomCode"></h2><button id="share">Copy join link</button><ul id="players"></ul><label id="modeLabel">Game mode <select id="mode"><option value="competitive">Beam Carry · two-player teams</option><option value="wheel">Wheelbarrow Race</option></select></label><section id="materials" hidden><h3>Choose your load</h3><p>Same cart handling. Your spill creates this hazard. Duplicates allowed; locked at countdown.</p><div id="materialGrid"></div><p id="chosenLoad" role="status"></p></section><button id="start">Start test</button><button id="back">Return to lobby</button><button id="reset" hidden>Reset to checkpoint</button><button id="restart" hidden>Restart course</button><button id="leave">Leave room</button></section><p id="help">WASD to move · Space to grab/release<br>On phones: joystick + ACTION</p></main><div id="hud" hidden><span id="hudText"></span><div id="beamStatus" role="status"></div><button id="grab">GRAB · Space</button><div id="signals"><button data-signal="LIFT">LIFT</button><button data-signal="WAIT">WAIT</button><button data-signal="LEFT">LEFT</button><button data-signal="RIGHT">RIGHT</button></div><button id="menu">Lobby controls</button></div><div id="touch" hidden><div id="joystick" aria-label="Movement joystick"><div id="stick"></div></div><button id="action">ACTION</button></div><section id="raceResults" hidden role="region" aria-labelledby="resultsTitle"><h2 id="resultsTitle">Final results</h2><p id="resultsRule"></p><ol id="resultsList"></ol><button id="closeResults">Keep driving in staging</button></section>`;
 const el=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 for(const category of MATERIAL_CATEGORIES){const column=document.createElement('div');const heading=document.createElement('strong');heading.textContent=category.name;column.append(heading);for(const name of category.items){const m=MATERIALS.find(m=>m.name===name)!;const button=document.createElement('button');button.type='button';button.dataset.material=String(m.id);button.textContent=m.name+' · '+m.effect;button.onclick=()=>room?.send('material',m.id);column.append(button);}el('materialGrid').append(column);}
 const signalReadout=document.createElement('div');signalReadout.id='crewSignals';el('hud').append(signalReadout);
@@ -39,6 +40,18 @@ el('reset').onclick=()=>{stopInput();room?.send('reset');menuOpen=false;render()
 el('restart').onclick=()=>{stopInput();room?.send('restart');menuOpen=false;render();};el('back').onclick=()=>{stopInput();room?.send('lobby');menuOpen=false;};
 el('leave').onclick=()=>{storage('beam-token',null);void room?.leave();};
 el('share').onclick=async()=>{if(!room?.state.code)return;const url=new URL(location.href);url.search='';url.searchParams.set('room',room.state.code);try{await navigator.clipboard.writeText(url.href);status('Join link copied');}catch{status(`Join link: ${url.href}`);}};
+let shownResults='',dismissedResults='';
+el('closeResults').onclick=()=>{dismissedResults=shownResults;el('raceResults').hidden=true;};
+function renderResults(state:any){
+  const ready=state?.phase==='test'&&state.racePhase==='results';
+  const key=ready?room?.roomId+':'+state.mode+':'+state.raceResets:'';
+  if(!ready){el('raceResults').hidden=true;shownResults='';dismissedResults='';return;}
+  shownResults=key;el('raceResults').hidden=dismissedResults===key;
+  el('resultsRule').textContent=state.mode==='wheel'?'Fewest spills wins · Fastest time breaks ties · Race time '+state.elapsed.toFixed(2)+'s':'Two workers per beam · Fastest team wins';
+  el('closeResults').textContent=state.mode==='wheel'?'Keep driving in staging':'Close results';
+  const entries=state.mode==='wheel'?[...state.results].sort((a:any,b:any)=>a.place-b.place):[...state.teams].sort((a:any,b:any)=>(a.place||99)-(b.place||99));
+  el('resultsList').replaceChildren(...entries.map((r:any)=>{const li=document.createElement('li');li.textContent=state.mode==='wheel'?'#'+r.place+' '+r.name+' · '+r.spills+' spills · '+r.time.toFixed(2)+'s':r.name+' · '+r.members+' · '+(r.dnf?'DNF':'#'+r.place+' · '+r.finishTime.toFixed(2)+'s');return li;}));
+}
 el('menu').onclick=()=>{menuOpen=!menuOpen;if(menuOpen)stopInput();render();};
 function action(){if(room?.state.phase==='test')room.send('action');}
 el('grab').onclick=action;
@@ -51,10 +64,10 @@ function moveJoystick(e:PointerEvent){if(e.pointerId!==joyPointer)return;const r
 joystick.onpointerdown=e=>{joyPointer=e.pointerId;joystick.setPointerCapture(e.pointerId);moveJoystick(e);};joystick.onpointermove=moveJoystick;
 joystick.onpointerup=joystick.onpointercancel=()=>{joyPointer=null;joyX=joyZ=0;el('stick').style.transform='translate(0px,0px)';};
 setInterval(()=>{if(room?.state.phase==='test'&&!document.hidden){room.send('input',{x:(Number(keys.has('KeyD'))-Number(keys.has('KeyA')))+joyX,z:(Number(keys.has('KeyS'))-Number(keys.has('KeyW')))+joyZ});}},1000/30);
-function render(){const state=room?.state,playing=state?.phase==='test';el('room').hidden=!room;el('panel').classList.toggle('playing',!!playing&&!menuOpen);el('hud').hidden=!playing;el('touch').hidden=!playing||menuOpen;
+function render(){const state=room?.state,playing=state?.phase==='test';el('room').hidden=!room;el('panel').classList.toggle('playing',!!playing&&!menuOpen);el('hud').hidden=!playing;el('touch').hidden=!playing||menuOpen;renderResults(state);
   el<HTMLButtonElement>('create').disabled=busy||!!room||!serverCompatible;el<HTMLButtonElement>('join').disabled=busy||!!room||!serverCompatible;
   if(!state?.players)return;
-  if(state.code&&typeof state.mode!=='string'){status('Outdated Beam Crew server. Close the existing server, relaunch Start-BeamCrew.cmd, then refresh both browsers.');el<HTMLButtonElement>('start').disabled=true;return;}el('roomCode').textContent=`Room ${state.code}`;el('players').replaceChildren();let connected=0;
+  if(state.code&&typeof state.mode!=='string'){status('Outdated BREAK TIME server. Close the existing server, relaunch Start-BeamCrew.cmd, then refresh both browsers.');el<HTMLButtonElement>('start').disabled=true;return;}el('roomCode').textContent=`Room ${state.code}`;el('players').replaceChildren();let connected=0;
   state.players.forEach((p:any,id:string)=>{if(p.connected)connected++;const row=document.createElement('li');row.textContent=`${p.name}${id===room?.sessionId?' (you)':''}${id===state.host?' • host':''}${p.connected?'':' • reconnecting'}`;row.style.borderLeft=`6px solid #${colors[p.color].toString(16).padStart(6,'0')}`;el('players').append(row);});
   const host=state.host===room?.sessionId;el('start').hidden=!host||playing;el<HTMLButtonElement>('start').disabled=connected<2;el('back').hidden=!host||!playing;el('reset').hidden=!host||!playing;el('restart').hidden=!host||!playing;
   el('back').textContent=playing?'Return to lobby / change game mode':'Return to lobby';
@@ -89,11 +102,12 @@ for(const z of [-10,10]){box(20,.15,.15,0xffc137,0,.8,z);box(20,.15,.15,0xffc137
 for(const x of [-10,10]){box(.15,.15,20,0xffc137,x,.8,0);box(.15,.15,20,0xffc137,x,1.4,0);}
 for(let i=0;i<12;i++){const h=4+(i%5)*3;box(4,h,4,0x7898ab,(i-6)*7,-8+h/2,-28);}
 const baseVisuals=scene.children.filter(o=>o instanceof THREE.Mesh||o instanceof THREE.GridHelper);
+function disposeVisual(root:THREE.Object3D){scene.remove(root);root.traverse(o=>{const mesh=o as THREE.Mesh;if(mesh.geometry)mesh.geometry.dispose();const materials=mesh.material?(Array.isArray(mesh.material)?mesh.material:[mesh.material]):[];for(const material of materials){const map=(material as THREE.MeshLambertMaterial).map;map?.dispose();material.dispose();}});}
 const workers=new Map<string,THREE.Group>();
 function worker(color:number){const g=new THREE.Group();box(.8,.9,.55,color,0,.8,0,g);box(.65,.55,.6,0xe6b68e,0,1.48,0,g);box(.9,.15,.8,0xffd447,0,1.82,0,g);box(.65,.25,.55,0xffd447,0,1.98,0,g);box(.24,.45,.3,0x354c65,-.22,.23,0,g);box(.24,.45,.3,0x354c65,.22,.23,0,g);box(.25,.6,.3,color,-.53,.85,0,g);box(.25,.6,.3,color,.53,.85,0,g);box(.09,.09,.04,0x263748,-.15,1.5,.32,g);box(.09,.09,.04,0x263748,.15,1.5,.32,g);scene.add(g);return g;}
 let previous=performance.now();
 function frame(now:number){requestAnimationFrame(frame);const dt=Math.min((now-previous)/1000,.1);previous=now;const state=room?.state;
-  for(const [id,g]of workers){if(!state?.players?.has(id)){scene.remove(g);workers.delete(id);}}
+  for(const [id,g]of workers){if(!state?.players?.has(id)){disposeVisual(g);workers.delete(id);}}
   state?.players?.forEach((p:any,id:string)=>{let g=workers.get(id);if(!g){g=worker(colors[p.color]);g.position.set(p.x,0,p.z);workers.set(id,g);}const blend=1-Math.exp(-18*dt);g.position.x+=(p.x-g.position.x)*blend;g.position.z+=(p.z-g.position.z)*blend;const difference=Math.atan2(Math.sin(p.rotation-g.rotation.y),Math.cos(p.rotation-g.rotation.y));g.rotation.y+=difference*blend;g.position.y=Math.sin(now*.008+p.color)*.025;g.visible=p.connected;});
   const me=room&&workers.get(room.sessionId);const target=me?.position??new THREE.Vector3();camera.position.lerp(new THREE.Vector3(target.x,15,target.z+18),1-Math.exp(-4*dt));camera.lookAt(target.x,0,target.z);updateBeamVisual(state,dt,now);updateWheelVisual(state,dt,now);renderer.render(scene,camera);
 }
@@ -193,7 +207,7 @@ function updateBeamVisual(state:any,dt:number,now:number){
 }
 
 const wheelCourseVisual=new THREE.Group();scene.add(wheelCourseVisual);
-box(30,.3,36,0x776e5d,0,-.2,-7,wheelCourseVisual);
+box(30,.3,44,0x776e5d,0,-.2,-10,wheelCourseVisual);
 WHEEL_COURSE.slice(1).forEach((b,i)=>{
   const a=WHEEL_COURSE[i],dx=b.x-a.x,dz=b.z-a.z,length=Math.hypot(dx,dz);
   const road=box(WHEEL_CONFIG.corridorRadius*2,.05,length+WHEEL_CONFIG.corridorRadius*2,0xbfa780,(a.x+b.x)/2,.01,(a.z+b.z)/2,wheelCourseVisual);road.rotation.y=Math.atan2(dx,dz);
@@ -203,12 +217,14 @@ WHEEL_COURSE.slice(1).forEach((b,i)=>{
     for(const side of [-1,1]){const wing=box(.16,.025,.65,0xffedb0,side*.2,0,.27,arrow);wing.rotation.y=-side*Math.PI/4;}
   }
 });
+const ropePoints=WHEEL_FENCES.flatMap(f=>[new THREE.Vector3(f.a.x,.5,f.a.z),new THREE.Vector3(f.b.x,.5,f.b.z)]);
+wheelCourseVisual.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(ropePoints),new THREE.LineBasicMaterial({color:0xf0d397})));
 for(const p of WHEEL_OBSTACLES){box(.3,.65,.3,0xffc137,p.x,.32,p.z,wheelCourseVisual);box(.32,.12,.32,0x27343d,p.x,.48,p.z,wheelCourseVisual);}
 for(let x=WHEEL_ROUGH.minX;x<=WHEEL_ROUGH.maxX;x+=.65)box(.16,.13,WHEEL_ROUGH.maxZ-WHEEL_ROUGH.minZ,0x7f705d,x,.1,-10,wheelCourseVisual);
 for(const x of [WHEEL_ROUGH.minX,WHEEL_ROUGH.maxX])for(let z=WHEEL_ROUGH.minZ;z<WHEEL_ROUGH.maxZ;z+=.4)box(.3,.025,.2,Math.round(z*10)%8===0?0x27343d:0xffc137,x,.09,z,wheelCourseVisual);
 box(5,.04,.25,0x54d695,-6,.09,6,wheelCourseVisual);box(5,.04,.5,0x54d695,-3,.09,-18,wheelCourseVisual);
 for(let i=0;i<10;i++)box(.5,.025,.3,i%2?0xffffff:0x27343d,-5.25+i*.5,.12,-18,wheelCourseVisual);
-box(FINISH_STAGING.maxX-FINISH_STAGING.minX,.08,FINISH_STAGING.maxZ-FINISH_STAGING.minZ,0x53988a,(FINISH_STAGING.minX+FINISH_STAGING.maxX)/2,0,(FINISH_STAGING.minZ+FINISH_STAGING.maxZ)/2,wheelCourseVisual);
+// Staging uses the same construction ground; no extra colored pad.
 const carts=new Map<string,{root:THREE.Group;tray:THREE.Group;load:THREE.Group;tag:THREE.Sprite}>();
 const materialMeshes:THREE.Mesh[]=[];
 const spillMaterials=MATERIAL_COLORS.map(color=>new THREE.MeshLambertMaterial({color}));
@@ -217,7 +233,7 @@ let wheelReset=-1;
 function renderWheelHud(state:any,me:any){
   if(!me)return;
   const countdown=state.racePhase==='countdown';
-  el('hudText').textContent=countdown?String(Math.ceil(state.countdown))+' • GET READY':state.racePhase==='results'?'FINAL RESULTS':me.finishOrder?'FINISHED · move in green staging area':'GO • '+state.elapsed.toFixed(1)+'s';
+  el('hudText').textContent=countdown?String(Math.ceil(state.countdown))+' • GET READY':state.racePhase==='results'?'FINAL RESULTS':me.finishOrder?'FINISHED · drive in staging':'GO • '+state.elapsed.toFixed(1)+'s';
   const warning=me.reload>0?'SPILLED! Reloading '+me.reload.toFixed(1)+'s':me.finishOrder?'Finished in '+me.finishTime.toFixed(2)+'s':me.instability>.7?'CAREFUL — LOAD TIPPING!':'Follow painted arrows • ease off before turns and rough ground';
   el('beamStatus').textContent=warning+'\nLoad risk '+Math.round(me.instability*100)+'% • Spills '+me.spills+' • Speed '+Math.round(me.speed/WHEEL_CONFIG.maxSpeed*100)+'%';
   el('beamStatus').style.borderLeft=me.instability>.7?'8px solid #ff6849':'8px solid #59d595';
@@ -227,8 +243,8 @@ function renderWheelHud(state:any,me:any){
 function updateWheelVisual(state:any,dt:number,now:number){
   const active=state?.phase==='test'&&state.mode==='wheel';wheelCourseVisual.visible=active;for(const o of baseVisuals)o.visible=!active;
   if(!active)el('beamStatus').style.borderLeft='';
-  if(active&&wheelReset!==state.raceResets){wheelReset=state.raceResets;stopInput();for(const c of carts.values())scene.remove(c.root);carts.clear();}
-  for(const [id,c]of carts){c.root.visible=active&&!!state?.players.get(id)?.connected;if(!state?.players.has(id)){scene.remove(c.root);carts.delete(id);}}
+  if(active&&wheelReset!==state.raceResets){wheelReset=state.raceResets;stopInput();for(const c of carts.values())disposeVisual(c.root);carts.clear();}
+  for(const [id,c]of carts){c.root.visible=active&&!!state?.players.get(id)?.connected;if(!state?.players.has(id)){disposeVisual(c.root);carts.delete(id);}}
   while(materialMeshes.length>(active?state.material.length:0)){scene.remove(materialMeshes.pop()!);}
   if(!active)return;
   state.material.forEach((b:any,i:number)=>{let mesh=materialMeshes[i];if(!mesh){mesh=new THREE.Mesh(brickGeometry,spillMaterials[6]);scene.add(mesh);materialMeshes.push(mesh);}mesh.material=spillMaterials[b.materialId??6];const category=Math.floor((b.materialId??6)/2);mesh.scale.set(category===0||category===5?2.5:category===1?2:1,category===0||category===5?.2:1,category===1?.4:1);mesh.position.set(b.x,.11,b.z);mesh.scale.y*=Math.min(3,1+(b.amount-1)*.15);mesh.position.y=.11*mesh.scale.y;});
@@ -240,7 +256,7 @@ function updateWheelVisual(state:any,dt:number,now:number){
       box(1.3,.45,.1,colors[p.color],0,.95,1.9,tray);
       for(const x of [-.5,.5])box(.08,.08,1.5,0x384956,x,.75,.3,root);
       const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.33,.33,.22,12),new THREE.MeshLambertMaterial({color:0x27343d}));wheel.rotation.z=Math.PI/2;wheel.position.set(0,.33,1.8);root.add(wheel);
-      for(let i=0;i<6;i++)box(.42,.22,.5,MATERIAL_COLORS[p.materialId??6],(i%2-.5)*.5,1.05+Math.floor(i/2)*.23,1.15,load);
+      createLoadVisual(load,p.materialId??6);
       const tag=label(id===room?.sessionId?'YOU':p.name,'#172d3c',1.6);tag.position.set(0,2.8,0);root.add(tag);
       c={root,tray,load,tag};carts.set(id,c);root.position.set(p.x,0,p.z);root.rotation.y=p.rotation;
     }
@@ -253,8 +269,8 @@ function updateWheelVisual(state:any,dt:number,now:number){
 }
 
 async function verifyServer(){
-  status('Checking Milestone 4 server…');render();
-  try{const response=await fetch('/health',{cache:'no-store',signal:AbortSignal.timeout(5000)});const health=await response.json();if(!response.ok||health.protocol!==PROTOCOL_VERSION||typeof health.startedAt!=='string')throw Error('The running server is an older version. Close its window with Ctrl+C, relaunch Start-BeamCrew.cmd, then refresh both browsers.');serverCompatible=true;status(BUILD_LABEL+' server ready — create or join a room.');
+  status('Checking BREAK TIME server…');render();
+  try{const response=await fetch('/health',{cache:'no-store',signal:AbortSignal.timeout(15000)});const health=await response.json();if(!response.ok||health.protocol!==PROTOCOL_VERSION||typeof health.startedAt!=='string')throw Error('The running server is an older version. Close its window with Ctrl+C, relaunch Start-BeamCrew.cmd, then refresh both browsers.');serverCompatible=true;status(BUILD_LABEL+' server ready — create or join a room.');
     try{
       const start=health.startedAt;
       const oldStart=sessionStorage.getItem('beam-server-start');

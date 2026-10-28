@@ -20,5 +20,5 @@ export class SpilledMaterial extends Schema {x=0;z=0;amount=1;vx=0;vz=0;material
 defineTypes(SpilledMaterial,{x:'number',z:'number',amount:'number',materialId:'number'});
 export class BeamTeam extends Beam {name='';members='';finishTime=0;place=0;dnf=false;}
 defineTypes(BeamTeam,{name:'string',members:'string',finishTime:'number',place:'number',dnf:'boolean'});
-export class CrewState extends Schema {teams=new ArraySchema<BeamTeam>();players=new MapSchema<Player>();beam=new Beam();code='';host='';phase='lobby';mode='beam';racePhase='waiting';countdown=0;elapsed=0;raceResets=0;finishCount=0;firstFinishAt=-1;results=new ArraySchema<RaceResult>();material=new ArraySchema<SpilledMaterial>();}
+export class CrewState extends Schema {teams=new ArraySchema<BeamTeam>();players=new MapSchema<Player>();beam=new Beam();code='';host='';phase='lobby';mode='competitive';racePhase='waiting';countdown=0;elapsed=0;raceResets=0;finishCount=0;firstFinishAt=-1;results=new ArraySchema<RaceResult>();material=new ArraySchema<SpilledMaterial>();}
 defineTypes(CrewState,{teams:[BeamTeam],players:{map:Player},beam:Beam,code:'string',host:'string',phase:'string',mode:'string',racePhase:'string',countdown:'number',elapsed:'number',raceResets:'number',results:[RaceResult],material:[SpilledMaterial]});

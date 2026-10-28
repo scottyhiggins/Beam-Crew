@@ -8,8 +8,8 @@ const run=promisify(execFile);
 const endpoint=process.env.TEST_URL;
 test('production server identifies its build and serves the mode selector assets',{skip:!endpoint},async()=>{
  const response=await fetch(`${endpoint}/health`);assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');
- const health=await response.json() as any;assert.equal(health.protocol,PROTOCOL_VERSION);assert.match(health.build,/Milestone 4/);assert.ok(health.repository);assert.ok(Number.isFinite(Date.parse(health.startedAt)));
- const page=await fetch(endpoint!);assert.equal(page.headers.get('cache-control'),'no-store');const html=await page.text();assert.match(html,/Milestone 4/);
+ const health=await response.json() as any;assert.equal(health.protocol,PROTOCOL_VERSION);assert.match(health.build,/BREAK TIME/);assert.ok(health.repository);assert.ok(Number.isFinite(Date.parse(health.startedAt)));
+ const page=await fetch(endpoint!);assert.equal(page.headers.get('cache-control'),'no-store');const html=await page.text();assert.match(html,/BREAK TIME/);
  const asset=html.match(/src="([^"]+\.js)"/);assert.ok(asset);const script=await (await fetch(new URL(asset[1],endpoint))).text();assert.match(script,/Wheelbarrow Race/);assert.match(script,/id="mode"/);assert.match(script,/value="wheel"/);
 });
 test('launcher preflight accepts an available port',async()=>{await run(process.execPath,['scripts/check-port.mjs','0']);});
