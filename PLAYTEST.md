@@ -1,3 +1,15 @@
+# Visual polish 1 acceptance
+
+Refresh both devices and confirm **Visual polish 1**, then create a fresh room.
+
+- Check hard hats, vests and animation, both modes, title/lobby/load selection/HUD/results, portrait and landscape.
+- Check all 12 materials loaded, tipping/spilling and at rest. PVC must be round/hollow, rebar metallic rods, cinder blocks open, boards flat, and loose materials piles/patches.
+- Confirm spray-painted arrows remain readable and landmarks do not obscure the route.
+- Repeat finish/spike/staging/spill/final-score checks; test public cross-network joining/reconnect.
+- On iPhone, play repeated spills and move through a busy yard; report smoothness, device/browser, heat and readability. Desktop checks cannot establish iPhone frame rate.
+
+---
+
 # Connected finish acceptance — BREAK TIME · Connected finish 1 (protocol 8)
 
 Refresh laptop and iPhone at https://break-time-9n1k.onrender.com and confirm this exact build label. Create a fresh room after deployment. Use laptop Wi-Fi and iPhone cellular, then swap who hosts. Previous finish/scoreboard/multiplayer acceptance passed per the user; repeat it with this geometry.

@@ -1,3 +1,15 @@
+# Milestone 5 — Visual polish 1 — October 28, 2026
+
+Build **BREAK TIME · Visual polish 1**, protocol **8**. Connected finish 1 passed the user's five-check acceptance gate. This release changes presentation only: rounded hard hats, faces, reflective vests, boots and walk/carry poses; cart rims, grips, supports and hubs; Beam Carry fasteners; site office, excavator, scaffolding, lumber and trees; grounded scenery, warm lighting, contact shadows and worn ground-painted arrows; compact connected lobby, title, HUD and results styling.
+
+All 12 materials were visually inspected in loaded, spilling and resting states using a temporary local audit (not shipped). Ground hazards now reuse and bake the existing loaded geometry and colors, one cached draw call per hazard. PVC keeps round hollow cylinders/rims; rebar has metal ribs; cement is cool gray; sand/cement keep low piles; barricades, hose, bricks, open cinder blocks, boards, plywood, gravel and rubble retain their silhouettes. A brief client-only spill bounce preserves the server positions and all hazard behavior. A new geometry test checks all 12 identities, finite/bounded geometry and cache reuse.
+
+Final production build and full local suite: **60 passed, zero failures/skips**. Vite reports the existing large bundle advisory (about 189 KB gzipped); no external art/fonts, postprocessing, physics or dynamic shadow maps were added. iPhone physical performance and final visual acceptance require a fresh device playtest. No server gameplay, simulation, scoring, collision, persistence, network schema or protocol changes. No Crane Challenge, Championship or Trivia.
+
+Recovery: branch `codex/pre-graphics-20261028` at `a1845b9`; external `Beam-Crew-pre-graphics-20261028.bundle` saved in the ChatGPT project workspace. Previous public Render deploy `dep-dbgnrek9v7es73avebjg` (source `fc5c981`) remains the recovery deployment. Same service `srv-dbglagdg1s2s73bmg9u0`, workspace `tea-dbgkg8sipgvc73dr3rtg`, unchanged plan/settings, automatic deployment off. Commit/push and new deployment/public verification are recorded separately after completion.
+
+---
+
 # Connected finish verified publicly — October 27, 2026
 
 Public play: https://break-time-9n1k.onrender.com . Build **BREAK TIME · Connected finish 1**, protocol **8**, source **fc5c9815a56be44c8990cd6f1d38f6a4eb99b77e**, Render deploy **dep-dbgnrek9v7es73avebjg** confirmed live. Gameplay commit pushed via GitHub Desktop. Same single approved service, plan and workspace; no billing/configuration changes. Auto-deploy remains off.
