@@ -1,3 +1,17 @@
+# Connected finish verified publicly — October 27, 2026
+
+Public play: https://break-time-9n1k.onrender.com . Build **BREAK TIME · Connected finish 1**, protocol **8**, source **fc5c9815a56be44c8990cd6f1d38f6a4eb99b77e**, Render deploy **dep-dbgnrek9v7es73avebjg** confirmed live. Gameplay commit pushed via GitHub Desktop. Same single approved service, plan and workspace; no billing/configuration changes. Auto-deploy remains off.
+
+- Final local production build/full suite: **59 passed, zero failures/skips**.
+- Public HTTPS/WSS smoke and full suite against Render: **59 passed, zero failures/skips**. Real two-client tests cover continuous finish/staging movement, post-finish spills with identical frozen official scores, stopped elapsed clock, reconnect/restart, material choices, ropes/checkpoints, eight clients and Beam Carry. A prior local Beam network timeout passed on clean rerun and publicly; Beam gameplay was not changed.
+- Browser keyboard play on the local production build verified natural crossing at speed, connected yard, visible segmented spike strip, staging spill/reload with official 27.87s/0-spill result unchanged, and reverse blocking. Screenshot saved outside the repository as BREAK-TIME-connected-finish.png. The public browser loaded the new label and compatible server; screenshot BREAK-TIME-connected-public-version.png.
+- Post-deploy Render error-log query returned no entries. Test rooms/temporary local server were cleaned up; public browser left at the new build lobby.
+- Human acceptance remains: refresh laptop and iPhone, confirm Connected finish 1, create a fresh room and run the new PLAYTEST.md checklist. Check ramp appearance/rise and phone performance, natural finish motion, bumps/spills, reverse blocking, both final boards and score freezing on separate networks.
+
+This verification follow-up changes documentation only; publishing it does not require another deployment. The gameplay release is already public. No Championship, second course, Trivia or Crane work was added.
+
+---
+
 # Connected finish release preparation
 
 Build **BREAK TIME · Connected finish 1**, protocol **8**. Same approved service `srv-dbglagdg1s2s73bmg9u0`, workspace My Workspace, HTTPS/WSS URL https://break-time-9n1k.onrender.com . No plan/billing/resource changes. Manual deployment required after source is pushed; the previous public version remains live until verified.

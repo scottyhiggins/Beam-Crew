@@ -1,3 +1,17 @@
+# Connected finish verified publicly — October 27, 2026
+
+Public play: https://break-time-9n1k.onrender.com . Build **BREAK TIME · Connected finish 1**, protocol **8**, source **fc5c9815a56be44c8990cd6f1d38f6a4eb99b77e**, Render deploy **dep-dbgnrek9v7es73avebjg** confirmed live. Gameplay commit pushed via GitHub Desktop. Same single approved service, plan and workspace; no billing/configuration changes. Auto-deploy remains off.
+
+- Final local production build/full suite: **59 passed, zero failures/skips**.
+- Public HTTPS/WSS smoke and full suite against Render: **59 passed, zero failures/skips**. Real two-client tests cover continuous finish/staging movement, post-finish spills with identical frozen official scores, stopped elapsed clock, reconnect/restart, material choices, ropes/checkpoints, eight clients and Beam Carry. A prior local Beam network timeout passed on clean rerun and publicly; Beam gameplay was not changed.
+- Browser keyboard play on the local production build verified natural crossing at speed, connected yard, visible segmented spike strip, staging spill/reload with official 27.87s/0-spill result unchanged, and reverse blocking. Screenshot saved outside the repository as BREAK-TIME-connected-finish.png. The public browser loaded the new label and compatible server; screenshot BREAK-TIME-connected-public-version.png.
+- Post-deploy Render error-log query returned no entries. Test rooms/temporary local server were cleaned up; public browser left at the new build lobby.
+- Human acceptance remains: refresh laptop and iPhone, confirm Connected finish 1, create a fresh room and run the new PLAYTEST.md checklist. Check ramp appearance/rise and phone performance, natural finish motion, bumps/spills, reverse blocking, both final boards and score freezing on separate networks.
+
+This verification follow-up changes documentation only; publishing it does not require another deployment. The gameplay release is already public. No Championship, second course, Trivia or Crane work was added.
+
+---
+
 # Connected finish update — October 27, 2026
 
 Build **BREAK TIME · Connected finish 1**, protocol **8**. Previous public finish/scoreboard/timer/ropes and laptop Wi-Fi + iPhone cellular multiplayer accepted by the user. Recoverable prior version: `backup/before-connected-finish-20261027`.
@@ -6,7 +20,7 @@ Removed finish teleport and stopped resetting movement on finish. Full normal ca
 
 The original approach ropes are clipped at the strip and connected through a short neck to a 16m-wide, 16m-deep yard. No cap, separate pad or relocated spawn. Its far boundary can join a later race; no Championship logic or extra course implemented. Finished carts bump and yield to unfinished arrivals. Stage debris is ignored by unfinished carts to prevent permanent finish blocking. All 12 materials, 192-pile cap, checkpoint scoring, automatic board and Beam Carry preserved. Pair contacts are bounded O(8²); rendering reuses spike/bolt geometry and materials.
 
-Tests cover exact continuous pose/speed at finish, traversable ramp and blocked reverse, preserved approach ropes/open neck, post-finish spills/reload and immutable official scores, pushable contacts, real two-client staging spills/results/reconnect/replay, materials, eight clients and Beam Carry. Browser keyboard play verified continuous finish travel at speed, staging spill/reload with an unchanged official 27.87s/0-spill result, and reverse blocking. Final local production build and complete suite: **59 passed, zero failures/skips**. One earlier Beam Carry network run timed out while browser QA was active; the unchanged Beam test passed in the clean final suite. Deployment remains pending until GitHub push and Render/public verification. Physical laptop+iPhone acceptance of this update remains pending; see PLAYTEST.md.
+Tests cover exact continuous pose/speed at finish, traversable ramp and blocked reverse, preserved approach ropes/open neck, post-finish spills/reload and immutable official scores, pushable contacts, real two-client staging spills/results/reconnect/replay, materials, eight clients and Beam Carry. Browser keyboard play verified continuous finish travel at speed, staging spill/reload with an unchanged official 27.87s/0-spill result, and reverse blocking. Final local production build and complete suite: **59 passed, zero failures/skips**. One earlier Beam Carry network run timed out while browser QA was active; the unchanged Beam test passed in the clean final suite. Deployment and public verification completed; see the current record above. Physical laptop+iPhone acceptance of this update remains pending; see PLAYTEST.md.
 
 ---
 

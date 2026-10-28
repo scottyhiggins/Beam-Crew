@@ -4,7 +4,7 @@ Construction party multiplayer for 2–8 players. Wheelbarrow Race and Beam Carr
 
 **Play publicly: https://break-time-9n1k.onrender.com**
 
-Verified live October 27, 2026 on Render: HTTPS, secure WebSockets, room-code/invite-link joining and all 55 automated checks against the public server (zero failures/skips). This runs independently of the laptop. The user confirmed laptop Wi-Fi + iPhone cellular multiplayer and the previous finish fix. The connected staging update requires a fresh device playtest. See DEPLOYMENT.md for the service record and costs.
+Verified live October 27, 2026 on Render: **Connected finish 1**, source **fc5c981**, protocol **8**. HTTPS/WSS smoke passed; all **59 automated checks passed locally and against the public server**, zero failures/skips. Runs independently of the laptop. The user accepted the previous finish/scoreboard and cross-network multiplayer; the connected staging update needs the fresh physical-device checklist in PLAYTEST.md. See DEPLOYMENT.md for the verified deployment record and costs.
 
 Hotfix build: **BREAK TIME · Connected finish 1** (protocol 8). After an update, refresh both devices and create a new room.
 
