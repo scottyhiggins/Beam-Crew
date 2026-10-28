@@ -1,3 +1,15 @@
+# Current public finish-fix release
+
+Verified October 27, 2026: https://break-time-9n1k.onrender.com . Live source **bca25d93e1558c3eafa700cafa5a6fcc9135f375**, deploy **dep-dbgmodflk1mc738vl3q0**, protocol **7**, build **BREAK TIME · Finish fix 1**. Reused the existing single approved Render service; auto-deploy off, /health configured, same corrected build command.
+
+All **55 tests passed locally and against the public server**, none skipped. HTTPS/WSS smoke passed. Real browser play verified the final scoreboard opens with both racers' times/spills/places, and remains frozen while the finished cart drives only within staging. Phone-width 390x844 layout bounds passed; physical iPhone hotfix acceptance remains pending. No runtime errors were returned by the post-deploy log query.
+
+The user pushed the gameplay fix with GitHub Desktop before this deploy. This verification record is a documentation-only follow-up; pushing it does not restart the game. Refresh both devices after the deploy and use a fresh room to test the fixed finish. No new paid services, Championship mode or second course were added.
+
+---
+
+## Previous deployment record (superseded above)
+
 # Verified live BREAK TIME — October 27, 2026
 
 **Public play URL: https://break-time-9n1k.onrender.com**

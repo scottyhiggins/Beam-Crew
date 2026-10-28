@@ -46,3 +46,5 @@ Close the previous server, relaunch Start-BeamCrew.cmd, confirm BREAK TIME and r
 Mark pass/fail and report screenshots/errors, device model, delay, most confusing action and whether another round feels fun. Graphics polish, championships, briefing, trivia, crane and rewards remain future work.
 
 Observed browser recovery quirk: after explicitly leaving, a reconnect message may appear. Refresh to start from a clean lobby; record whether the same occurs on iPhone. This pre-existing behavior was not changed in the deployment pass.
+
+Public hotfix verification completed: source bca25d9, build Finish fix 1/protocol 7; all 55 tests passed against Render and the final scoreboard was checked in a real browser race and at 390px width. Please refresh both physical devices and repeat steps 1–6 above for personal hotfix acceptance.

@@ -1,3 +1,18 @@
+# Finish hotfix verified publicly — October 27, 2026
+
+Live URL: https://break-time-9n1k.onrender.com . Render deploy dep-dbgmodflk1mc738vl3q0 is live with source **bca25d93e1558c3eafa700cafa5a6fcc9135f375**, build **BREAK TIME · Finish fix 1**, protocol **7**. The source fix is pushed to GitHub. Existing approved service/plan/ropes/course/modes are unchanged.
+
+- Local isolated production suite: **55 passed, zero failures/skips**.
+- Public HTTPS/WSS smoke and complete suite against the Render URL: **55 passed, zero failures/skips**, including the exact formerly missed fence-line route with two clients, matching times/spills/ranks, frozen clock, staging containment, reconnect and reset. Beam Carry and material/rope coverage pass.
+- Actual public browser race completed with a second network client. Before the browser racer finished, the first racer's 18.07s/0-spill result appeared provisionally. On the browser's finish at 128.70s/0 spills, the Final results panel opened automatically with both rows and correct ranking. The race clock remained 128.70s after waiting and driving in staging.
+- Phone-width emulation: viewport 390x844, results panel x=12..378, y=90..385; both scores and the dismissal button fit. This is browser layout verification, not physical iPhone acceptance.
+- Dismissed the panel and held movement toward the course: the finished cart stayed behind the stripe in staging, with unchanged time/results. Cleaned up the test room and left the public page at the new build's lobby.
+- Public runtime error-log query since this deploy returned no entries. Browser proof saved outside the repo: BREAK-TIME-fixed-scoreboard.png and BREAK-TIME-fixed-scoreboard-phone.png in the chat workspace. Use the normal-size screenshot for the clearest preview.
+
+Next human action: refresh both devices, confirm Finish fix 1 and create a fresh room, then repeat the formerly failing fence-line finish on laptop Wi-Fi + iPhone cellular. No account/hosting changes are needed. Any follow-up documentation-only commit can be published through GitHub Desktop Push origin; auto-deploy stays off and the gameplay fix is already deployed.
+
+---
+
 # Wheelbarrow finish hotfix — October 27, 2026
 
 User's physical public test confirmed laptop Wi-Fi + iPhone cellular multiplayer and ropes work. They found legal races had no finish/scoreboard. Treat this report as the acceptance finding; earlier automated passes did not cover ordinary fence-line paths.
