@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {Client,type Room} from 'colyseus.js';
 import {WHEEL_COURSE} from '../shared/wheelbarrow.js';
 const endpoint=process.env.TEST_URL;
+const routeIndex=new Map<string,number>();
+function drive(r:Room,throttle:number){const p=r.state.players?.get(r.sessionId);if(!p||p.finishOrder)return;let i=routeIndex.get(r.sessionId)??1;let goal=WHEEL_COURSE[i];if(Math.hypot(goal.x-p.x,goal.z-p.z)<.35&&i<WHEEL_COURSE.length-1){i++;routeIndex.set(r.sessionId,i);goal=WHEEL_COURSE[i];}const dx=goal.x-p.x,dz=goal.z-p.z,n=Math.hypot(dx,dz)||1;r.send('input',{x:dx/n*throttle,z:dz/n*throttle});}
 const pause=(ms:number)=>new Promise(r=>setTimeout(r,ms));
 async function until(fn:()=>boolean,timeout=7000){const end=Date.now()+timeout;while(!fn()){if(Date.now()>end)throw Error('Wheelbarrow synchronization timeout');await pause(25);}}
 test('two racers synchronize countdown, independent carts, reconnect, finish and host replay',{skip:!endpoint,timeout:65000},async()=>{
@@ -16,14 +18,14 @@ test('two racers synchronize countdown, independent carts, reconnect, finish and
   guest.send('restart');await pause(100);assert.equal(host.state.raceResets,1);
   await until(()=>guest!.state.racePhase==='racing');
   const id=guest.sessionId,token=guest.reconnectionToken;guest.connection.close();await until(()=>!host!.state.players.get(id).connected);guest=await client.reconnect(token);await until(()=>host!.state.players.get(id).connected&&guest!.state.players?.has(id));assert.equal(guest.sessionId,id);
-  timer=setInterval(()=>{const p=host!.state.players.get(host!.sessionId),target=WHEEL_COURSE[Math.min(p.checkpoint,WHEEL_COURSE.length-1)],dx=target.x-p.x,dz=(p.checkpoint===WHEEL_COURSE.length?-20:target.z)-p.z,len=Math.hypot(dx,dz);host!.send('input',{x:dx/len*.55,z:dz/len*.55});},30);
+  timer=setInterval(()=>{drive(host!,.55);},30);
   await until(()=>guest!.state.players.get(host!.sessionId).finishOrder===1,35000);
   clearInterval(timer);timer=undefined;
   const winner=guest.state.players.get(host.sessionId);assert.ok(winner.finishTime>0);assert.equal(winner.spills,0);assert.equal(guest.state.players.get(id).finishOrder,0);assert.equal(guest.state.players.get(id).z,7);
   assert.equal(guest.state.racePhase,'racing');
   host.send('input',{x:0,z:0});await pause(650);const finishedX=winner.x,finishedZ=winner.z;host.send('input',{x:1,z:1});await until(()=>guest!.state.players.get(host!.sessionId).x>finishedX+.02&&guest!.state.players.get(host!.sessionId).z>finishedZ+.02);assert.ok(guest.state.players.get(host.sessionId).x>finishedX);assert.ok(guest.state.players.get(host.sessionId).z>=finishedZ);assert.equal(guest.state.players.get(host.sessionId).finishOrder,1);assert.equal(guest.state.players.get(host.sessionId).finishTime,winner.finishTime);
   assert.equal(guest.state.results.length,1);assert.equal(guest.state.results[0].place,1);
-  timer=setInterval(()=>{const p=guest!.state.players.get(id),target=WHEEL_COURSE[Math.min(p.checkpoint,WHEEL_COURSE.length-1)],dx=target.x-p.x,dz=(p.checkpoint===WHEEL_COURSE.length?-20:target.z)-p.z,len=Math.hypot(dx,dz);guest!.send('input',{x:dx/len*.55,z:dz/len*.55});},30);
+  timer=setInterval(()=>{drive(guest!,.55);},30);
   await until(()=>host!.state.racePhase==='results',35000);clearInterval(timer);timer=undefined;
   await until(()=>guest!.state.racePhase==='results'&&guest!.state.results.length===2);
   const finalElapsed=host.state.elapsed;await pause(150);assert.equal(host.state.elapsed,finalElapsed);assert.equal(guest.state.elapsed,finalElapsed);
@@ -39,7 +41,7 @@ test('spilled material synchronizes to both racers and survives reload and recon
  try{
   host=await client.create('crew',{name:'Spill host'});guest=await client.joinById(host.roomId,{name:'Spill guest'});await until(()=>guest!.state.players?.size===2&&host!.state.players?.size===2);
   host.send('mode','wheel');await until(()=>guest!.state.mode==='wheel');host.send('start');await until(()=>guest!.state.racePhase==='racing');
-  timer=setInterval(()=>{const p=host!.state.players.get(host!.sessionId),target=WHEEL_COURSE[Math.min(p.checkpoint,WHEEL_COURSE.length-1)],dx=target.x-p.x,dz=target.z-p.z,len=Math.hypot(dx,dz)||1;host!.send('input',{x:dx/len,z:dz/len});},30);
+  timer=setInterval(()=>{drive(host!,1);},30);
   await until(()=>guest!.state.material?.length>=6,10000);clearInterval(timer);timer=undefined;host.send('input',{x:0,z:0});
   await until(()=>host!.state.material.length===guest!.state.material.length);const count=guest.state.material.length;
   await until(()=>host!.state.players.get(host!.sessionId).reload===0);assert.equal(host.state.material.length,count);

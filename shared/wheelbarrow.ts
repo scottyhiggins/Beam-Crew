@@ -14,6 +14,16 @@ export const WHEEL_COURSE = [
   {x:-6,z:7}, {x:-6,z:-2}, {x:2,z:-6},
   {x:4,z:-10}, {x:-3,z:-10}, {x:-3,z:-19},
 ];
+// Full-lane gates sit at unavoidable cross-sections, not small circles at bend vertices.
+// The short hairpin overlaps its neighboring lanes, so it has no hidden apex target.
+export const WHEEL_GATES = [
+  {x:-6,z:2.5,nx:0,nz:-1,halfWidth:2.8,label:'Start straight'},
+  {x:-2,z:-4,nx:2/Math.sqrt(5),nz:-1/Math.sqrt(5),halfWidth:2.8,label:'Bend exit'},
+  {x:-3,z:-13.5,nx:0,nz:-1,halfWidth:2.8,label:'Finish approach'},
+  {x:-3,z:-18,nx:0,nz:-1,halfWidth:2.8,label:'Finish line'},
+];
+export const WHEEL_FINISH_CHECKPOINT=WHEEL_GATES.length+1;
+export const WHEEL_FINISH_Z=WHEEL_GATES[WHEEL_GATES.length-1].z;
 export const WHEEL_FENCES=corridorFences(WHEEL_COURSE,WHEEL_CONFIG.corridorRadius);
 export const WHEEL_ROUGH={minX:-2,maxX:2,minZ:-11.5,maxZ:-8.5};
 // Shared posts are both rendered and collided with; no separate visual walls.
@@ -52,9 +62,9 @@ export function stepMaterial(material:Material[],dt:number){
 }
 export function compareResults(a:{spills:number;time:number;finishOrder:number},b:{spills:number;time:number;finishOrder:number}){return a.spills-b.spills||a.time-b.time||a.finishOrder-b.finishOrder;}
 export function shouldEndRace(players:Cart[],elapsed:number,firstFinishAt:number,timeout=WHEEL_CONFIG.postFinishTimeoutSeconds){return players.length>0&&(players.every(p=>p.finishOrder>0)||(timeout>0&&firstFinishAt>=0&&elapsed-firstFinishAt>=timeout));}
-export type Cart = {x:number;z:number;rotation:number;speed:number;instability:number;spills:number;reload:number;checkpoint:number;finishTime:number;finishOrder:number;lean:number;materialId?:number};
+export type Cart = {x:number;z:number;rotation:number;speed:number;instability:number;spills:number;reload:number;checkpoint:number;finishTime:number;finishOrder:number;lean:number;materialId?:number;finishCrossed?:boolean};
 export function resetCart(p:Cart,slot:number,count=8){
-  Object.assign(p,{x:-6+(slot%4-(Math.min(count,4)-1)/2)*1.15,z:7+Math.floor(slot/4)*1.4,rotation:Math.PI,speed:0,instability:0,spills:0,reload:0,checkpoint:1,finishTime:0,finishOrder:0,lean:0});
+  Object.assign(p,{x:-6+(slot%4-(Math.min(count,4)-1)/2)*1.15,z:7+Math.floor(slot/4)*1.4,rotation:Math.PI,speed:0,instability:0,spills:0,reload:0,checkpoint:1,finishTime:0,finishOrder:0,finishCrossed:false,lean:0});
 }
 const angle=(a:number)=>Math.atan2(Math.sin(a),Math.cos(a));
 export function onCourse(x:number,z:number){
@@ -63,6 +73,7 @@ export function onCourse(x:number,z:number){
 export function stepCart(p:Cart,inputX:number,inputZ:number,dt:number,material:Material[]=[]){
   if(p.finishOrder){stepStaging(p,inputX,inputZ,dt);return;}
   if(p.reload>0){p.reload=Math.max(0,p.reload-dt);p.speed=0;if(p.reload===0){p.instability=0;p.lean=0;}return;}
+  const previous={x:p.x,z:p.z,rotation:p.rotation};
   const magnitude=Math.min(1,Math.hypot(inputX,inputZ));
   const target=magnitude*WHEEL_CONFIG.maxSpeed;
   p.speed+=Math.max(-(target<p.speed?WHEEL_CONFIG.braking:WHEEL_CONFIG.acceleration)*dt,Math.min(WHEEL_CONFIG.acceleration*dt,target-p.speed));
@@ -100,14 +111,29 @@ export function stepCart(p:Cart,inputX:number,inputZ:number,dt:number,material:M
       p.rotation=angle(p.rotation+(sin*nz-cos*nx)*severity*.3);
     }
   }
+  advanceCartProgress(p,previous);
   if(p.instability>=WHEEL_CONFIG.spillThreshold){p.spills++;p.reload=WHEEL_CONFIG.reloadSeconds;p.speed=0;p.instability=WHEEL_CONFIG.spillThreshold;return;}
-  const next=WHEEL_COURSE[p.checkpoint];
-  if(next&&Math.hypot(p.x-next.x,p.z-next.z)<=WHEEL_CONFIG.checkpointRadius)p.checkpoint++;
+}
+export function advanceCartProgress(p:Cart,previous:{x:number;z:number;rotation:number}){
+  if(p.finishOrder||p.finishCrossed)return;
+  while(p.checkpoint>=1&&p.checkpoint<=WHEEL_GATES.length){
+    const gate=WHEEL_GATES[p.checkpoint-1],finish=p.checkpoint===WHEEL_GATES.length;
+    // Credit a wheelbarrow as its leading edge crosses the actual painted finish.
+    const offset=finish?WHEEL_CONFIG.cartOffset+WHEEL_CONFIG.cartRadius:0;
+    const ax=previous.x+Math.sin(previous.rotation)*offset,az=previous.z+Math.cos(previous.rotation)*offset;
+    const bx=p.x+Math.sin(p.rotation)*offset,bz=p.z+Math.cos(p.rotation)*offset;
+    const before=(ax-gate.x)*gate.nx+(az-gate.z)*gate.nz,after=(bx-gate.x)*gate.nx+(bz-gate.z)*gate.nz;
+    if(before>0||after<0||after-before<1e-8)return;
+    const t=-before/(after-before),x=ax+(bx-ax)*t,z=az+(bz-az)*t;
+    if(Math.abs((x-gate.x)*-gate.nz+(z-gate.z)*gate.nx)>gate.halfWidth)return;
+    p.checkpoint++;
+    if(finish){p.finishCrossed=true;return;}
+  }
 }
 export function finishCarts(players:Cart[],elapsed:number,previousOrder=0){
   let order=Math.max(previousOrder,...players.map(p=>p.finishOrder));
   // Arrival order is recorded independently from spill-first ranking.
-  for(const p of players)if(!p.finishOrder&&p.checkpoint===WHEEL_COURSE.length&&p.z<=-18){p.finishTime=elapsed;p.finishOrder=++order;p.speed=0;p.instability=0;p.lean=0;p.reload=0;p.x=-3+(order-1)%4;p.z=-23-Math.floor((order-1)/4);}
+  for(const p of players)if(!p.finishOrder&&p.checkpoint===WHEEL_FINISH_CHECKPOINT&&p.finishCrossed){p.finishTime=elapsed;p.finishOrder=++order;p.finishCrossed=false;p.speed=0;p.instability=0;p.lean=0;p.reload=0;p.x=-3+(order-1)%4;p.z=-23-Math.floor((order-1)/4);}
   return order;
 }
 

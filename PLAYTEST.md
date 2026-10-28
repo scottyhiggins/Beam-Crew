@@ -1,3 +1,18 @@
+# Wheelbarrow finish hotfix acceptance
+
+After the hotfix deploys, refresh both laptop and iPhone and confirm **BREAK TIME · Finish fix 1**. Start a new room at https://break-time-9n1k.onrender.com . Existing rooms end on the server restart.
+
+1. Repeat the successful laptop Wi-Fi + iPhone cellular connection. Choose loads normally. Follow the course while hugging the inner rope at the first bend and taking the legal inside line through the hairpin. Do not aim at invisible points. Route HUD should reach 3/3 before the finish.
+2. Cross the painted finish with the leading edge of one cart. It must record that player's elapsed time and spills immediately, show finished feedback, and transfer the visible cart/worker to staging. The other racer continues.
+3. Drive the finished cart backward and around every staging edge. It cannot reach/cross the finish line, touch active hazards or record a second finish.
+4. Finish the second player. Both devices must automatically show the same final scoreboard, names, finish times and spill counts. Main elapsed time freezes. Fewest spills wins, then fastest finish time. Dismiss results to drive in staging.
+5. Refresh the phone after finishing: its recorded result and final board return. Restart: countdown, checkpoint progress, finish state and results reset correctly. Play again with different loads.
+6. Attempt a reverse crossing and a direct trip to finish without the required route: neither awards a finish. Verify ropes still block shortcuts. Complete a Beam Carry race to check its original two-player mechanic.
+
+Automated coverage now follows the exact formerly missed legal fence-line path and an independent inner hairpin path, plus full-lane/backward/shortcut/staging cases and a real two-client result/reconnect/reset run. Physical iPhone acceptance of the hotfix remains your final check.
+
+---
+
 # BREAK TIME — competition readiness checklist
 
 Close the previous server, relaunch Start-BeamCrew.cmd, confirm BREAK TIME and refresh both browsers. Laptop http://localhost:2571; iPhone on the same Wi-Fi at http://<current-laptop-IPv4>:2571. Public play URL: https://break-time-9n1k.onrender.com . The full 49-test suite passed against this public server; physical iPhone acceptance remains pending. Record device/iOS/browser, network, player count and any error text.

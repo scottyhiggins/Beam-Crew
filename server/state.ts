@@ -4,6 +4,7 @@ export class Player extends Schema {
   name='Worker'; color=0; x=0; z=0; rotation=0; connected=true; actions=0; signal='';
   grip=-1; feedback=''; materialId=6; team=-1; end=-1;
   speed=0;instability=0;spills=0;reload=0;checkpoint=1;finishTime=0;finishOrder=0;lean=0;
+  finishCrossed=false; // Server-only crossing latch; never accepted from clients.
   vx=0; vz=0; inputX=0; inputZ=0; lastInput=0; lastAction=0; lastSignal=0; signalUntil=0; feedbackUntil=0;
 }
 defineTypes(Player,{name:'string',color:'number',x:'number',z:'number',rotation:'number',connected:'boolean',actions:'number',signal:'string',grip:'number',feedback:'string',materialId:'number',team:'number',end:'number',speed:'number',instability:'number',spills:'number',reload:'number',checkpoint:'number',finishTime:'number',finishOrder:'number',lean:'number'});

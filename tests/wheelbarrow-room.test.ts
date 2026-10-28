@@ -2,15 +2,15 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {CrewRoom} from '../server/room.js';
 import {CrewState,Player} from '../server/state.js';
-import {resetCart,WHEEL_COURSE} from '../shared/wheelbarrow.js';
+import {WHEEL_FINISH_CHECKPOINT,resetCart,WHEEL_COURSE} from '../shared/wheelbarrow.js';
 function race(){const room=new CrewRoom();room.setState(new CrewState());room.state.phase='test';room.state.mode='wheel';room.state.racePhase='racing';for(let i=0;i<2;i++){const p=new Player();resetCart(p,i,2);p.name=`Racer ${i}`;room.state.players.set(String(i),p);}return room;}
 test('server keeps unfinished racer active and reranks a slower clean finish ahead of a spilled first finish',()=>{
  const room=race(),a=room.state.players.get('0')!,b=room.state.players.get('1')!;
- Object.assign(a,{x:-3,z:-19,checkpoint:WHEEL_COURSE.length,spills:1});room.state.elapsed=24;room.tick(1/30);
+ Object.assign(a,{x:-3,z:-19,checkpoint:WHEEL_FINISH_CHECKPOINT,finishCrossed:true,spills:1});room.state.elapsed=24;room.tick(1/30);
  assert.equal(a.finishOrder,1);assert.equal(b.finishOrder,0);assert.equal(room.state.racePhase,'racing');assert.equal(room.state.results.length,1);
  a.lastInput=Date.now();a.inputX=1;const x=a.x;room.tick(1/30);assert.ok(a.x>x);assert.equal(a.finishOrder,1);
  b.connected=false;room.tick(1/30);assert.equal(room.state.racePhase,'racing');b.connected=true;
- Object.assign(b,{x:-3,z:-19,checkpoint:WHEEL_COURSE.length});room.state.elapsed=31;room.tick(1/30);
+ Object.assign(b,{x:-3,z:-19,checkpoint:WHEEL_FINISH_CHECKPOINT,finishCrossed:true});room.state.elapsed=31;room.tick(1/30);
  assert.equal(b.finishOrder,2);assert.equal(room.state.racePhase,'results');assert.equal(room.state.results.find(r=>r.name===b.name)!.place,1);assert.equal(room.state.results.find(r=>r.name===a.name)!.place,2);
  assert.equal(room.state.results.find(r=>r.name===a.name)!.finishOrder,1);
 });

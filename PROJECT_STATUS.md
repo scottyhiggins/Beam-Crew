@@ -1,3 +1,31 @@
+# Wheelbarrow finish hotfix — October 27, 2026
+
+User's physical public test confirmed laptop Wi-Fi + iPhone cellular multiplayer and ropes work. They found legal races had no finish/scoreboard. Treat this report as the acceptance finding; earlier automated passes did not cover ordinary fence-line paths.
+
+## Reproduction and cause
+
+Reproduced using the unmodified production math: drive from the start via (-4.3,1), (-4,-0.3), (-3.6,-1.2), (0,-5), then the remaining existing course. Every simulated position stays on course and respects the existing fences. The closest approach to the first hidden checkpoint is 2.5197587m, outside its 2.4m circle. At (-3.002,-19.940), checkpoint remains 1 and finishOrder stays 0. Thus crossing the visible finish cannot record a result. The old test driver aimed at checkpoint centers and therefore concealed this failure.
+
+## Fix and decisions
+
+- Replace circular bend targets with ordered full-lane crossing gates at the start straight, diagonal exit and finish approach. The short overlapping hairpin has no invisible apex requirement. Existing course, rope geometry, barriers, controls, materials and Beam Carry are preserved.
+- Last gate is the painted finish at z=-18. The server detects a continuous forward crossing by the cart's leading edge, including crossings near either lane edge. It latches the validated crossing in a server-only field, then records finish time/order/spills once in the same tick. Static positions beyond the line, backward crossings, out-of-lane crossings and skipped route gates cannot finish.
+- Existing result reconciliation now receives real finish records. Fewest spills remains primary, fastest finish time breaks ties. First finisher continues moving only in isolated staging; others keep racing. Last finisher freezes elapsed time and publishes final ranking to all clients. Reconnect preserves results/staging; restart clears the crossing latch, checkpoints and results.
+- HUD shows route gate progress and the next required gate. Final results are announced through the existing panel. Build label BREAK TIME · Finish fix 1, protocol 7: refresh both clients and create a new room after deployment.
+- Ranking/staging unit fixtures explicitly model an already validated crossing; detection is independently exercised by real movement and network tests. Drivers follow route waypoints independently of server checkpoint indices.
+
+## Verification and delivery
+
+pnpm test:all passed: **55 tests, zero failures/skips**, including seven live network tests against an isolated production server. Added five deterministic exact-failure/crossing tests and one two-client fence-line race that verifies identical scores, frozen time, staging containment, reconnect and reset. Legacy multiplayer, material selection/spills, ropes and complete Beam Carry pass. Build/TypeScript and diff formatting pass; the existing bundle-size warning remains.
+
+This section records the tested implementation before public rollout. Public deploy ID, source commit and protocol/build verification will be recorded after deployment. Do not call the public fix verified until the actual service is redeployed and the new fence-line regression passes there. No Championship, second course or unrelated lobby changes.
+
+Backup branch backup/before-finish-fix-20261027 preserves 29a63be. Existing untracked helpers/work remain untouched. Public service remains srv-dbglagdg1s2s73bmg9u0, approved single paid instance; reuse it for the hotfix.
+
+---
+
+## Historical notes (superseded above)
+
 # BREAK TIME is public — October 27, 2026
 
 **Verified playable URL: https://break-time-9n1k.onrender.com**

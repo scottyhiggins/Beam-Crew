@@ -6,13 +6,15 @@ Construction party multiplayer for 2–8 players. Wheelbarrow Race and Beam Carr
 
 Verified live October 27, 2026 on Render: HTTPS, secure WebSockets, room-code/invite-link joining and all 49 automated checks against the public server (zero failures/skips). This runs independently of the laptop. Physical laptop+iPhone/cellular acceptance remains pending. See DEPLOYMENT.md for the service record and costs.
 
+Hotfix build: **BREAK TIME · Finish fix 1** (protocol 7). After an update, refresh both devices and create a new room.
+
 ## Play locally
 
 Close the old server with Ctrl+C, then double-click Start-BeamCrew.cmd. Confirm BREAK TIME. Laptop: http://localhost:2571. iPhone: same Wi-Fi, http://<laptop-Wi-Fi-IPv4>:2571 (find the current address with ipconfig). Keep the launcher open. Create a room, join by code/link, choose mode, Start test. The lobby panel/menu behavior is preserved.
 
 WASD / joystick moves. Space / ACTION grabs/releases your assigned beam end. Beam Carry pairs connected workers in join order; an odd worker spectates. Two workers is a team time trial. Multiple teams race simultaneously without beam-to-beam blocking. The existing doorway and turn course is unchanged.
 
-Wheelbarrow has 12 material choices in six paired categories. Loaded handling is identical; spills create different hazards. Loads now look like cement/sand, pipes/rebar, barricades/coiled hose, bricks/hollow blocks, boards/offcuts, gravel/rubble. Choices lock at countdown. Fewest spills wins; fastest finish time breaks ties. Follow arrows inside continuous rope barriers and ordered server checkpoints.
+Wheelbarrow has 12 material choices in six paired categories. Loaded handling is identical; spills create different hazards. Loads now look like cement/sand, pipes/rebar, barricades/coiled hose, bricks/hollow blocks, boards/offcuts, gravel/rubble. Choices lock at countdown. Fewest spills wins; fastest finish time breaks ties. Ordered full-lane route gates validate progress; the cart’s leading edge crossing the painted finish records the finish. The HUD shows route progress. Follow arrows inside continuous rope barriers and ordered server checkpoints.
 
 Finishers stay visible and can drive within the staging bounds, strictly beyond the finish line. They cannot re-enter the course, interact with active hazards or finish twice. There is no colored staging pad. Final results open automatically for all clients, with the timer stopped; dismiss results to keep driving. Host uses the unchanged Lobby controls to restart or return.
 

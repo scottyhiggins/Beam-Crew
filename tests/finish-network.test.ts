@@ -1,0 +1,20 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {Client,type Room} from 'colyseus.js';
+import {FINISH_STAGING,WHEEL_FINISH_Z,WHEEL_CONFIG} from '../shared/wheelbarrow.js';
+const endpoint=process.env.TEST_URL;
+const route=[{x:-4.3,z:1},{x:-4,z:-.3},{x:-3.6,z:-1.2},{x:0,z:-5},{x:2,z:-6},{x:4,z:-10},{x:-3,z:-10},{x:-3,z:-20}];
+async function until(check:()=>boolean,timeout=10000){const deadline=Date.now()+timeout;while(!check()){if(Date.now()>deadline)throw Error('Fence-line finish synchronization timeout');await new Promise(r=>setTimeout(r,30));}}
+test('two real clients finish the missed-checkpoint route, receive scores, freeze time and reconnect in staging',{skip:!endpoint,timeout:120000},async()=>{
+ const client=new Client(endpoint!.replace(/^http/,'ws')),rooms:Room[]=[];let timer:ReturnType<typeof setInterval>|undefined;
+ try{const host=await client.create('crew',{name:'Fence line A'});rooms.push(host);let guest=await client.joinById(host.roomId,{name:'Fence line B'});rooms.push(guest);await until(()=>host.state.players?.size===2&&guest.state.players?.size===2);
+ host.send('mode','wheel');host.send('material',2);guest.send('material',2);await until(()=>guest.state.mode==='wheel'&&host.state.players.get(host.sessionId).materialId===2&&guest.state.players.get(guest.sessionId).materialId===2);host.send('start');await until(()=>host.state.racePhase==='racing'&&guest.state.racePhase==='racing');
+ const indices=[0,0];timer=setInterval(()=>{rooms.forEach((r,index)=>{const p=r.state.players?.get(r.sessionId);if(!p||p.finishOrder||index===1&&r.state.elapsed<1.5)return;let goal=route[indices[index]];if(!goal)return;let dx=goal.x-p.x,dz=goal.z-p.z,n=Math.hypot(dx,dz);if(n<.06){indices[index]++;goal=route[indices[index]];if(!goal)return;dx=goal.x-p.x;dz=goal.z-p.z;n=Math.hypot(dx,dz);}const throttle=.25*Math.min(1,n/.6);r.send('input',{x:dx/(n||1)*throttle,z:dz/(n||1)*throttle});});},30);
+ await until(()=>host.state.racePhase==='results'&&guest.state.racePhase==='results'&&host.state.results.length===2&&guest.state.results.length===2,100000);clearInterval(timer);timer=undefined;
+ const view=(r:Room)=>Array.from(r.state.results,(x:any)=>[x.name,x.place,x.time,x.spills,x.finishOrder]);assert.deepEqual(view(host),view(guest));assert.deepEqual([...host.state.results].map((r:any)=>r.place).sort(),[1,2]);
+ for(const r of rooms){const p=r.state.players.get(r.sessionId);assert.ok(p.finishOrder>0);assert.ok(p.finishTime>0);const result=[...r.state.results].find((x:any)=>x.name===p.name)!;assert.equal(result.time,p.finishTime);assert.equal(result.spills,p.spills);assert.equal(p.spills,0);}
+ const elapsed=host.state.elapsed,time=guest.state.players.get(guest.sessionId).finishTime;guest.send('input',{x:0,z:1});await new Promise(r=>setTimeout(r,450));assert.equal(host.state.elapsed,elapsed);assert.equal(guest.state.elapsed,elapsed);assert.ok(guest.state.players.get(guest.sessionId).z+WHEEL_CONFIG.cartOffset+WHEEL_CONFIG.cartRadius<WHEEL_FINISH_Z);assert.equal(guest.state.players.get(guest.sessionId).finishTime,time);
+ const token=guest.reconnectionToken,id=guest.sessionId;guest.connection.close();await until(()=>!host.state.players.get(id).connected);guest=await client.reconnect(token);rooms[1]=guest;await until(()=>guest.state.players?.get(id)?.connected&&guest.state.racePhase==='results'&&guest.state.results?.length===2);assert.deepEqual(view(host),view(guest));assert.equal(guest.state.players.get(id).finishTime,time);assert.ok(guest.state.players.get(id).z<=FINISH_STAGING.maxZ);
+ host.send('restart');await until(()=>guest.state.racePhase==='countdown'&&guest.state.results.length===0);assert.equal(guest.state.players.get(id).finishOrder,0);assert.equal(guest.state.players.get(id).checkpoint,1);
+ }finally{if(timer)clearInterval(timer);await Promise.allSettled(rooms.filter(r=>r.connection.isOpen).map(r=>r.leave()));}
+});
