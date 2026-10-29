@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import {MATERIAL_COLORS} from '../shared/materials.js';
 function box(w:number,h:number,d:number,color:number,x:number,y:number,z:number,parent:THREE.Object3D){const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshLambertMaterial({color}));mesh.position.set(x,y,z);parent.add(mesh);return mesh;}
 // Logical objects, not mesh parts: a barricade includes its legs; rebar includes ribs.
-export const MATERIAL_PIECE_COUNTS=[1,1,5,5,2,2,6,6,4,4,12,12] as const;
+export {MATERIAL_PIECE_COUNTS} from '../shared/materials.js';
 export function createLoadVisual(load:THREE.Group,id:number,onlyPiece?:number){
   const color=id===0?0x899796:MATERIAL_COLORS[id],category=Math.floor(id/2);
   if(category===0){const heap=new THREE.Mesh(new THREE.SphereGeometry(1,10,6),new THREE.MeshLambertMaterial({color}));heap.scale.set(.52,id===0?.13:.27,.6);heap.position.set(0,id===0?1.02:1.1,1.15);load.add(heap);return;}

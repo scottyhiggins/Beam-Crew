@@ -1,3 +1,27 @@
+# Playtest corrections 1 — debris alignment and iPhone landscape
+
+Build **BREAK TIME · Playtest corrections 1**, compatibility protocol **9**. Refresh both clients after deployment. No schema, message format, room lifecycle, race rules, scoring, finish/staging rules, material persistence, or effect coefficients changed. Protocol 9 prevents freshly loaded mismatched clients from treating the new shared contact contract as the old renderer-only arrangement.
+
+## Debris is the hazard
+
+Removed the translucent spill rings completely. The client and server now share the exact logical-object allocation, piece offsets/rotation/scale and per-material simplified contact shapes. Empty fractional-object records have no mesh and no collision/effect. Contact normals and separation come from the visible debris shapes rather than the former generic circles. Wet cement/sand match their ten-sided heap footprint; rods/boards/bricks/blocks/barricades use tight rotated boxes; hose and stones use close-fitting circles. A cart's unchanged body radius is included in contact checks. Loose heaps retain one load's total volume, and solid counts remain 2/5/6/4/12 as appropriate. Cached geometry remains bounded; a broadphase avoids detailed checks for distant debris. Permanent records and existing cap aggregation stay authoritative and synchronized.
+
+Removed the persistent debris bounce/tilt that briefly moved a visible hazard away from its active footprint. Cart tipping animation remains. All six effects remain: sticky slowdown, rolling, fixed/blocking, pushable heavy debris, bumpy and rough spill-risk. Ground inspection confirmed no spill rings for all twelve materials. Tests compare rendered vertices to server bounds at normal and aggregated quantities, confirm empty slots have no effect, and verify all six effects on actual contact. Existing fixtures that placed fake hazards in empty slots were corrected; the finishing fixture now places its finisher in the legitimate staging yard rather than on the race course.
+
+## Touch landscape presentation
+
+Dedicated short touch-landscape profile (height at most 540 CSS px and wide aspect), leaving desktop/portrait framing intact. Compact 12px HUD text, smaller world labels, nearby-player name culling, a 92px joystick, 74px action button, and at least 44px menu/close targets. Collapsible standings replace the large persistent ranking text. Final results are a small scrollable side overlay, can be dismissed, and can be reopened with Results. Closer north-up camera with forward look-ahead keeps the player and upcoming route visible while preserving control direction.
+
+`viewport-fit=cover`, dynamic viewport sizing and all four safe-area insets protect touch controls and panels from the notch, home indicator and Safari chrome. Portrait retains its existing layout with safe-area padding; landscape text inflation is disabled without rasterizing HUD text.
+
+Browser QA used controlled 844×390 and 667×375 landscape previews with production markup/CSS/framing. Controls and close button stayed within bounds, results dismissed/reopened, and standings opened/closed. Camera projection tests cover 844×390, 915×412, 667×375 and 740×320 plus unchanged portrait/desktop profiles. User-referenced screenshots were not attached in the received message; these checks do not replace a fresh physical-iPhone acceptance test.
+
+Recovery: branch `codex/pre-playtest-corrections-20261028` at `4370e72`, external `Beam-Crew-pre-playtest-corrections-20261028.bundle` in the ChatGPT project workspace. Prior recovery branches and Visual polish 2 Render deployment remain preserved. Same Render service/workspace/plan; automatic deploys off. No Championship, Crane Challenge or new courses.
+
+Final production build and full local suite: **68 passed, zero failures/skips**, including real two-client spills for all twelve materials. Public deployment verification is pending. An initial local asset check failed after Windows blocked build-output creation; retrying the build produced the assets. Final clean-run evidence supersedes that attempt.
+
+---
+
 # Visual polish 2 — focused sharpness and spill quantity fixes
 
 Build **BREAK TIME · Visual polish 2**, protocol **8**. October 28, 2026. The accepted Visual polish 1 remains recoverable: branch `codex/pre-visual-polish2-20261028` at `034a68f`, existing `codex/pre-graphics-20261028` untouched, external `Beam-Crew-pre-visual-polish2-20261028.bundle` in the ChatGPT project workspace. Previous live deploy `dep-dbh3fbsipgvc73dm2ju0` used gameplay source `ca5ec18`.

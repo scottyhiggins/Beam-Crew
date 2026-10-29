@@ -1,2 +1,2 @@
-export const BUILD_LABEL = 'BREAK TIME · Visual polish 2';
-export const PROTOCOL_VERSION = 8;
+export const BUILD_LABEL = 'BREAK TIME · Playtest corrections 1';
+export const PROTOCOL_VERSION = 9;

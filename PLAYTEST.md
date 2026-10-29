@@ -1,3 +1,12 @@
+# Playtest corrections 1 public acceptance
+
+1. Refresh laptop and iPhone at https://break-time-9n1k.onrender.com and confirm **Playtest corrections 1**. Create a fresh room; run one session on separate networks.
+2. Spill each material. Verify one load's quantity and real shapes, no translucent rings, and no slowdown/bump/blocking in empty gaps. Touch actual cement/sand, rods, barricades/hose, bricks/blocks, boards and gravel/rubble to check the corresponding effect. Repeat spills, reload, push rolling/heavy debris, and reconnect; both views should agree and debris should persist.
+3. In iPhone landscape, check Menu/Standings/Results, joystick and Beam Carry ACTION. Open/close standings. Dismiss final results and reopen with Results. Check labels, player position and upcoming obstacles; course center should remain clear while driving. Test both landscape directions with the notch/home indicator and Safari toolbar visible/hidden.
+4. Rotate to portrait and compare laptop layout. Repeat Beam Carry, finish/spike strip, staging, reverse protection, bumps/spills and frozen official results. Report device/browser, screenshot and any remaining UI overlap or contact mismatch.
+
+---
+
 # Visual polish 2 public acceptance
 
 1. Refresh laptop and iPhone at https://break-time-9n1k.onrender.com . Confirm **BREAK TIME · Visual polish 2**, then create a fresh room (use separate networks for one run).

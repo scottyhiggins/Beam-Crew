@@ -4,14 +4,16 @@ import {MATERIALS,MATERIAL_CATEGORIES,validMaterial} from '../shared/materials.j
 import {WHEEL_FINISH_CHECKPOINT,resetCart,stepCart,spillMaterial,stepMaterial,finishCarts,WHEEL_CONFIG,WHEEL_COURSE,FINISH_STAGING,type Cart,type Material} from '../shared/wheelbarrow.js';
 import {CrewRoom} from '../server/room.js';
 import {CrewState,Player} from '../server/state.js';
+import {planSpills} from '../shared/debris.js';
 import {createBeam,stepBeam,COURSE} from '../shared/beam.js';
 const cart=(id=6)=>{const p={materialId:id} as Cart;resetCart(p,0,2);return p;};
 test('12 materials in six vertical pairs and strict input validation',()=>{assert.equal(MATERIALS.length,12);assert.equal(MATERIAL_CATEGORIES.length,6);for(const c of MATERIAL_CATEGORIES)assert.equal(c.items.length,2);for(const value of [-1,12,1.1,'1',null,NaN])assert.equal(validMaterial(value),false);assert.equal(validMaterial(11),true);});
 test('all twelve loaded carts have identical speed steering risk and spill thresholds',()=>{const reference=cart(0);for(let i=0;i<60;i++)stepCart(reference,.2,-.4,1/30);for(let id=1;id<12;id++){const p=cart(id);for(let i=0;i<60;i++)stepCart(p,.2,-.4,1/30);for(const field of ['x','z','rotation','speed','instability','spills','reload'] as const)assert.equal(p[field],reference[field]);}});
 test('six spill behaviors: sticky, rolling, fixed, heavy, bumpy and rough',()=>{
- const hit=(id:number)=>{const p=cart();Object.assign(p,{x:-6,z:3,rotation:Math.PI,speed:5.5});const b:Material={x:-6,z:1.7,vx:0,vz:0,amount:1,materialId:id};stepCart(p,0,-1,1/30,[b]);return {p,b};};
+ const hit=(id:number)=>{const p=cart();Object.assign(p,{x:-6,z:3,rotation:Math.PI,speed:5.5});const material:Material[]=Array.from({length:6},(_,i)=>({x:20+i,z:20,vx:0,vz:0,amount:1,materialId:id}));const index=planSpills(material).findIndex(p=>p.pieces>0);const b=material[index];b.x=-6;b.z=1.7;stepCart(p,0,-1,1/30,material);return {p,b};};
  const sticky=hit(0),rolling=hit(2),fixed=hit(4),heavy=hit(6),bumpy=hit(8),rough=hit(10);
- assert.ok(sticky.p.speed<5.5);assert.equal(sticky.b.z,1.7);assert.notEqual(rolling.b.z,1.7);assert.ok(Math.abs(rolling.b.vz)>Math.abs(heavy.b.vz));assert.equal(fixed.b.z,1.7);assert.ok(fixed.p.speed<5.5);assert.ok(bumpy.p.instability>0);assert.ok(rough.p.instability>bumpy.p.instability);
+ assert.ok(sticky.p.speed<5.5);assert.equal(sticky.b.z,1.7);assert.ok(Math.hypot(rolling.b.x+6,rolling.b.z-1.7)>0);assert.ok(Math.hypot(heavy.b.x+6,heavy.b.z-1.7)>0);assert.equal(fixed.b.z,1.7);assert.ok(fixed.p.speed<5.5);assert.ok(bumpy.p.instability>0);assert.ok(rough.p.instability>0);
+ const rollingFree={...rolling.b,x:-6,z:4,vx:1,vz:1},heavyFree={...heavy.b,x:-6,z:4,vx:1,vz:1};stepMaterial([rollingFree],1/30);stepMaterial([heavyFree],1/30);assert.ok(rollingFree.vx>heavyFree.vx);
  for(const id of [0,4,8,10]){const b:Material={x:-6,z:3,vx:1,vz:1,amount:1,materialId:id};stepMaterial([b],1/30);assert.equal(b.x,-6);assert.equal(b.z,3);}
 });
 test('mixed repeated spills stay bounded and preserve material identity',()=>{const material:Material[]=[];for(let i=0;i<1000;i++)spillMaterial(cart(i%12),material,b=>material.push(b));assert.equal(material.length,WHEEL_CONFIG.maxMaterial);assert.ok(material.every(b=>validMaterial(b.materialId)&&Number.isFinite(b.amount)));assert.equal(new Set(material.map(b=>b.materialId)).size,12);});

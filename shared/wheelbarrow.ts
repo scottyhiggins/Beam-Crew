@@ -1,12 +1,13 @@
 import {corridorFences,fenceContact} from './fences.js';
 import {materialCategory} from './materials.js';
+import {planSpills,recordContact,HAZARDS_PER_LOAD} from './debris.js';
 export const WHEEL_CONFIG = {
   maxSpeed: 5.5, acceleration: 3.8, braking: 7, steering: 2.8,
   speedGain: .24, turnGain: .65, roughGain: 1.35, recovery: .3,
   spillThreshold: 1, reloadSeconds: 2.4, countdownSeconds: 3,
   corridorRadius: 2.8, checkpointRadius: 2.4,
   cartRadius: .65, cartOffset: 1.1, impactGain: .65,
-  materialRadius: .25, maxMaterial: 192, bricksPerSpill: 6,
+  materialRadius: .25, maxMaterial: 192, bricksPerSpill: HAZARDS_PER_LOAD,
   // Zero disables the optional grace period after the first finisher.
   postFinishTimeoutSeconds: 0,
 };
@@ -63,10 +64,11 @@ export function spillMaterial(p:Cart,material:Material[],create:(value:Material)
   }
 }
 export function stepMaterial(material:Material[],dt:number){
-  for(const b of material){
+  const plans=planSpills(material);
+  for(const [index,b] of material.entries()){
     const category=materialCategory(b.materialId);if(category!==1&&category!==3){b.vx=b.vz=0;continue;}
     const x=b.x+b.vx*dt,z=b.z+b.vz*dt;
-    if(onDriveableArea(x,z)&&!WHEEL_OBSTACLES.some(o=>Math.hypot(x-o.x,z-o.z)<o.radius+WHEEL_CONFIG.materialRadius)){b.x=x;b.z=z;}
+    if(onDriveableArea(x,z)&&!WHEEL_OBSTACLES.some(o=>Math.hypot(x-o.x,z-o.z)<o.radius+1.8&&recordContact(plans[index],index,{x,z},o,o.radius))){b.x=x;b.z=z;}
     else {b.vx*=-.25;b.vz*=-.25;}
     b.vx*=Math.exp(-(materialCategory(b.materialId)===1?1.2:5)*dt);b.vz*=Math.exp(-(materialCategory(b.materialId)===1?1.2:5)*dt);
     if(Math.hypot(b.vx,b.vz)<.01)b.vx=b.vz=0;
@@ -100,20 +102,25 @@ export function stepCart(p:Cart,inputX:number,inputZ:number,dt:number,material:M
   const sin=Math.sin(p.rotation),cos=Math.cos(p.rotation);
   const contact=fenceContact({x:p.x+sin*WHEEL_CONFIG.cartOffset,z:p.z+cos*WHEEL_CONFIG.cartOffset},WHEEL_CONFIG.cartRadius,WHEEL_FENCES,allowed);
   if(contact){const px=p.x+contact.x,pz=p.z+contact.z;if(allowed(px,pz)){p.x=px;p.z=pz;}p.instability+=WHEEL_CONFIG.impactGain*ratio**2;p.speed*=.15;}
-  for(const o of [...WHEEL_OBSTACLES,...material]){
+  const materialPlans=planSpills(material);
+  for(const [obstacleIndex,o] of [...WHEEL_OBSTACLES,...material].entries()){
     const movable='amount' in o;
     if(!p.finishOrder&&movable&&o.z<=WHEEL_FINISH_Z)continue;
     const category=movable?materialCategory(o.materialId):-1;
-    const radius=WHEEL_CONFIG.cartRadius+(movable?(category===0||category===5?.65:WHEEL_CONFIG.materialRadius):o.radius);
-    const dx=p.x+sin*WHEEL_CONFIG.cartOffset-o.x,dz=p.z+cos*WHEEL_CONFIG.cartOffset-o.z,distance=Math.hypot(dx,dz);
-    if(distance>=radius)continue;
+    const point={x:p.x+sin*WHEEL_CONFIG.cartOffset,z:p.z+cos*WHEEL_CONFIG.cartOffset};
+    const index=obstacleIndex-WHEEL_OBSTACLES.length;
+    const dx=point.x-o.x,dz=point.z-o.z,distance=Math.hypot(dx,dz);
+    const radius=WHEEL_CONFIG.cartRadius+(movable?0:o.radius);
+    const contact=movable?recordContact(materialPlans[index],index,o,point,WHEEL_CONFIG.cartRadius):
+      distance<radius?{nx:distance>.0001?dx/distance:-sin,nz:distance>.0001?dz/distance:-cos,depth:radius-distance}:null;
+    if(!contact)continue;
     if(category===0){p.speed*=Math.exp(-2.5*dt);continue;}
     if(category===5||category===4){p.instability+=dt*(category===5?1.4:.85)*(p.speed/WHEEL_CONFIG.maxSpeed)**2;p.speed*=Math.exp(-.5*dt);continue;}
-    const nx=distance>.0001?dx/distance:-sin,nz=distance>.0001?dz/distance:-cos;
+    const {nx,nz}=contact;
     const severity=Math.max(0,-(sin*nx+cos*nz))*p.speed/WHEEL_CONFIG.maxSpeed;
     p.instability+=WHEEL_CONFIG.impactGain*severity**2*(movable?.6:1);
     p.speed*=1-Math.min(.8,severity*(movable?.5:.8));
-    const separation=radius-distance+.001;
+    const separation=contact.depth+.001;
     if(movable&&(category===1||category===3)){
       const pushX=o.x-nx*separation,pushZ=o.z-nz*separation;
       if(allowed(pushX,pushZ)){o.x=pushX;o.z=pushZ;}else{p.x+=nx*separation;p.z+=nz*separation;}

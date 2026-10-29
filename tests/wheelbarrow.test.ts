@@ -18,7 +18,7 @@ test('spilled material persists, moves when another cart hits, and ignores finis
  const b=material[0];const hitter=cart();Object.assign(hitter,{x:b.x,z:b.z+1.7,rotation:Math.PI,speed:5.5});const x=b.x,z=b.z;
  stepCart(hitter,0,-1,1/30,material);assert.ok(b.x!==x||b.z!==z);assert.ok(hitter.speed<5.5);assert.ok(hitter.instability>0);
  for(let i=0;i<300;i++)stepMaterial(material,1/30);assert.equal(material.length,6);assert.ok(material.every(m=>Number.isFinite(m.x)&&onCourse(m.x,m.z)));
- hitter.finishOrder=1;const snapshot=JSON.stringify(material);stepCart(hitter,1,1,1/30,material);assert.equal(JSON.stringify(material),snapshot);
+ Object.assign(hitter,{finishOrder:1,x:-3,z:-25});const snapshot=JSON.stringify(material);stepCart(hitter,1,1,1/30,material);assert.equal(JSON.stringify(material),snapshot);
 });
 test('eight-player repeated spills preserve all material within a bounded number of piles',()=>{
  const material:Material[]=[];for(let i=0;i<1000;i++){const p=cart();resetCart(p,i%8,8);spillMaterial(p,material,b=>material.push(b));}

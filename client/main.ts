@@ -1,6 +1,8 @@
+import {presentationFor} from './presentation';
 import {makeWorker,animateWorker,scenery,paintArrow} from './polish';
 import {createSpillVisual,spillSignature,updateSpillVisual} from './spill-visual';
 import {planSpills} from './spill-plan';
+import {debrisRotation} from '../shared/debris';
 import {renderRatio,ResolutionGovernor} from './render-resolution';
 import {createLoadVisual} from './load-visual';
 import * as THREE from 'three';
@@ -13,7 +15,7 @@ import {MATERIAL_CATEGORIES,MATERIALS,MATERIAL_COLORS} from '../shared/materials
 import {FINISH_STAGING} from '../shared/wheelbarrow';
 const colors=[0xffad32,0x35b9ff,0xff5985,0x59d595,0xa38aff,0xf2ee57,0xffffff,0x965c42];
 const app=document.querySelector<HTMLDivElement>('#app')!;
-app.innerHTML=`<main id="panel"><h1>BREAK TIME</h1><p id="buildLabel">${BUILD_LABEL}</p><p class="eyebrow">CLOCK OUT. PLAY HARD.</p><p>A little teamwork. A lot of spilled cement.</p><label>Your name <input id="name" maxlength="18" value="Worker" autocomplete="nickname"></label><button id="create">Create room</button><div class="join"><input id="code" maxlength="5" placeholder="ROOM CODE" aria-label="Room code"><button id="join">Join</button></div><p id="status" role="status"></p><section id="room" hidden><h2 id="roomCode"></h2><button id="share">Copy join link</button><ul id="players"></ul><label id="modeLabel">Game mode <select id="mode"><option value="competitive">Beam Carry · two-player teams</option><option value="wheel">Wheelbarrow Race</option></select></label><section id="materials" hidden><h3>Choose your load</h3><p>Same cart handling. Your spill creates this hazard. Duplicates allowed; locked at countdown.</p><div id="materialGrid"></div><p id="chosenLoad" role="status"></p></section><button id="start">Let’s get to work</button><button id="back">Return to lobby</button><button id="reset" hidden>Reset to checkpoint</button><button id="restart" hidden>Restart course</button><button id="leave">Leave room</button></section><p id="help">WASD to move · Space to grab/release<br>On phones: joystick + ACTION</p></main><div id="hud" hidden><span id="hudText"></span><div id="beamStatus" role="status"></div><button id="grab">GRAB · Space</button><div id="signals"><button data-signal="LIFT">LIFT</button><button data-signal="WAIT">WAIT</button><button data-signal="LEFT">LEFT</button><button data-signal="RIGHT">RIGHT</button></div><button id="menu">Lobby controls</button></div><div id="touch" hidden><div id="joystick" aria-label="Movement joystick"><div id="stick"></div></div><button id="action">ACTION</button></div><section id="raceResults" hidden role="region" aria-live="polite" aria-labelledby="resultsTitle"><h2 id="resultsTitle">Final results</h2><p id="resultsRule"></p><ol id="resultsList"></ol><button id="closeResults">Keep driving in staging</button></section>`;
+app.innerHTML=`<main id="panel"><h1>BREAK TIME</h1><p id="buildLabel">${BUILD_LABEL}</p><p class="eyebrow">CLOCK OUT. PLAY HARD.</p><p>A little teamwork. A lot of spilled cement.</p><label>Your name <input id="name" maxlength="18" value="Worker" autocomplete="nickname"></label><button id="create">Create room</button><div class="join"><input id="code" maxlength="5" placeholder="ROOM CODE" aria-label="Room code"><button id="join">Join</button></div><p id="status" role="status"></p><section id="room" hidden><h2 id="roomCode"></h2><button id="share">Copy join link</button><ul id="players"></ul><label id="modeLabel">Game mode <select id="mode"><option value="competitive">Beam Carry · two-player teams</option><option value="wheel">Wheelbarrow Race</option></select></label><section id="materials" hidden><h3>Choose your load</h3><p>Same cart handling. Your spill creates this hazard. Duplicates allowed; locked at countdown.</p><div id="materialGrid"></div><p id="chosenLoad" role="status"></p></section><button id="start">Let’s get to work</button><button id="back">Return to lobby</button><button id="reset" hidden>Reset to checkpoint</button><button id="restart" hidden>Restart course</button><button id="leave">Leave room</button></section><p id="help">WASD to move · Space to grab/release<br>On phones: joystick + ACTION</p></main><div id="hud" hidden><span id="hudText"></span><div id="beamStatus" role="status"></div><button id="grab">GRAB · Space</button><div id="signals"><button data-signal="LIFT">LIFT</button><button data-signal="WAIT">WAIT</button><button data-signal="LEFT">LEFT</button><button data-signal="RIGHT">RIGHT</button></div><details id="standings" hidden><summary>Standings</summary><ol id="standingsList"></ol></details><button id="showResults" hidden>Results</button><button id="menu">Lobby controls</button></div><div id="touch" hidden><div id="joystick" aria-label="Movement joystick"><div id="stick"></div></div><button id="action">ACTION</button></div><section id="raceResults" hidden role="region" aria-live="polite" aria-labelledby="resultsTitle"><h2 id="resultsTitle">Final results</h2><p id="resultsRule"></p><ol id="resultsList"></ol><button id="closeResults">Keep driving in staging</button></section>`;
 const el=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 for(const category of MATERIAL_CATEGORIES){const column=document.createElement('div');const heading=document.createElement('strong');heading.textContent=category.name;column.append(heading);for(const name of category.items){const m=MATERIALS.find(m=>m.name===name)!;const button=document.createElement('button');button.type='button';button.dataset.material=String(m.id);button.textContent=m.name+' · '+m.effect;button.onclick=()=>room?.send('material',m.id);column.append(button);}el('materialGrid').append(column);}
 const signalReadout=document.createElement('div');signalReadout.id='crewSignals';el('hud').append(signalReadout);
@@ -45,14 +47,15 @@ el('restart').onclick=()=>{stopInput();room?.send('restart');menuOpen=false;rend
 el('leave').onclick=()=>{storage('beam-token',null);void room?.leave();};
 el('share').onclick=async()=>{if(!room?.state.code)return;const url=new URL(location.href);url.search='';url.searchParams.set('room',room.state.code);try{await navigator.clipboard.writeText(url.href);status('Join link copied');}catch{status(`Join link: ${url.href}`);}};
 let shownResults='',dismissedResults='';
+el('showResults').onclick=()=>{dismissedResults='';renderResults(room?.state);};
 el('closeResults').onclick=()=>{dismissedResults=shownResults;el('raceResults').hidden=true;};
 function renderResults(state:any){
-  const ready=state?.phase==='test'&&state.racePhase==='results';
+  const ready=state?.phase==='test'&&state.racePhase==='results';el('showResults').hidden=!ready;
   const key=ready?room?.roomId+':'+state.mode+':'+state.raceResets:'';
   if(!ready){el('raceResults').hidden=true;shownResults='';dismissedResults='';return;}
   shownResults=key;el('raceResults').hidden=dismissedResults===key;
   el('resultsRule').textContent=state.mode==='wheel'?'Fewest spills wins · Fastest time breaks ties · Race time '+state.elapsed.toFixed(2)+'s':'Two workers per beam · Fastest team wins';
-  el('closeResults').textContent=state.mode==='wheel'?'Keep driving in staging':'Close results';
+  el('closeResults').textContent=currentPresentation.compact?'Close':state.mode==='wheel'?'Keep driving in staging':'Close results';
   const entries=state.mode==='wheel'?[...state.results].sort((a:any,b:any)=>a.place-b.place):[...state.teams].sort((a:any,b:any)=>(a.place||99)-(b.place||99));
   el('resultsList').replaceChildren(...entries.map((r:any)=>{const li=document.createElement('li');li.textContent=state.mode==='wheel'?'#'+r.place+' '+r.name+' · '+r.spills+' spills · '+r.time.toFixed(2)+'s':r.name+' · '+r.members+' · '+(r.dnf?'DNF':'#'+r.place+' · '+r.finishTime.toFixed(2)+'s');return li;}));
 }
@@ -68,7 +71,7 @@ function moveJoystick(e:PointerEvent){if(e.pointerId!==joyPointer)return;const r
 joystick.onpointerdown=e=>{joyPointer=e.pointerId;joystick.setPointerCapture(e.pointerId);moveJoystick(e);};joystick.onpointermove=moveJoystick;
 joystick.onpointerup=joystick.onpointercancel=()=>{joyPointer=null;joyX=joyZ=0;el('stick').style.transform='translate(0px,0px)';};
 setInterval(()=>{if(room?.state.phase==='test'&&!document.hidden){room.send('input',{x:(Number(keys.has('KeyD'))-Number(keys.has('KeyA')))+joyX,z:(Number(keys.has('KeyS'))-Number(keys.has('KeyW')))+joyZ});}},1000/30);
-function render(){el('panel').classList.toggle('connected',!!room);el('hud').classList.toggle('menu-open',menuOpen);const state=room?.state,playing=state?.phase==='test';el('room').hidden=!room;el('panel').classList.toggle('playing',!!playing&&!menuOpen);el('hud').hidden=!playing;el('touch').hidden=!playing||menuOpen;renderResults(state);
+function render(){el('menu').textContent=currentPresentation.compact?'Menu':'Lobby controls';el('panel').classList.toggle('connected',!!room);el('hud').classList.toggle('menu-open',menuOpen);const state=room?.state,playing=state?.phase==='test';el('room').hidden=!room;el('panel').classList.toggle('playing',!!playing&&!menuOpen);el('hud').hidden=!playing;el('touch').hidden=!playing||menuOpen;renderResults(state);
   el<HTMLButtonElement>('create').disabled=busy||!!room||!serverCompatible;el<HTMLButtonElement>('join').disabled=busy||!!room||!serverCompatible;
   if(!state?.players)return;
   if(state.code&&typeof state.mode!=='string'){status('Outdated BREAK TIME server. Close the existing server, relaunch Start-BeamCrew.cmd, then refresh both browsers.');el<HTMLButtonElement>('start').disabled=true;return;}el('roomCode').textContent=`Room ${state.code}`;el('players').replaceChildren();let connected=0;
@@ -90,6 +93,7 @@ function render(){el('panel').classList.toggle('connected',!!room);el('hud').cla
   }
   if(state.mode==='wheel'){renderWheelHud(state,me);el('reset').hidden=true;}
   el('grab').hidden=el('action').hidden=el('signals').hidden=state.mode==='wheel';
+  updateStandings(state);
   const signals:string[]=[];state.players.forEach((p:any)=>{if(p.signal)signals.push(`${p.name}: ${p.signal}`);});if(state.mode==='beam')signalReadout.textContent=signals.join(' · ');
   if(playing&&state.mode==='wheel')status('Wheelbarrow Race — host can restart from Lobby controls.');else if(playing)status('Beam Carry active — host controls can reset or restart.');else status(connected<2?'Waiting for another worker to start.':'Ready — the host can start the test.');}
 // Render only: all gameplay positions and rotations originate on the server.
@@ -99,11 +103,14 @@ let renderer:THREE.WebGLRenderer;
 try{renderer=new THREE.WebGLRenderer({antialias:true});}catch{status('This browser cannot start 3D graphics. Try a browser with WebGL enabled.');throw Error('WebGL unavailable');}
 document.body.prepend(renderer.domElement);
 const resolution=new ResolutionGovernor();let displayDpr=devicePixelRatio;
+let currentPresentation=presentationFor(innerWidth,innerHeight,matchMedia('(any-pointer:coarse)').matches||navigator.maxTouchPoints>0);
 function resizeRenderer(){
  const width=Math.max(1,renderer.domElement.clientWidth),height=Math.max(1,renderer.domElement.clientHeight);
  displayDpr=devicePixelRatio;const ratio=renderRatio(width,height,displayDpr,matchMedia('(pointer:coarse)').matches,resolution.scale);
  renderer.setPixelRatio(ratio);renderer.setSize(width,height,false);
- camera.aspect=width/height;camera.updateProjectionMatrix();
+ currentPresentation=presentationFor(width,height,matchMedia('(any-pointer:coarse)').matches||navigator.maxTouchPoints>0);
+ document.body.classList.toggle('mobile-landscape',currentPresentation.compact);
+ camera.aspect=width/height;camera.fov=currentPresentation.fov;camera.updateProjectionMatrix();queueMicrotask(render);
 }
 resizeRenderer();new ResizeObserver(resizeRenderer).observe(renderer.domElement);
 window.visualViewport?.addEventListener('resize',resizeRenderer);
@@ -118,7 +125,7 @@ for(const z of [-10,10]){box(20,.15,.15,0xffc137,0,.8,z);box(20,.15,.15,0xffc137
 for(const x of [-10,10]){box(.15,.15,20,0xffc137,x,.8,0);box(.15,.15,20,0xffc137,x,1.4,0);}
 for(let i=0;i<12;i++){const h=4+(i%5)*3;box(4,h,4,0x7898ab,(i-6)*7,-8+h/2,-28);}
 const baseVisuals=scene.children.filter(o=>o instanceof THREE.Mesh||o instanceof THREE.GridHelper);
-function disposeVisual(root:THREE.Object3D){scene.remove(root);root.traverse(o=>{const mesh=o as THREE.Mesh;if(mesh.geometry)mesh.geometry.dispose();const materials=mesh.material?(Array.isArray(mesh.material)?mesh.material:[mesh.material]):[];for(const material of materials){const map=(material as THREE.MeshLambertMaterial).map;map?.dispose();material.dispose();}});}
+function disposeVisual(root:THREE.Object3D){scene.remove(root);root.traverse(o=>{if(o instanceof THREE.Sprite){const index=worldLabels.indexOf(o);if(index>=0)worldLabels.splice(index,1);}const mesh=o as THREE.Mesh;if(mesh.geometry)mesh.geometry.dispose();const materials=mesh.material?(Array.isArray(mesh.material)?mesh.material:[mesh.material]):[];for(const material of materials){const map=(material as THREE.MeshLambertMaterial).map;map?.dispose();material.dispose();}});}
 const lobbyCrew=new THREE.Group();scene.add(lobbyCrew);
 for(let i=0;i<2;i++){const mascot=makeWorker(colors[i]);mascot.position.set(2+i*2.5,0,2);mascot.rotation.y=-.4;mascot.scale.setScalar(1.2);lobbyCrew.add(mascot);}
 const workers=new Map<string,THREE.Group>();
@@ -127,17 +134,19 @@ let previous=performance.now();
 function frame(now:number){requestAnimationFrame(frame);const frameMs=now-previous;const dt=Math.min(frameMs/1000,.1);previous=now;if(resolution.sample(frameMs,!document.hidden)||displayDpr!==devicePixelRatio)resizeRenderer();const state=room?.state;lobbyCrew.visible=!room;
   for(const [id,g]of workers){if(!state?.players?.has(id)){disposeVisual(g);workers.delete(id);}}
   state?.players?.forEach((p:any,id:string)=>{let g=workers.get(id);if(!g){g=worker(colors[p.color]);g.position.set(p.x,0,p.z);workers.set(id,g);}animateWorker(g,Math.hypot(p.x-g.position.x,p.z-g.position.z)*8,state.mode==='wheel'||p.grip>=0,now);const blend=1-Math.exp(-18*dt);g.position.x+=(p.x-g.position.x)*blend;g.position.z+=(p.z-g.position.z)*blend;const difference=Math.atan2(Math.sin(p.rotation-g.rotation.y),Math.cos(p.rotation-g.rotation.y));g.rotation.y+=difference*blend;g.position.y=(state.mode==='wheel'?rampHeight(p.x,p.z):0)+Math.sin(now*.008+p.color)*.025;g.visible=p.connected;});
-  const me=room&&workers.get(room.sessionId);const target=me?.position??new THREE.Vector3();camera.position.lerp(new THREE.Vector3(target.x,15,target.z+18),1-Math.exp(-4*dt));camera.lookAt(target.x,0,target.z);updateBeamVisual(state,dt,now);updateWheelVisual(state,dt,now);renderer.render(scene,camera);
+  const me=room&&workers.get(room.sessionId);const target=me?.position??new THREE.Vector3();camera.position.lerp(new THREE.Vector3(target.x,currentPresentation.cameraY,target.z+currentPresentation.cameraZ),1-Math.exp(-4*dt));camera.lookAt(target.x,0,target.z-currentPresentation.lookAhead);
+  for(const sprite of worldLabels){sprite.scale.set(sprite.userData.width*currentPresentation.labelScale,sprite.userData.height*currentPresentation.labelScale,1);}updateBeamVisual(state,dt,now);updateWheelVisual(state,dt,now);renderer.render(scene,camera);
 }
 requestAnimationFrame(frame);window.addEventListener('resize',resizeRenderer);
 
 
+const worldLabels:THREE.Sprite[]=[];
 function label(text:string,color='#172d3c',width=3,square=false){
   const canvas=document.createElement('canvas');canvas.width=square?96:512;canvas.height=96;
   const ctx=canvas.getContext('2d')!;ctx.fillStyle='#ffffffe8';ctx.fillRect(0,0,canvas.width,96);
   ctx.fillStyle=color;ctx.font=square?'bold 60px system-ui':'bold 42px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,canvas.width/2,48);
   const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(canvas),depthTest:false}));
-  sprite.scale.set(width,width*96/canvas.width,1);scene.add(sprite);return sprite;
+  sprite.userData.width=width;sprite.userData.height=width*96/canvas.width;worldLabels.push(sprite);sprite.scale.set(width,width*96/canvas.width,1);scene.add(sprite);return sprite;
 }
 const courseVisual=new THREE.Group();scene.add(courseVisual);
 for(const o of COURSE.obstacles){
@@ -267,6 +276,10 @@ function renderWheelHud(state:any,me:any){
   const warning=me.reload>0?'SPILLED! Reloading '+me.reload.toFixed(1)+'s':me.finishOrder?'Finished in '+me.finishTime.toFixed(2)+'s':me.instability>.7?'CAREFUL — LOAD TIPPING!':'Follow painted arrows • ease off before turns and rough ground';
   el('beamStatus').textContent=warning+(me.finishOrder?'':'\nRoute '+Math.min(me.checkpoint-1,WHEEL_GATES.length-1)+'/'+(WHEEL_GATES.length-1)+' checkpoints · Next: '+(WHEEL_GATES[me.checkpoint-1]?.label??'Finish line'))+'\nLoad risk '+Math.round(me.instability*100)+'% • '+(me.finishOrder?'Staging spills '+Math.max(0,me.spills-([...state.results].find((r:any)=>r.finishOrder===me.finishOrder)?.spills??me.spills)):'Spills '+me.spills)+' • Speed '+Math.round(me.speed/WHEEL_CONFIG.maxSpeed*100)+'%';
   el('beamStatus').style.borderLeft=me.instability>.7?'8px solid #ff6849':'8px solid #59d595';
+  if(currentPresentation.compact){
+    el('hudText').textContent=countdown?Math.ceil(state.countdown)+' · READY':me.finishOrder?'FINISHED':state.elapsed.toFixed(1)+'s';
+    el('beamStatus').textContent=(me.reload>0?'Reload '+me.reload.toFixed(1)+'s':me.instability>.7?'TIPPING!':me.finishOrder?'Staging':'Next: '+(WHEEL_GATES[me.checkpoint-1]?.label??'Finish'))+' · '+me.spills+' spills · Risk '+Math.round(me.instability*100)+'%';
+  }
   const results=Array.from(state.results as Iterable<any>).sort((a,b)=>a.place-b.place);
   signalReadout.textContent='FEWEST SPILLS WINS • Time breaks ties'+(results.length?'\n'+(state.racePhase==='results'?'Final ranking: ':'Provisional ranking — others still racing: ')+results.map(p=>'#'+p.place+' '+p.name+' • '+p.spills+' spills • '+p.time.toFixed(2)+'s').join(' | '):'');
 }
@@ -283,7 +296,7 @@ function updateWheelVisual(state:any,dt:number,now:number){
       const born=visual?.userData.born??now;if(visual)scene.remove(visual);
       visual=createSpillVisual(plan);visual.userData.born=born;scene.add(visual);materialMeshes[i]=visual;
     }
-    visual.position.set(b.x,.045,b.z);visual.rotation.y=i*2.399;
+    visual.position.set(b.x,.045,b.z);visual.rotation.y=debrisRotation(i);
     updateSpillVisual(visual,plan,(now-visual.userData.born)/1000);
   });
   state.players.forEach((p:any,id:string)=>{
@@ -301,6 +314,7 @@ function updateWheelVisual(state:any,dt:number,now:number){
       const tag=label(id===room?.sessionId?'YOU':p.name,'#172d3c',1.6);tag.position.set(0,2.8,0);root.add(tag);
       c={root,tray,load,tag};carts.set(id,c);root.position.set(p.x,0,p.z);root.rotation.y=p.rotation;
     }
+    c.tag.visible=!currentPresentation.compact||id===room?.sessionId||Math.hypot(p.x-(state.players.get(room?.sessionId)?.x??p.x),p.z-(state.players.get(room?.sessionId)?.z??p.z))<7;
     c.root.visible=p.connected;c.root.position.y=rampHeight(p.x+Math.sin(p.rotation)*WHEEL_CONFIG.cartOffset,p.z+Math.cos(p.rotation)*WHEEL_CONFIG.cartOffset);
     const w=workers.get(id);if(w)w.visible=p.connected;
     const blend=1-Math.exp(-18*dt);c.root.position.x+=(p.x-c.root.position.x)*blend;c.root.position.z+=(p.z-c.root.position.z)*blend;c.root.rotation.y+=Math.atan2(Math.sin(p.rotation-c.root.rotation.y),Math.cos(p.rotation-c.root.rotation.y))*blend;
@@ -325,3 +339,10 @@ async function verifyServer(){
   render();
 }
 void verifyServer();
+
+function updateStandings(state:any){
+ const active=state?.phase==='test'&&currentPresentation.compact;el('standings').hidden=!active;if(!active)return;
+ const entries=state.mode==='wheel'?[...state.results].sort((a:any,b:any)=>a.place-b.place):[...state.teams].sort((a:any,b:any)=>(a.place||99)-(b.place||99));
+ el('standingsList').replaceChildren(...entries.map((r:any)=>{const li=document.createElement('li');li.textContent=state.mode==='wheel'?'#'+r.place+' '+r.name+' · '+r.spills+' spills · '+r.time.toFixed(1)+'s':r.name+' · '+(r.dnf?'DNF':r.place?'#'+r.place+' · '+r.finishTime.toFixed(1)+'s':'racing');return li;}));
+ if(!entries.length){const li=document.createElement('li');li.textContent='Race in progress';el('standingsList').append(li);}
+}

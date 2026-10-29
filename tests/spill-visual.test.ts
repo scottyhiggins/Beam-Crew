@@ -15,7 +15,7 @@ test('one real server spill has exactly one load of solid objects or loose volum
   const plans=planSpills(records),load=new THREE.Group();createLoadVisual(load,id);
   let pieceVertices=0,count=0,volume=0,scaledVolume=0;const spilledPieces=new THREE.Group();
   for(const plan of plans){const root=createSpillVisual(plan);updateSpillVisual(root,plan,1);
-   assert.ok(root.children.length>=1); // Every unchanged hazard has a visible footprint.
+   assert.equal(root.children.length,plan.pieces>0?1:0); // No rings or geometry at empty slots.
    const pieces=root.getObjectByName('pieces') as THREE.Mesh|undefined;
    if(pieces){const again=createSpillVisual(plan).getObjectByName('pieces') as THREE.Mesh;assert.equal(pieces.geometry,again.geometry);pieceVertices+=pieces.geometry.getAttribute('position').count;spilledPieces.add(pieces.clone());scaledVolume+=pieces.scale.x**3;
     for(const value of pieces.geometry.getAttribute('position').array)assert.ok(Number.isFinite(value));
