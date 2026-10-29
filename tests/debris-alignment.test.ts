@@ -54,3 +54,10 @@ test('empty slots have no server effect while visible debris retains all six mat
   const clear=cartAt(shape.x+2.5,shape.z),clearExpected={...clear};stepCart(clear,0,-1,1/30,b);stepCart(clearExpected,0,-1,1/30,[]);assert.deepEqual(clear,clearExpected);
  }
 });
+
+test('a loose load is one heap and gravel is individually scattered at full size',()=>{
+ for(const id of [0,1]){const plans=planSpills(records(id));assert.equal(plans.filter(p=>p.pieces>0).length,1);assert.equal(plans.reduce((n,p)=>n+p.volume,0),1);}
+ const plans=planSpills(records(10)),angles=new Set<number>();
+ for(const [i,p]of plans.entries())for(const shape of debrisShapes(p,i,{x:0,z:0})){assert.equal(shape.halfX,.11);angles.add(shape.rotation);}
+ assert.equal(angles.size,12);
+});

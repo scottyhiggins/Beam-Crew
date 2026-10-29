@@ -25,7 +25,7 @@ test('one real server spill has exactly one load of solid objects or loose volum
   }
   assert.ok(Math.abs(volume-1)<1e-9);
   if(id>=2){assert.equal(count,MATERIAL_PIECE_COUNTS[id]);assert.equal(pieceVertices,vertices(load));assert.deepEqual(colors(spilledPieces),colors(load));}
-  else {assert.equal(count,6);assert.ok(Math.abs(scaledVolume-1)<1e-9);} // Six 1/6-volume patches.
+  else {assert.equal(count,1);assert.ok(Math.abs(scaledVolume-1)<1e-9);} // One full heap, with five inactive records.
  }
 });
 test('mixed repeated spills and cap aggregation conserve quantities with bounded visible geometry',()=>{

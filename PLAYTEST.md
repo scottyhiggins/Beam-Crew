@@ -1,3 +1,17 @@
+# October 29 repairs 1 — fastest physical acceptance (about 8 minutes)
+
+Refresh laptop and iPhone at https://break-time-9n1k.onrender.com . Both must show **October 29 repairs 1** (protocol 10). Create a fresh room.
+
+1. In the lobby, refresh each device: the same worker/room should resume. Leave room: Create/Join must immediately work. Host departure must transfer hosting.
+2. During a Wheelbarrow race, switch Safari tabs briefly, then return. Turn networking off/on briefly: reconnect should retain the racer if the reservation is still valid. Repeat with more than 30 seconds disconnected: a clear failure/expiry must appear and Create/Join must work. During reconnect, tap **Cancel reconnect / Return to landing** and create a different room. On an offline page refresh, use **Retry connection** once back online.
+3. In four quick Wheelbarrow starts, select PVC, bricks, gravel and mini barricades. Force one spill and inspect from both clients: **5 pipes, 6 bricks, 12 stones, 2 barricades**, all full size and scattered, with no rings or active empty slots. If time permits check the other eight: one cement patch, one sand pile, 5 rebar rods, 2 hoses, 6 blocks, 4 lumber pieces, 4 plywood offcuts, 12 rubble chunks.
+4. Watch the worker through a slow turn and a spill: body behind the tray, hands near grips, stepping/bending legs during recovery, then normal stride. Check landscape in both directions.
+5. Finish one race over the spike strip into staging; confirm final scores, dismiss/reopen results and restart. Briefly start Beam Carry and check two workers can grip/move together.
+
+Automated coverage includes all twelve rendered material geometries/contact footprints, quantities across two real clients, late/canceled/stalled reconnect attempts, actual server reservation expiry, host transfer, eight-player capacity, race finish/staging and both existing modes. Physical Safari suspension/network behavior remains a human acceptance check. No Championship or Crane Challenge added.
+
+---
+
 # Playtest corrections 1 public acceptance
 
 1. Refresh laptop and iPhone at https://break-time-9n1k.onrender.com and confirm **Playtest corrections 1**. Create a fresh room; run one session on separate networks.

@@ -1,3 +1,17 @@
+# October 29 repairs 1
+
+Build **BREAK TIME · October 29 repairs 1**, protocol **10**. Focused physical-playtest repairs only; Championship/Crane remain unimplemented. Recovery branch `codex/pre-oct29-repairs` and external `Beam-Crew-pre-oct29-repairs.bundle` preserve the prior release.
+
+Reconnect now stores the reservation deadline, bounds stalled transport waits, stops on expired/invalid reservations, exposes Cancel outside the disconnected room panel, releases late successful responses and ignores stale room callbacks. Explicit Leave immediately clears local state and unlocks Create/Join. Offline startup has Retry connection and retries verification on online/visible events. Server host-transfer, capacity, reservation duration and race lifecycle are unchanged.
+
+Solid spill objects retain full loaded dimensions/counts, distributed across the existing six records with individual angles/offsets rather than repeated small stacks. Cement/sand use one full-size heap per load; the other five records have no geometry or contact. Client and server use the same allocation/scatter/contact shapes, including capped aggregation. Geometry audits checked all twelve using actual spill record positions. All six effects, permanent records, effect coefficients and scoring remain unchanged. The footprint of loose loads is intentionally consolidated to the visible heap.
+
+The wheel worker sits 0.7 units behind the cart origin, with lowered grip arms and a pose locked to the rendered cart through turns. A lightweight knee/step/lean reaction uses synchronized race elapsed time plus authoritative instability/reload. Beam worker pose remains unchanged. No extra messages, assets, physics or animation loops.
+
+Final local production build succeeded; all 76 tests passed with zero failures/skips. Render deployment verification follows in the release record. See PLAYTEST.md for the fastest physical acceptance pass. Physical Safari tab suspension, networking and comfort remain human checks.
+
+---
+
 # Playtest corrections 1 — debris alignment and iPhone landscape
 
 Build **BREAK TIME · Playtest corrections 1**, compatibility protocol **9**. Refresh both clients after deployment. No schema, message format, room lifecycle, race rules, scoring, finish/staging rules, material persistence, or effect coefficients changed. Protocol 9 prevents freshly loaded mismatched clients from treating the new shared contact contract as the old renderer-only arrangement.

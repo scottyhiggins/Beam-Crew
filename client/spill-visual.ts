@@ -47,7 +47,7 @@ export function createSpillVisual(plan:SpillPlan){
 export function updateSpillVisual(root:THREE.Group,plan:SpillPlan,age:number){
  root.userData.representedPieces=plan.pieces;root.userData.loadVolume=plan.volume;
  const pieces=root.getObjectByName('pieces');if(!pieces)return;
- // Loose material shares one load's volume across six smaller patches.
+ // Loose material forms one full-size heap per load; empty records stay inert.
  // Extreme server aggregation retains the previous bounded-pile convention.
  pieces.scale.setScalar(debrisScale(plan));
  // Keep geometry grounded and aligned from its first authoritative patch.

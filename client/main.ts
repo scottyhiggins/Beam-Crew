@@ -1,3 +1,4 @@
+import {ReconnectRun,RESERVATION_MS,reservationValid} from './reconnect';
 import {presentationFor} from './presentation';
 import {makeWorker,animateWorker,scenery,paintArrow} from './polish';
 import {createSpillVisual,spillSignature,updateSpillVisual} from './spill-visual';
@@ -15,13 +16,13 @@ import {MATERIAL_CATEGORIES,MATERIALS,MATERIAL_COLORS} from '../shared/materials
 import {FINISH_STAGING} from '../shared/wheelbarrow';
 const colors=[0xffad32,0x35b9ff,0xff5985,0x59d595,0xa38aff,0xf2ee57,0xffffff,0x965c42];
 const app=document.querySelector<HTMLDivElement>('#app')!;
-app.innerHTML=`<main id="panel"><h1>BREAK TIME</h1><p id="buildLabel">${BUILD_LABEL}</p><p class="eyebrow">CLOCK OUT. PLAY HARD.</p><p>A little teamwork. A lot of spilled cement.</p><label>Your name <input id="name" maxlength="18" value="Worker" autocomplete="nickname"></label><button id="create">Create room</button><div class="join"><input id="code" maxlength="5" placeholder="ROOM CODE" aria-label="Room code"><button id="join">Join</button></div><p id="status" role="status"></p><section id="room" hidden><h2 id="roomCode"></h2><button id="share">Copy join link</button><ul id="players"></ul><label id="modeLabel">Game mode <select id="mode"><option value="competitive">Beam Carry · two-player teams</option><option value="wheel">Wheelbarrow Race</option></select></label><section id="materials" hidden><h3>Choose your load</h3><p>Same cart handling. Your spill creates this hazard. Duplicates allowed; locked at countdown.</p><div id="materialGrid"></div><p id="chosenLoad" role="status"></p></section><button id="start">Let’s get to work</button><button id="back">Return to lobby</button><button id="reset" hidden>Reset to checkpoint</button><button id="restart" hidden>Restart course</button><button id="leave">Leave room</button></section><p id="help">WASD to move · Space to grab/release<br>On phones: joystick + ACTION</p></main><div id="hud" hidden><span id="hudText"></span><div id="beamStatus" role="status"></div><button id="grab">GRAB · Space</button><div id="signals"><button data-signal="LIFT">LIFT</button><button data-signal="WAIT">WAIT</button><button data-signal="LEFT">LEFT</button><button data-signal="RIGHT">RIGHT</button></div><details id="standings" hidden><summary>Standings</summary><ol id="standingsList"></ol></details><button id="showResults" hidden>Results</button><button id="menu">Lobby controls</button></div><div id="touch" hidden><div id="joystick" aria-label="Movement joystick"><div id="stick"></div></div><button id="action">ACTION</button></div><section id="raceResults" hidden role="region" aria-live="polite" aria-labelledby="resultsTitle"><h2 id="resultsTitle">Final results</h2><p id="resultsRule"></p><ol id="resultsList"></ol><button id="closeResults">Keep driving in staging</button></section>`;
+app.innerHTML=`<main id="panel"><h1>BREAK TIME</h1><p id="buildLabel">${BUILD_LABEL}</p><p class="eyebrow">CLOCK OUT. PLAY HARD.</p><p>A little teamwork. A lot of spilled cement.</p><label>Your name <input id="name" maxlength="18" value="Worker" autocomplete="nickname"></label><button id="create">Create room</button><div class="join"><input id="code" maxlength="5" placeholder="ROOM CODE" aria-label="Room code"><button id="join">Join</button></div><p id="status" role="status"></p><button id="retryConnection" hidden>Retry connection</button><button id="cancelReconnect" hidden>Cancel reconnect / Return to landing</button><section id="room" hidden><h2 id="roomCode"></h2><button id="share">Copy join link</button><ul id="players"></ul><label id="modeLabel">Game mode <select id="mode"><option value="competitive">Beam Carry · two-player teams</option><option value="wheel">Wheelbarrow Race</option></select></label><section id="materials" hidden><h3>Choose your load</h3><p>Same cart handling. Your spill creates this hazard. Duplicates allowed; locked at countdown.</p><div id="materialGrid"></div><p id="chosenLoad" role="status"></p></section><button id="start">Let’s get to work</button><button id="back">Return to lobby</button><button id="reset" hidden>Reset to checkpoint</button><button id="restart" hidden>Restart course</button><button id="leave">Leave room</button></section><p id="help">WASD to move · Space to grab/release<br>On phones: joystick + ACTION</p></main><div id="hud" hidden><span id="hudText"></span><div id="beamStatus" role="status"></div><button id="grab">GRAB · Space</button><div id="signals"><button data-signal="LIFT">LIFT</button><button data-signal="WAIT">WAIT</button><button data-signal="LEFT">LEFT</button><button data-signal="RIGHT">RIGHT</button></div><details id="standings" hidden><summary>Standings</summary><ol id="standingsList"></ol></details><button id="showResults" hidden>Results</button><button id="menu">Lobby controls</button></div><div id="touch" hidden><div id="joystick" aria-label="Movement joystick"><div id="stick"></div></div><button id="action">ACTION</button></div><section id="raceResults" hidden role="region" aria-live="polite" aria-labelledby="resultsTitle"><h2 id="resultsTitle">Final results</h2><p id="resultsRule"></p><ol id="resultsList"></ol><button id="closeResults">Keep driving in staging</button></section>`;
 const el=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 for(const category of MATERIAL_CATEGORIES){const column=document.createElement('div');const heading=document.createElement('strong');heading.textContent=category.name;column.append(heading);for(const name of category.items){const m=MATERIALS.find(m=>m.name===name)!;const button=document.createElement('button');button.type='button';button.dataset.material=String(m.id);button.textContent=m.name+' · '+m.effect;button.onclick=()=>room?.send('material',m.id);column.append(button);}el('materialGrid').append(column);}
 const signalReadout=document.createElement('div');signalReadout.id='crewSignals';el('hud').append(signalReadout);
 const status=(message:string)=>{el('status').textContent=message;};
 const client=new Client(`${location.protocol==='https:'?'wss':'ws'}://${location.host}`);
-let room:Room|null=null;let serverCompatible=false;let busy=false;let recovery=false;let menuOpen=false;
+let room:Room|null=null;let serverCompatible=false;let busy=false;let recovery=false;let menuOpen=false;let recoveryRun:ReconnectRun<Room>|null=null;let connectionEpoch=0;let verifying=false;
 const keys=new Set<string>();let joyX=0,joyZ=0;let joyPointer:number|null=null;
 const savedCode=new URLSearchParams(location.search).get('room');if(savedCode)el<HTMLInputElement>('code').value=savedCode.toUpperCase();
 try {el<HTMLInputElement>('name').value=localStorage.getItem('beam-name')||'Worker';}catch{}
@@ -33,18 +34,35 @@ async function connect(create:boolean){if(busy||room||!serverCompatible)return;b
   else {const code=el<HTMLInputElement>('code').value.trim().toUpperCase();if(!/^[A-Z2-9]{5}$/.test(code))throw Error('Enter a five-character room code');const response=await fetch(`/api/rooms/${code}`);const result=await response.json();if(!response.ok)throw Error(result.error);joined=await client.joinById(result.roomId,{name});}
   attach(joined);
 }catch(error){status(`Could not join: ${error instanceof Error?error.message:String(error)}. Check the code; active or full rooms cannot accept new players.`);}finally{busy=false;render();}}
-function attach(joined:Room){room=joined;recovery=false;storage('beam-token',joined.reconnectionToken);status('Connected');
-  joined.onStateChange(()=>render());joined.onError((code,message)=>status(`Connection error ${code}: ${message}`));
-  joined.onLeave(code=>{if(room!==joined)return;room=null;stopInput();render();if(code!==1000&&code!==4000){void reconnect(joined.reconnectionToken);}else{storage('beam-token',null);status('Left room');}});render();}
-async function reconnect(token:string){if(recovery)return;recovery=true;busy=true;status('Reconnecting… Your place is reserved for 30 seconds.');render();const deadline=Date.now()+29000;
-  while(Date.now()<deadline&&recovery){try{attach(await client.reconnect(token));busy=false;render();return;}catch{await new Promise(resolve=>setTimeout(resolve,1000));}}
-  recovery=false;busy=false;storage('beam-token',null);status('Reconnect expired. Create or join a lobby again.');render();}
+function attach(joined:Room){room=joined;recovery=false;storage('beam-token',joined.reconnectionToken);storage('beam-until',String(Date.now()+RESERVATION_MS));menuOpen=false;status('Connected');
+  joined.onStateChange(()=>{if(room===joined)render();});joined.onError((code,message)=>{if(room===joined)status(`Connection error ${code}: ${message}`);});
+  joined.onLeave(code=>{if(room!==joined)return;room=null;stopInput();render();if(code!==1000&&code!==4000){void reconnect(joined.reconnectionToken,Date.now()+RESERVATION_MS);}else{cancelRecovery('Left room. Create or join a room.');}});render();}
+function cancelRecovery(message='Reconnect canceled. Create or join a room.'){
+  connectionEpoch++;recoveryRun?.cancel();recoveryRun=null;recovery=false;busy=false;
+  storage('beam-token',null);storage('beam-until',null);status(message);render();
+}
+async function reconnect(token:string,until:number){
+  if(recovery||room)return;
+  if(!reservationValid(until)){cancelRecovery('Your reserved place expired. Create or join a room.');return;}
+  const epoch=++connectionEpoch,run=new ReconnectRun<Room>();recoveryRun=run;recovery=true;busy=true;
+  storage('beam-until',String(until));stopInput();render();
+  const countdown=setInterval(()=>{if(epoch===connectionEpoch)status(`Reconnecting… ${Math.max(0,Math.ceil((until-Date.now())/1000))}s remaining. Cancel to join another room.`);},500);
+  try{
+    const joined=await run.run(until,()=>client.reconnect(token),seconds=>status(`Reconnecting… ${seconds}s remaining. Cancel to join another room.`));
+    if(epoch!==connectionEpoch){if(joined)void joined.leave();return;}
+    if(joined){recoveryRun=null;busy=false;attach(joined);}
+    else cancelRecovery('Could not reconnect: the reserved place expired or is no longer available. Create or join a room.');
+  }catch{if(epoch===connectionEpoch)cancelRecovery('Connection failed. Create or join a room.');}finally{clearInterval(countdown);}
+}
+el('cancelReconnect').onclick=()=>cancelRecovery();
+function rememberReservation(){if(room){storage('beam-token',room.reconnectionToken);storage('beam-until',String(Date.now()+RESERVATION_MS));}}
+setInterval(rememberReservation,1000);window.addEventListener('pagehide',rememberReservation);
 el('create').onclick=()=>void connect(true);el('join').onclick=()=>void connect(false);
 el<HTMLSelectElement>('mode').onchange=()=>room?.send('mode',el<HTMLSelectElement>('mode').value);
 el('start').onclick=()=>room?.send('start');
 el('reset').onclick=()=>{stopInput();room?.send('reset');menuOpen=false;render();};
 el('restart').onclick=()=>{stopInput();room?.send('restart');menuOpen=false;render();};el('back').onclick=()=>{stopInput();room?.send('lobby');menuOpen=false;};
-el('leave').onclick=()=>{storage('beam-token',null);void room?.leave();};
+el('leave').onclick=()=>{const old=room;stopInput();room=null;cancelRecovery('Left room. Create or join a room.');void old?.leave();};
 el('share').onclick=async()=>{if(!room?.state.code)return;const url=new URL(location.href);url.search='';url.searchParams.set('room',room.state.code);try{await navigator.clipboard.writeText(url.href);status('Join link copied');}catch{status(`Join link: ${url.href}`);}};
 let shownResults='',dismissedResults='';
 el('showResults').onclick=()=>{dismissedResults='';renderResults(room?.state);};
@@ -71,7 +89,7 @@ function moveJoystick(e:PointerEvent){if(e.pointerId!==joyPointer)return;const r
 joystick.onpointerdown=e=>{joyPointer=e.pointerId;joystick.setPointerCapture(e.pointerId);moveJoystick(e);};joystick.onpointermove=moveJoystick;
 joystick.onpointerup=joystick.onpointercancel=()=>{joyPointer=null;joyX=joyZ=0;el('stick').style.transform='translate(0px,0px)';};
 setInterval(()=>{if(room?.state.phase==='test'&&!document.hidden){room.send('input',{x:(Number(keys.has('KeyD'))-Number(keys.has('KeyA')))+joyX,z:(Number(keys.has('KeyS'))-Number(keys.has('KeyW')))+joyZ});}},1000/30);
-function render(){el('menu').textContent=currentPresentation.compact?'Menu':'Lobby controls';el('panel').classList.toggle('connected',!!room);el('hud').classList.toggle('menu-open',menuOpen);const state=room?.state,playing=state?.phase==='test';el('room').hidden=!room;el('panel').classList.toggle('playing',!!playing&&!menuOpen);el('hud').hidden=!playing;el('touch').hidden=!playing||menuOpen;renderResults(state);
+function render(){el('retryConnection').hidden=serverCompatible||verifying;el('cancelReconnect').hidden=!recovery;el('menu').textContent=currentPresentation.compact?'Menu':'Lobby controls';el('panel').classList.toggle('connected',!!room);el('hud').classList.toggle('menu-open',menuOpen);const state=room?.state,playing=state?.phase==='test';el('room').hidden=!room;el('panel').classList.toggle('playing',!!playing&&!menuOpen);el('hud').hidden=!playing;el('touch').hidden=!playing||menuOpen;renderResults(state);
   el<HTMLButtonElement>('create').disabled=busy||!!room||!serverCompatible;el<HTMLButtonElement>('join').disabled=busy||!!room||!serverCompatible;
   if(!state?.players)return;
   if(state.code&&typeof state.mode!=='string'){status('Outdated BREAK TIME server. Close the existing server, relaunch Start-BeamCrew.cmd, then refresh both browsers.');el<HTMLButtonElement>('start').disabled=true;return;}el('roomCode').textContent=`Room ${state.code}`;el('players').replaceChildren();let connected=0;
@@ -133,7 +151,7 @@ function worker(color:number){const g=makeWorker(color);scene.add(g);return g;}
 let previous=performance.now();
 function frame(now:number){requestAnimationFrame(frame);const frameMs=now-previous;const dt=Math.min(frameMs/1000,.1);previous=now;if(resolution.sample(frameMs,!document.hidden)||displayDpr!==devicePixelRatio)resizeRenderer();const state=room?.state;lobbyCrew.visible=!room;
   for(const [id,g]of workers){if(!state?.players?.has(id)){disposeVisual(g);workers.delete(id);}}
-  state?.players?.forEach((p:any,id:string)=>{let g=workers.get(id);if(!g){g=worker(colors[p.color]);g.position.set(p.x,0,p.z);workers.set(id,g);}animateWorker(g,Math.hypot(p.x-g.position.x,p.z-g.position.z)*8,state.mode==='wheel'||p.grip>=0,now);const blend=1-Math.exp(-18*dt);g.position.x+=(p.x-g.position.x)*blend;g.position.z+=(p.z-g.position.z)*blend;const difference=Math.atan2(Math.sin(p.rotation-g.rotation.y),Math.cos(p.rotation-g.rotation.y));g.rotation.y+=difference*blend;g.position.y=(state.mode==='wheel'?rampHeight(p.x,p.z):0)+Math.sin(now*.008+p.color)*.025;g.visible=p.connected;});
+  state?.players?.forEach((p:any,id:string)=>{let g=workers.get(id);if(!g){g=worker(colors[p.color]);g.position.set(p.x,0,p.z);workers.set(id,g);}const wheel=state.phase==='test'&&state.mode==='wheel',wx=p.x-(wheel?Math.sin(p.rotation)*.7:0),wz=p.z-(wheel?Math.cos(p.rotation)*.7:0);animateWorker(g,wheel?Math.abs(p.speed):Math.hypot(p.x-g.position.x,p.z-g.position.z)*8,wheel||p.grip>=0,wheel&&p.reload>0?(2.4-p.reload)*1000:wheel&&state.racePhase!=='results'?state.elapsed*1000:now,wheel?Math.max(p.instability*.35,p.reload/2.4):0,wheel);const blend=1-Math.exp(-18*dt);g.position.x+=(wx-g.position.x)*blend;g.position.z+=(wz-g.position.z)*blend;const difference=Math.atan2(Math.sin(p.rotation-g.rotation.y),Math.cos(p.rotation-g.rotation.y));g.rotation.y+=difference*blend;g.position.y=(state.mode==='wheel'?rampHeight(p.x,p.z):0)+Math.sin(now*.008+p.color)*.025;g.visible=p.connected;});
   const me=room&&workers.get(room.sessionId);const target=me?.position??new THREE.Vector3();camera.position.lerp(new THREE.Vector3(target.x,currentPresentation.cameraY,target.z+currentPresentation.cameraZ),1-Math.exp(-4*dt));camera.lookAt(target.x,0,target.z-currentPresentation.lookAhead);
   for(const sprite of worldLabels){sprite.scale.set(sprite.userData.width*currentPresentation.labelScale,sprite.userData.height*currentPresentation.labelScale,1);}updateBeamVisual(state,dt,now);updateWheelVisual(state,dt,now);renderer.render(scene,camera);
 }
@@ -318,12 +336,17 @@ function updateWheelVisual(state:any,dt:number,now:number){
     c.root.visible=p.connected;c.root.position.y=rampHeight(p.x+Math.sin(p.rotation)*WHEEL_CONFIG.cartOffset,p.z+Math.cos(p.rotation)*WHEEL_CONFIG.cartOffset);
     const w=workers.get(id);if(w)w.visible=p.connected;
     const blend=1-Math.exp(-18*dt);c.root.position.x+=(p.x-c.root.position.x)*blend;c.root.position.z+=(p.z-c.root.position.z)*blend;c.root.rotation.y+=Math.atan2(Math.sin(p.rotation-c.root.rotation.y),Math.cos(p.rotation-c.root.rotation.y))*blend;
+    if(w){w.position.x=c.root.position.x-Math.sin(c.root.rotation.y)*.7;w.position.z=c.root.position.z-Math.cos(c.root.rotation.y)*.7;w.rotation.y=c.root.rotation.y;}
     c.tray.rotation.z=p.reload>0?1.15:Math.sin(now*.016+p.color)*p.instability*.22-p.lean*p.instability*.08;
     c.load.visible=p.reload<=0;c.load.position.x=Math.sin(now*.016)*p.instability*.2;
   });
 }
 
+el('retryConnection').onclick=()=>void verifyServer();
+window.addEventListener('online',()=>{if(!serverCompatible)void verifyServer();});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!serverCompatible)void verifyServer();});
 async function verifyServer(){
+  if(verifying)return;verifying=true;
   status('Checking BREAK TIME server…');render();
   try{const response=await fetch('/health',{cache:'no-store',signal:AbortSignal.timeout(15000)});const health=await response.json();if(!response.ok||health.protocol!==PROTOCOL_VERSION||typeof health.startedAt!=='string')throw Error('The running server is an older version. Close its window with Ctrl+C, relaunch Start-BeamCrew.cmd, then refresh both browsers.');serverCompatible=true;status(BUILD_LABEL+' server ready — create or join a room.');
     try{
@@ -332,11 +355,11 @@ async function verifyServer(){
       if(oldStart!==start)storage('beam-token',null);
       storage('beam-server-start',start);
       const token=sessionStorage.getItem('beam-token');
-      if(token)void reconnect(token);
+      if(token)void reconnect(token,Number(sessionStorage.getItem('beam-until')));
     }catch{}
   }
   catch(error){status(error instanceof Error?error.message:'Could not verify the server. Check Start-BeamCrew.cmd.');}
-  render();
+  verifying=false;render();
 }
 void verifyServer();
 

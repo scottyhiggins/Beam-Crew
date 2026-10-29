@@ -13,7 +13,7 @@ export function planSpills(records:Iterable<HazardRecord>):SpillPlan[]{
   units[id]+=b.amount;
   const first=Math.floor(before*count/HAZARDS_PER_LOAD);
   const end=Math.floor(units[id]*count/HAZARDS_PER_LOAD);
-  return {id,pieces:id<2?1:end-first,offset:first%count,volume:b.amount/HAZARDS_PER_LOAD};
+  return {id,pieces:end-first,offset:first%count,volume:id<2?end-first:b.amount/HAZARDS_PER_LOAD};
  });
 }
 
@@ -23,10 +23,11 @@ export function debrisParts(plan:SpillPlan){
  const visible=Math.min(12,plan.pieces),scale=debrisScale(plan);
  return Array.from({length:visible},(_,i)=>({
   index:(plan.offset+i)%MATERIAL_PIECE_COUNTS[plan.id],
-  x:visible>1?(i%3-(Math.min(visible,3)-1)/2)*.23:0,
-  z:visible>1?Math.floor(i%6/3)*.26:0,
-  y:visible>1?Math.floor(i/6)*.08:0,
-  rotation:visible>1?i*1.7:0,scale,
+  // Scatter individual full-size objects, never a repeated miniature stack.
+  x:visible>1?Math.cos((plan.offset+i)*2.399)*.22:0,
+  z:visible>1?Math.sin((plan.offset+i)*2.399)*.22:0,
+  y:0,
+  rotation:(plan.offset+i)*2.399,scale,
  }));
 }
 
