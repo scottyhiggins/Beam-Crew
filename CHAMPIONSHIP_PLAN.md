@@ -1,3 +1,11 @@
+# Milestone 6A implementation boundary — October 29, 2026
+
+Implemented: the fixed Original → Scaffold Switchback two-course Championship; a local-coordinate course contract and continuous level 5.6m-wide socket; shared yard and visible authoritative gate; synchronized three-second transition; permanent debris and material/pose persistence; immutable per-course scores and cumulative standings; disconnect reservation/DNF progression; separate single-race and Beam Carry modes; finite batched city scenery with distance culling. See PROJECT_STATUS.md for validation and PLAYTEST.md for the physical gate.
+
+The roadmap below remains the long-term design. Its former statement that Championship is entirely unimplemented describes the pre-6A release. Random selection, host 3/5/10 choice, the remaining courses, all-order adjacency certification and final awards remain **6B work after physical acceptance**. Do not expose incomplete longer-route options. The current rigid translation/level socket contract deliberately supports future assembly; it does not claim that ten modules or all permutations have been certified.
+
+---
+
 # Wheelbarrow Championship — future architecture
 
 Planning only. No new mode, course, city scenery, Crane Challenge or Trivia is implemented in Visual polish 2. Keep the October 31 competition release focused on accepted, stable gameplay. Advance through the gates below in order.

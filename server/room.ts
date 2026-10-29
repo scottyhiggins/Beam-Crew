@@ -1,6 +1,7 @@
+import {championshipTrack,COURSE_TWO} from '../shared/championship.js';
 import { Room, Client, ServerError } from '@colyseus/core';
 import { randomInt } from 'node:crypto';
-import { CrewState, Player, RaceResult, SpilledMaterial, BeamTeam } from './state.js';
+import { CrewState, Player, RaceResult, ChampionshipResult, SpilledMaterial, BeamTeam } from './state.js';
 import { CONFIG, movement } from '../shared/movement.js';
 import { GRIPS, gripPosition, nearestGrip, resetBeam, stepBeam, workerCollides } from '../shared/beam.js';
 import { collideStagingCarts, WHEEL_CONFIG, resetCart, stepCart, finishCarts, spillMaterial, stepMaterial, compareResults, shouldEndRace } from '../shared/wheelbarrow.js';
@@ -18,7 +19,7 @@ export class CrewRoom extends Room<CrewState> {
     this.onMessage('input',(c,data)=>{const p=this.state.players.get(c.sessionId);if(!p||!data||!Number.isFinite(data.x)||!Number.isFinite(data.z))return;p.inputX=Math.max(-1,Math.min(1,data.x));p.inputZ=Math.max(-1,Math.min(1,data.z));p.lastInput=Date.now();});
     this.onMessage('action',c=>{
       const p=this.state.players.get(c.sessionId);
-      if(this.state.mode==='wheel'||!p||this.state.phase!=='test'||Date.now()-p.lastAction<=200)return;
+      if((this.state.mode==='wheel'||this.state.mode==='championship')||!p||this.state.phase!=='test'||Date.now()-p.lastAction<=200)return;
       p.lastAction=Date.now();p.actions++;
       if(p.grip>=0){p.grip=-1;p.vx=p.vz=0;this.feedback(p,'Released');return;}
       const beam=this.state.mode==='competitive'?this.state.teams[p.team]:this.state.beam;
@@ -30,7 +31,7 @@ export class CrewRoom extends Room<CrewState> {
       p.grip=grip;p.vx=p.vz=0;this.positionCarrier(p);this.feedback(p,`Gripping ${grip+1} — press again to release`);
     });
     this.onMessage('signal',(c,value)=>{const p=this.state.players.get(c.sessionId);if(p&&['LIFT','WAIT','LEFT','RIGHT'].includes(value)&&Date.now()-p.lastSignal>500){p.signal=value;p.lastSignal=Date.now();p.signalUntil=Date.now()+2000;}});
-    this.onMessage('mode',(c,value)=>{if(c.sessionId===this.state.host&&this.state.phase==='lobby'&&['beam','wheel','competitive'].includes(value))this.state.mode=value==='beam'?'competitive':value;});
+    this.onMessage('mode',(c,value)=>{if(c.sessionId===this.state.host&&this.state.phase==='lobby'&&['beam','wheel','competitive','championship'].includes(value))this.state.mode=value==='beam'?'competitive':value;});
     this.onMessage('material',(c,id)=>{const p=this.state.players.get(c.sessionId);if(p&&this.state.phase==='lobby'&&validMaterial(id))p.materialId=id;});
     this.onMessage('start',c=>{if(c.sessionId===this.state.host&&this.state.phase==='lobby'&&this.clients.length>=2){this.restart(false);this.state.phase='test';this.lock();}});
     this.onMessage('reset',c=>{if(c.sessionId===this.state.host&&this.state.phase==='test'&&Date.now()-this.lastReset>1000){this.restart(true);}});
@@ -50,7 +51,7 @@ export class CrewRoom extends Room<CrewState> {
       for(const [,p] of players)if(p.team<0){p.x=8;p.z=7;this.feedback(p,'Spectating this round — Wheelbarrow supports odd counts');}
       return;
     }
-    if(this.state.mode==='wheel'){this.state.racePhase='countdown';this.state.countdown=WHEEL_CONFIG.countdownSeconds;this.state.elapsed=0;this.state.raceResets++;this.state.finishCount=0;this.state.firstFinishAt=-1;this.state.results.clear();this.state.material.clear();let slot=0;for(const p of this.state.players.values()){resetCart(p,slot++,this.state.players.size);p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;p.lastInput=0;}return;}
+    if((this.state.mode==='wheel'||this.state.mode==='championship')){this.state.leg=0;this.state.legResults.clear();this.state.standings.clear();for(const [id,p]of this.state.players){p.legSpills=0;const total=new ChampionshipResult();Object.assign(total,{playerId:id,name:p.name,color:p.color});this.state.standings.push(total);}this.state.racePhase='countdown';this.state.countdown=WHEEL_CONFIG.countdownSeconds;this.state.elapsed=0;this.state.raceResets++;this.state.finishCount=0;this.state.firstFinishAt=-1;this.state.results.clear();this.state.material.clear();let slot=0;for(const p of this.state.players.values()){resetCart(p,slot++,this.state.players.size);p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;p.lastInput=0;}return;}
     resetBeam(this.state.beam,checkpoint);this.state.beam.resets++;
     for(const p of this.state.players.values()){
       p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;p.lastInput=0;p.feedback='';
@@ -69,10 +70,60 @@ export class CrewRoom extends Room<CrewState> {
   async onLeave(c:Client,consented:boolean){
     const p=this.state.players.get(c.sessionId);if(!p)return;
     p.connected=false;p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;this.transferHost(c.sessionId);
-    try{if(consented)throw Error('left');await this.allowReconnection(c,CONFIG.reconnectSeconds);p.connected=true;p.lastInput=Date.now();this.feedback(p,this.state.mode==='wheel'?'Reconnected — continue racing':'Reconnected — grab again when ready');if(!this.state.host)this.state.host=c.sessionId;}
-    catch{this.state.players.delete(c.sessionId);this.transferHost(c.sessionId);this.reconcileWheelResults();}
+    try{if(consented)throw Error('left');await this.allowReconnection(c,CONFIG.reconnectSeconds);p.connected=true;p.lastInput=Date.now();this.feedback(p,(this.state.mode==='wheel'||this.state.mode==='championship')?'Reconnected — continue racing':'Reconnected — grab again when ready');if(!this.state.host)this.state.host=c.sessionId;}
+    catch{if(this.state.mode==='championship')this.departChampionship(c.sessionId);this.state.players.delete(c.sessionId);this.transferHost(c.sessionId);this.reconcileWheelResults();}
+  }
+  departChampionship(id:string){
+    if(this.state.phase!=='test'||this.state.racePhase==='results')return;
+    const total=this.state.standings.find(r=>r.playerId===id);if(total)total.dnf=true;
+    if(!this.state.legResults.some(r=>r.playerId===id&&r.leg===this.state.leg)){
+      const p=this.state.players.get(id);if(p){const r=new ChampionshipResult();Object.assign(r,{playerId:id,name:p.name,color:p.color,leg:this.state.leg,dnf:true,spills:p.legSpills,time:this.state.elapsed});this.state.legResults.push(r);}
+    }
+    this.rankChampionship();
+  }
+  rankChampionship(){
+    for(const total of this.state.standings){const results=this.state.legResults.filter(r=>r.playerId===total.playerId&&!r.dnf);total.spills=results.reduce((sum,r)=>sum+r.spills,0);total.time=results.reduce((sum,r)=>sum+r.time,0);total.completed=results.length;total.finishOrder=results.at(-1)?.finishOrder??0;}
+    [...this.state.standings].sort((a,b)=>Number(a.dnf)-Number(b.dnf)||b.completed-a.completed||compareResults(a,b)||a.color-b.color).forEach((r,i)=>r.place=i+1);
+  }
+  reconcileChampionship(){
+    if(this.state.phase!=='test'||this.state.racePhase!=='racing')return;
+    for(const [id,p]of this.state.players)if(p.finishOrder&&!this.state.legResults.some(r=>r.playerId===id&&r.leg===this.state.leg)){
+      const r=new ChampionshipResult();Object.assign(r,{playerId:id,name:p.name,color:p.color,leg:this.state.leg,spills:p.legSpills,time:p.finishTime,finishOrder:p.finishOrder,completed:1});this.state.legResults.push(r);
+    }
+    const leg=this.state.legResults.filter(r=>r.leg===this.state.leg&&!r.dnf);[...leg].sort(compareResults).forEach((r,i)=>r.place=i+1);
+    this.rankChampionship();
+    if([...this.state.players.values()].every(p=>p.finishOrder>0)){
+      if(this.state.leg===0&&this.state.players.size){this.state.racePhase='intermission';this.state.countdown=3;}
+      else this.state.racePhase='results';
+    }
+  }
+  beginSecondLeg(){
+    this.state.leg=1;this.state.elapsed=0;this.state.finishCount=0;this.state.firstFinishAt=-1;this.state.racePhase='racing';this.state.countdown=0;
+    // Keep positions, speed, instability, reload, materials and every earlier snapshot.
+    for(const p of this.state.players.values()){p.checkpoint=1;p.finishOrder=0;p.finishTime=0;p.finishCrossed=false;p.legSpills=0;}
+  }
+  tickChampionship(dt:number,now:number){
+    if(this.state.racePhase==='countdown'){this.state.countdown=Math.max(0,this.state.countdown-dt);if(this.state.countdown<1e-8){this.state.countdown=0;this.state.racePhase='racing';}return;}
+    if(!['racing','intermission','results'].includes(this.state.racePhase))return;
+    if(this.state.racePhase==='intermission'){
+      this.state.countdown=Math.max(0,this.state.countdown-dt);
+      if(this.state.countdown<1e-8){this.beginSecondLeg();return;}
+    }
+    const track=championshipTrack(this.state.leg),players=[...this.state.players.values()],material=[...this.state.material];
+    if(this.state.racePhase==='racing')this.state.elapsed+=dt;
+    // Offscreen debris remains live in both courses; this world context includes both.
+    const world={...COURSE_TWO,startArea:(x:number,z:number)=>COURSE_TWO.startArea!(x,z)||championshipTrack(0).path.some((a,i,path)=>i>0&&distanceToSegment(x,z,path[i-1],a)<2.8)};
+    stepMaterial(material,dt,world);
+    for(const p of players){const active=p.connected&&now-p.lastInput<300,spills=p.spills,previousZ=p.z,racing=this.state.racePhase==='racing'&&!p.finishOrder;
+      stepCart(p,active?p.inputX:0,active?p.inputZ:0,dt,material,track);
+      if(this.state.leg===1){const limit=Math.max(-19.95,Math.min(previousZ,-16.25));if(p.z>limit){p.z=limit;p.speed=0;}}
+      if(p.spills>spills){if(racing)p.legSpills+=p.spills-spills;spillMaterial(p,material,value=>{const b=new SpilledMaterial();Object.assign(b,value);this.state.material.push(b);material.push(b);},track);}
+    }
+    collideStagingCarts(players,track);
+    if(this.state.racePhase==='racing'){this.state.finishCount=finishCarts(players,this.state.elapsed,this.state.finishCount,track);this.reconcileChampionship();}
   }
   reconcileWheelResults(){
+    if(this.state.mode==='championship'){this.reconcileChampionship();return;}
     if(this.state.phase!=='test'||this.state.mode!=='wheel'||this.state.racePhase!=='racing')return;
     const players=[...this.state.players.values()];
     for(const p of players)if(p.finishOrder&&!this.state.results.some(r=>r.finishOrder===p.finishOrder)){const result=new RaceResult();Object.assign(result,{name:p.name,color:p.color,spills:p.spills,time:p.finishTime,finishOrder:p.finishOrder});this.state.results.push(result);}
@@ -83,6 +134,7 @@ export class CrewRoom extends Room<CrewState> {
   tick(dt:number){
     const now=Date.now();
     for(const p of this.state.players.values()){if(p.signalUntil<now)p.signal='';if(p.feedbackUntil<now)p.feedback='';}
+    if(this.state.phase==='test'&&this.state.mode==='championship'){this.tickChampionship(dt,now);return;}
     if(this.state.phase==='test'&&this.state.mode==='competitive'){
       if(this.state.racePhase==='countdown'){this.state.countdown=Math.max(0,this.state.countdown-dt);if(!this.state.countdown)this.state.racePhase='racing';return;}
       if(this.state.racePhase!=='racing')return;
@@ -99,7 +151,7 @@ export class CrewRoom extends Room<CrewState> {
       });
       if(this.state.teams.every(b=>b.delivered||b.dnf))this.state.racePhase='results';return;
     }
-    if(this.state.phase==='test'&&this.state.mode==='wheel'){
+    if(this.state.phase==='test'&&(this.state.mode==='wheel'||this.state.mode==='championship')){
       if(this.state.racePhase==='countdown'){this.state.countdown=Math.max(0,this.state.countdown-dt);if(this.state.countdown===0)this.state.racePhase='racing';return;}
       if(this.state.racePhase!=='racing'&&this.state.racePhase!=='results')return;
       if(this.state.racePhase==='racing')this.state.elapsed+=dt;
@@ -132,3 +184,5 @@ export class CrewRoom extends Room<CrewState> {
   }
   onDispose(){roomsByCode.delete(this.state.code);}
 }
+
+function distanceToSegment(x:number,z:number,a:{x:number;z:number},b:{x:number;z:number}){const dx=b.x-a.x,dz=b.z-a.z,t=Math.max(0,Math.min(1,((x-a.x)*dx+(z-a.z)*dz)/(dx*dx+dz*dz)));return Math.hypot(x-a.x-t*dx,z-a.z-t*dz);}

@@ -1,3 +1,16 @@
+# Milestone 6A — laptop + iPhone acceptance
+
+1. Refresh both devices at https://break-time-9n1k.onrender.com and confirm **Championship 6A**. Use laptop Wi-Fi and iPhone cellular. Create a fresh room and select **Wheelbarrow Championship · 2 courses**. Choose different loads.
+2. Race Course 1. Have one racer finish first: keep driving and spill in the shared yard while the other races. Confirm the first official course score stays frozen in Standings, the spike strip blocks reverse, and the next gate stays closed.
+3. Finish the second racer. Both screens must show the same three-second countdown. Keep moving in the yard. At GO, the gate opens without teleport, scene reload, changed load or lost spills. Drive forward into Pipe alley.
+4. Race Scaffold Switchback: check ropes, turns, rough straight, cranes and pipe/lumber landmarks. Try reversing toward Course 1; the old finish lip must block it. Confirm scenery remains outside the racing lane and the surface has no seam snag.
+5. Briefly background/reconnect the iPhone in the shared yard/countdown and on Course 2. Check the same room, leg, position, chosen load, old hazards and scores. Explicit Leave or reservation expiry must let the remaining racer progress; the departed worker is DNF. Host transfer must work.
+6. Finish Course 2. Compare per-course results and cumulative totals on both devices: fewest racing spills, then combined racing time. Spill/drive in final staging and confirm the clock, official totals and places remain frozen. Close and reopen Results/Standings.
+7. Restart the Championship: fresh Course 1, empty ledger/hazards, same load choices. Return to lobby and verify single-race Wheelbarrow and Beam Carry still work.
+8. On iPhone, check portrait and landscape, notch/Safari chrome, leg/countdown readability, standings/results scrolling and controls. Run several rounds with repeated spills; report heat, stutter or blurry rendering, device/iOS version and player count. Physical acceptance gates Milestone 6B.
+
+---
+
 # October 29 repairs 1 — fastest physical acceptance (about 8 minutes)
 
 Refresh laptop and iPhone at https://break-time-9n1k.onrender.com . Both must show **October 29 repairs 1** (protocol 10). Create a fresh room.

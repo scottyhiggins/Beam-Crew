@@ -1,3 +1,19 @@
+# Milestone 6A — two-course Wheelbarrow Championship
+
+Build **BREAK TIME · Championship 6A**, protocol **11**, October 29, 2026. The separately selectable **Wheelbarrow Championship · 2 courses** preserves the original Course 1 and continues through its existing yard into Scaffold Switchback. Beam Carry and the independent single-race Wheelbarrow option remain available. Refresh both devices after deployment and create a fresh room.
+
+The server owns leg progression, ordered gates, finishing, scoring and the three-second intermission. Finished carts keep normal driving, reload, instability, contact and spill behavior in the common yard. Its next-course gate stays shut until GO. GO resets only the next leg's progress, finish latch, official spill counter and elapsed time; cart positions, rotation, speed, instability, reload, materials, room/session membership and old hazards survive. Both finish strips retain one-way protection, including Course 1's lip after GO. Course 2 has a pipe alley, tighter switchbacks, a rough scaffold straight, overhead tower cranes, exposed buildings and equipment. Obstacles are static in 6A.
+
+Immutable leg snapshots record racing spills and official race time. Staging/intermission/results spills remain physical but are excluded from official totals. Cumulative standings sum completed-leg snapshots; fewest spills wins, combined racing time breaks ties, then final-leg finish order. The Standings control shows cumulative and per-course results; the final board opens after Course 2. Permanently departed racers are marked DNF and rank behind classified finishers. A disconnected unfinished racer remains eligible during the existing 30-second reconnect reservation; expiry or explicit Leave releases the next transition. Host transfer and replay use the existing room lifecycle. Restart resets the entire series; there is no host command to advance an individual leg early.
+
+Shared versioned track data supplies gates, ropes, driveable ground, rough zones, ramp profile and yards to simulation and rendering. Course 2 is authored in local coordinates and placed at Course 1's exit socket (-3, -36), with a 5.6m clear lane, level ground and matching forward orientation. Its final yard ends at (-5, -90). Shared-yard end caps are removed only in Championship; the existing single-race cap remains. Fixed two-course ordering is intentional. The finite city corridor uses shared geometries/materials, instanced building/scaffold/equipment batches, fog, frustum culling and distance-hidden scenery chunks. The existing adaptive resolution budget remains. Physical iPhone heat/frame-rate and cross-network comfort still need the acceptance pass below.
+
+Recovery: **codex/pre-milestone6a-20261029** at **34d2b0a**, plus **Beam-Crew-pre-milestone6a-20261029.bundle** in the ChatGPT project workspace. Prior public deployment **dep-dbhnrouc6qcc73ftgv40** is the October 29 repairs release. Existing untracked helpers were preserved. No additional Render service, plan or settings changes; auto-deploy remains off. No 3/5/10 selection, random ordering, extra eight courses, awards, Crane Challenge or Toolbox Trivia are included. Milestone 6B waits for physical acceptance.
+
+Validation/release evidence is recorded below after the final local and public runs.
+
+---
+
 # BREAK TIME — October 29 repairs 1
 
 Focused reconnect, one-load debris scatter, worker handle position and procedural stumble repairs. Build **October 29 repairs 1**, protocol **10**. Refresh both devices and create a fresh room. Recovery version preserved; no Championship or Crane Challenge. See PLAYTEST.md for the short acceptance pass.
