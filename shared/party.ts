@@ -31,6 +31,6 @@ export function applyPartyResult(people:Map<string,PartyPerson>,result:PartyMode
 export function partyRanking(people:Iterable<PartyPerson>){return [...people].sort((a,b)=>b.points-a.points||b.wins-a.wins||a.order-b.order);}
 export function partyPodium(people:Iterable<PartyPerson>,results:PartyModeResult[]){
  const ranking=partyRanking(people).map((p,i)=>({...p,place:i+1}));
- const award=(key:string,title:string,low=false)=>{const entries=ranking.filter(p=>Number.isFinite(p.stats[key]));entries.sort((a,b)=>(low?1:-1)*(a.stats[key]-b.stats[key])||a.order-b.order);return entries[0]?{title,playerId:entries[0].id,value:entries[0].stats[key],stat:key}:null;};
+ const award=(key:string,title:string,low=false)=>{const entries=ranking.filter(p=>Number.isFinite(p.stats[key])&&(key==='wheelSpills'?(p.stats.wheelCompleted??0)>0:p.stats[key]>0));entries.sort((a,b)=>(low?1:-1)*(a.stats[key]-b.stats[key])||a.order-b.order);return entries[0]?{title,playerId:entries[0].id,value:entries[0].stats[key],stat:key}:null;};
  return {version:1,kind:'party-night',winnerId:ranking[0]?.id??null,topThree:ranking.slice(0,3),ranking,results,awards:[award('wheelSpills','Steady Hands',true),award('beamRecoveries','Safety Comeback Crew'),award('triviaCorrect','Toolbox Brain')].filter(Boolean)};
 }

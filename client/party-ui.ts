@@ -40,7 +40,7 @@ export function installParty(room:Room){
    }
    if(v.phase==='final'){
     const p=v.podium;node('h2',p.ranking[0]?.name??'Shift complete');node('p','Top three: '+p.topThree.map((r:any)=>`#${r.place} ${r.name} · ${r.points} pts`).join(' | '));
-    for(const a of p.awards)node('p',`${a.title}: ${p.ranking.find((r:any)=>r.id===a.playerId)?.name} · ${a.value} ${a.stat}`);
+    for(const a of p.awards)node('p',`${a.title}: ${p.ranking.find((r:any)=>r.id===a.playerId)?.name} · ${a.value} ${{wheelSpills:'racing spills',beamRecoveries:'team recoveries',triviaCorrect:'correct team answers'}[a.stat as string]??'recorded actions'}`);
     if(host)button('Play another Party Night',()=>room.send('partyReplay',{epoch:v.epoch}));
    }
   }

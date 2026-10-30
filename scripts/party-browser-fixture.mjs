@@ -17,5 +17,5 @@ server.define('party',BrowserPartyFixture);
 const startedAt=new Date().toISOString();
 app.get('/health',(_req,res)=>res.json({ok:true,startedAt,protocol:PROTOCOL_VERSION,build:'BREAK TIME Party Night BROWSER FIXTURE'}));
 app.get('/api/party/:code',(req,res)=>{const room=partyRooms.get(req.params.code.toUpperCase());if(!room){res.status(404).json({error:'Room not found'});return;}res.json({roomId:room.roomId});});
-app.use(express.static(fileURLToPath(new URL('../dist/',import.meta.url))));
+app.use(express.static(fileURLToPath(new URL('../dist/',import.meta.url)),{setHeaders(res,path){if(path.endsWith('.html'))res.setHeader('Cache-Control','no-store');}}));
 await server.listen(2600,'127.0.0.1');console.log('Party Night browser QA fixture only: http://127.0.0.1:2600/party.html');

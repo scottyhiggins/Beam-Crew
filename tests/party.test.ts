@@ -39,3 +39,9 @@ test('trivia retains native team scoring and a remaining worker covers both role
  const g=r.trivia!;g.disconnect('1');assert.equal(g.role('0'),'selector');const v=g.view('0',Date.now());assert.ok(v.question);assert.equal(v.answers?.length,4);
  assert.equal(g.answer('0',{choice:g.order.indexOf(0),epoch:g.epoch-1},Date.now()),false);assert.equal(g.answer('0',{choice:g.order.indexOf(0),epoch:g.epoch},Date.now()),true);assert.equal(g.teams[0].score,1000);
 });
+test('workplace awards require recorded play; empty or zero statistics do not invent achievements',()=>{
+ const r=fixture(2);begin(r);const first=r.people.get('0')!;
+ assert.deepEqual(partyPodium(r.people.values(),[]).awards,[]);
+ first.stats={wheelSpills:0,wheelCompleted:0,beamRecoveries:0,triviaCorrect:0};assert.deepEqual(partyPodium(r.people.values(),[]).awards,[]);
+ first.stats={wheelSpills:2,wheelCompleted:3,beamRecoveries:1,triviaCorrect:4};const awards=partyPodium(r.people.values(),[]).awards;assert.equal(awards.length,3);assert.deepEqual(awards.map(a=>a!.value),[2,1,4]);
+});

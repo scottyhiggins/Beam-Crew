@@ -69,6 +69,6 @@ export class PartyRoom extends CrewRoom {
  }
  finishMode(result:PartyModeResult,now:number){applyPartyResult(this.people,result);this.results.push(result);this.next(now);}
  sendParty(c:Client){c.send('partyView',{phase:this.partyPhase,index:this.index,epoch:this.epoch,session:this.session,code:this.state.code,host:this.state.host,remaining:Math.max(0,Math.ceil((this.deadline-Date.now())/1000)),canContinue:Date.now()>=this.earliest,notice:this.notice,players:[...this.state.players].map(([id,p])=>({id,name:p.name,connected:p.connected})),ranking:partyRanking(this.people.values()),results:this.results,trivia:this.trivia?.view(c.sessionId,Date.now()),podium:this.partyPhase==='final'?partyPodium(this.people.values(),this.results):null});}
- publishParty(){for(const c of this.clients)this.sendParty(c);}
+ publishParty(){for(const [id,p]of this.state.players){const person=this.people.get(id);if(person)person.look={hat:p.hat,vest:p.vest,expression:p.expression};}for(const c of this.clients)this.sendParty(c);}
  override onDispose(){partyRooms.delete(this.state.code);}
 }

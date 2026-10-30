@@ -47,7 +47,8 @@ let room:Room|null=null;let serverCompatible=false;let busy=false;let recovery=f
 const keys=new Set<string>();let joyX=0,joyZ=0;let joyPointer:number|null=null;
 const savedCode=new URLSearchParams(location.search).get('room');if(savedCode)el<HTMLInputElement>('code').value=savedCode.toUpperCase();
 try {el<HTMLInputElement>('name').value=localStorage.getItem('beam-name')||'Worker';}catch{}
-function storage(key:string,value:string|null){try{if(value===null)sessionStorage.removeItem(key);else sessionStorage.setItem(key,value);}catch{}}
+function storageKey(key:string){return partyPage?key.replace(/^beam-/,'party-'):key;}
+function storage(key:string,value:string|null){key=storageKey(key);try{if(value===null)sessionStorage.removeItem(key);else sessionStorage.setItem(key,value);}catch{}}
 function stopInput(){keys.clear();joyX=joyZ=0;joyPointer=null;el('stick').style.transform='translate(0px,0px)';room?.send('input',{partyEpoch:partyEpochFor(room),x:0,z:0});}
 async function connect(create:boolean){if(busy||room||!serverCompatible)return;busy=true;status('Connecting…');try{const name=el<HTMLInputElement>('name').value;try{localStorage.setItem('beam-name',name);}catch{}
   let joined:Room;
@@ -479,11 +480,11 @@ async function verifyServer(){
   try{const response=await fetch('/health',{cache:'no-store',signal:AbortSignal.timeout(15000)});const health=await response.json();if(!response.ok||health.protocol!==PROTOCOL_VERSION||typeof health.startedAt!=='string')throw Error('The running server is an older version. Close its window with Ctrl+C, relaunch Start-BeamCrew.cmd, then refresh both browsers.');serverCompatible=true;status(BUILD_LABEL+' server ready — create or join a room.');
     try{
       const start=health.startedAt;
-      const oldStart=sessionStorage.getItem('beam-server-start');
+      const oldStart=sessionStorage.getItem(storageKey('beam-server-start'));
       if(oldStart!==start)storage('beam-token',null);
       storage('beam-server-start',start);
-      const token=sessionStorage.getItem('beam-token');
-      if(token)void reconnect(token,Number(sessionStorage.getItem('beam-until')),sessionStorage.getItem('beam-public-wait')==='1');
+      const token=sessionStorage.getItem(storageKey('beam-token'));
+      if(token)void reconnect(token,Number(sessionStorage.getItem(storageKey('beam-until'))),sessionStorage.getItem(storageKey('beam-public-wait'))==='1');
     }catch{}
   }
   catch(error){status(error instanceof Error?error.message:'Could not verify the server. Check Start-BeamCrew.cmd.');}

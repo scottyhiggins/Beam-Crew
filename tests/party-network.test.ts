@@ -30,7 +30,7 @@ test('real clients: same-room transitions, host transfer, reconnect across modes
   sender.send('partyAnswer',{choice:g.order.indexOf(0),epoch:g.epoch,partyEpoch:prior});await pause(70);assert.equal(g.teams[0].score,0);
   sender.send('partyAnswer',{choice:g.order.indexOf(0),epoch:g.epoch,partyEpoch:room.epoch});await until(()=>g.teams[0].score===1000);g.phase='podium';room.partyTick(Date.now());await until(()=>views.get(a)?.phase==='final'&&views.get(b)?.phase==='final');assert.deepEqual(views.get(a).podium,views.get(b).podium);assert.equal(views.get(a).podium.ranking.length,2);
   b.send('partyReplay',{epoch:room.epoch});await until(()=>room.partyPhase==='lobby');assert.equal(room.people.size,0);assert.equal(room.state.code,code);assert.equal(partyRooms.get(code),room);assert.equal(room.state.players.size,2);
-  b.send('partyContinue',{epoch:room.epoch});await until(()=>room.partyPhase==='intermission');assert.equal(room.results.length,0);
+  const friend=track(await client.joinById(b.roomId,{name:'Replay friend'}));await until(()=>friend.state.players?.size===3);b.send('partyContinue',{epoch:room.epoch});await until(()=>room.partyPhase==='intermission');assert.equal(room.results.length,0);assert.equal(room.people.size,3);
  }finally{await Promise.allSettled(clients.filter(r=>r.connection.isOpen).map(r=>r.leave()));await server.gracefullyShutdown(false);}
 });
 test('real 2–8 client matrix: native three-race finishes, team results, odd skips and shared final ranking',{timeout:40000},async()=>{
