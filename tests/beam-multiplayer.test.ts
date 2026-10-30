@@ -12,7 +12,7 @@ test('two clients carry, release, reject non-host reset, reconnect, complete and
   try{
     host=await client.create('crew',{name:'Beam host'});guest=await client.joinById(host.roomId,{name:'Beam guest'});
     await until(()=>host!.state.players?.size===2&&guest!.state.players?.size===2);
-    host.send('start');await until(()=>guest!.state.racePhase==='racing');
+    host.send('mode','competitive');host.send('start');await until(()=>guest!.state.racePhase==='racing');
     host.send('action');guest.send('action');
     await until(()=>host!.state.players.get(host!.sessionId).grip===0&&host!.state.players.get(guest!.sessionId).grip===7);
     await until(()=>guest!.state.teams[0].leftSupported&&guest!.state.teams[0].rightSupported);

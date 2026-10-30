@@ -1,0 +1,21 @@
+// Small inline vector illustrations: no image downloads, textures or extra WebGL scenes.
+const svg=(body:string)=>`<svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">${body}</svg>`;
+const wheel='<circle cx="158" cy="96" r="17" fill="#26383e"/><circle cx="158" cy="96" r="7" fill="#e7efe5"/><path d="M46 46h129l-22 37H77z" fill="#f9c43c" stroke="#26383e" stroke-width="5"/><path d="m77 82-12 20m34-18 12 18M49 52 25 40" fill="none" stroke="#287e80" stroke-width="7" stroke-linecap="round"/><path d="m67 42 16-18 23 16 22-22 28 24" fill="#b5b0a0"/><path d="M70 59h81" stroke="#ffe99b" stroke-width="5"/>';
+const worker=(x:number,flip=false)=>`<g transform="translate(${x} 0)${flip?' scale(-1 1)':''}"><path d="m-12 85-5 24m28-24 5 24" stroke="#26383e" stroke-width="10"/><path d="M-18 54h36l7 34h-50z" fill="#ee7b39"/><path d="M-9 55v28m18-28v28" stroke="#fff4ce" stroke-width="5"/><circle cy="39" r="13" fill="#d29d73"/><path d="M-19 37q0-24 19-24t19 24z" fill="#f9c43c"/><path d="M-22 38h44" stroke="#26383e" stroke-width="4"/></g>`;
+export const MODE_ART={
+ wheel:svg(wheel),
+ beam:svg(worker(48)+worker(192,true)+'<path d="M61 68h119v14H61z" fill="#75999a" stroke="#26383e" stroke-width="4"/><path d="M61 67h119" stroke="#e2e4cb" stroke-width="4"/>'),
+ crane:svg('<path d="M82 110V17h17v93M88 20l11 17-17 18 17 18-17 18 17 17M42 21h166v13H42z" fill="none" stroke="#f9c43c" stroke-width="6"/><path d="M56 20 91 5l91 15M178 35v29q-9 0-9 9t17 5" fill="none" stroke="#26383e" stroke-width="4"/><path d="M69 110h45M146 87h60v25h-60z" fill="#287e80"/><path d="m175 72-21 16m21-16 22 16" stroke="#26383e" stroke-width="3"/>'),
+ store:svg('<path d="M39 69h80l8 42H31z" fill="#ee7b39" stroke="#26383e" stroke-width="4"/><path d="M47 69q0-28 32-28t32 28" fill="none" stroke="#26383e" stroke-width="6"/><path d="M138 61q0-37 32-37t32 37z" fill="#f9c43c" stroke="#26383e" stroke-width="4"/><path d="M129 62h81m-41-36v29" stroke="#26383e" stroke-width="5"/><path d="m163 85 8 8 16-18" fill="none" stroke="#287e80" stroke-width="7"/>')
+};
+export function materialArt(id:number){
+ let body='';
+ if(id<2)body=`<path d="M40 100q8-30 30-35 20-54 49-35 21 10 28 38 29 2 47 32z" fill="${id===0?'#9c9884':'#d8b777'}" stroke="#536467" stroke-width="3"/><path d="m75 70 23-25 25 5m-65 35 30-8m44-9 20 16" stroke="${id===0?'#c5c5ac':'#efd7a1'}" stroke-width="5" fill="none"/>`;
+ else if(id===2||id===3){for(let i=0;i<5;i++)body+=`<g transform="translate(${47+i*27} ${26+i%2*12}) rotate(-12)"><path d="M0 0h${id===2?18:8}v72H0z" fill="${id===2?'#d8e5d9':'#74828a'}" stroke="#43545b" stroke-width="3"/>${id===2?'<ellipse cx="9" cy="0" rx="9" ry="5" fill="#436b70"/>':'<path d="M0 10h8m-8 12h8m-8 12h8m-8 12h8m-8 12h8" stroke="#b6bbac" stroke-width="2"/>'}</g>`;}
+ else if(id===4){for(const x of [42,132])body+=`<path d="m${x} 103 12-74h34l12 74" fill="#f28a3d" stroke="#344b51" stroke-width="4"/><path d="M${x-5} 48h70v21h-70z" fill="#ffce49" stroke="#344b51" stroke-width="3"/><path d="m${x+4} 50 17 17m8-17 17 17" stroke="#344b51" stroke-width="7"/>`;}
+ else if(id===5){for(const x of [81,154])body+=`<g transform="translate(${x} 65)"><circle r="36" fill="none" stroke="#354c54" stroke-width="12"/><circle r="19" fill="none" stroke="#536e75" stroke-width="11"/><path d="M-31 18h-14v21" fill="none" stroke="#354c54" stroke-width="11"/></g>`;}
+ else if(id===6||id===7){for(let i=0;i<6;i++){const x=37+i%3*54,y=28+Math.floor(i/3)*39;body+=`<path d="m${x} ${y+10} 38-9 16 12v25l-39 7-15-12z" fill="${id===6?'#c96f4c':'#a1aaa3'}" stroke="#45595d" stroke-width="2"/><path d="m${x} ${y+10} 15 14 39-11m-39 11v21" fill="none" stroke="#45595d" stroke-width="2"/>${id===7?`<path d="m${x+11} ${y+10} 10-2 7 5-11 3zm17-4 10-2 8 6-11 2z" fill="#45595d"/>`:''}`;}}
+ else if(id===8||id===9){for(let i=0;i<4;i++){const x=37+i*35;body+=`<g transform="rotate(${i%2?8:-8} 120 65)"><path d="M${x} 20h${id===8?22:32}v82h-${id===8?22:32}z" fill="${id===8?'#ac7c4d':'#d0b184'}" stroke="#76583e" stroke-width="3"/><path d="M${x+8} 30v59m7-45v32" stroke="#8a6946" stroke-width="2"/></g>`;}}
+ else{for(let i=0;i<12;i++){const x=44+i%4*41,y=33+Math.floor(i/4)*28;body+=`<path d="m${x} ${y} 15-8 16 10-3 15-18 3-14-9z" fill="${(i+id)%2?'#909992':'#667b80'}" stroke="#45595d" stroke-width="2"/>`;}}
+ return svg(body);
+}

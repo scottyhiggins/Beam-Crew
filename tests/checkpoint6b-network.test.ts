@@ -15,7 +15,7 @@ for(const count of [3,5,10])test(count+' randomized legs synchronize on two clie
  }
  try{
   a=await client.create('crew',{name:'Route host'});b=await client.joinById(a.roomId,{name:'Route guest'});await until(()=>a!.state.players?.size===2&&b!.state.players?.size===2);
-  b.send('championshipLength',5);await pause(150);assert.equal(a.state.championshipLength,2);a.send('mode','championship');a.send('championshipLength',count);await until(()=>b!.state.championshipLength===count);a.send('championshipLength',11);await pause(150);assert.equal(b.state.championshipLength,count);
+  b.send('championshipLength',5);await pause(150);assert.equal(a.state.championshipLength,3);a.send('mode','championship');a.send('championshipLength',count);await until(()=>b!.state.championshipLength===count);a.send('championshipLength',11);await pause(150);assert.equal(b.state.championshipLength,count);
   a.send('material',3);b.send('material',8);await until(()=>a!.state.players.get(b!.sessionId).materialId===8&&b!.state.players.get(a!.sessionId).materialId===3);a.send('start');await until(()=>a!.state.routeIds?.length===count&&b!.state.routeIds?.length===count);const ids=[...a.state.routeIds];assert.equal(new Set(ids).size,count);assert.deepEqual([...b.state.routeIds],ids);route=assembleRoute(ids);
   b.send('championshipLength',2);a.send('championshipLength',2);b.send('material',0);await until(()=>a!.state.racePhase==='racing');assert.equal(b.state.championshipLength,count);assert.equal(b.state.players.get(b.sessionId).materialId,8);
   timer=setInterval(()=>{if(a?.connection.isOpen)drive(a);if(b?.connection.isOpen)drive(b);},30);

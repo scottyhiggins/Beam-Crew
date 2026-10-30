@@ -15,7 +15,7 @@ test('eight clients synchronize, reject invalid joins, transfer host, reconnect 
     assert.equal(new Set(Array.from(host.state.players.values(),(p:any)=>p.color)).size,8);
     await assert.rejects(()=>client.joinById(roomId,{name:'Ninth'}));
     clients[1].send('start');await new Promise(r=>setTimeout(r,150));assert.equal(host.state.phase,'lobby');
-    host.send('start');await until(()=>clients.every(r=>r.state.phase==='test'));await until(()=>host.state.racePhase==='racing');
+    host.send('mode','competitive');host.send('start');await until(()=>clients.every(r=>r.state.phase==='test'));await until(()=>host.state.racePhase==='racing');
     assert.equal((await fetch(`${endpoint}/api/rooms/${code}`)).status,409);
     const mover=clients[1],other=clients[2];const before=mover.state.players.get(mover.sessionId).x;const otherBefore=other.state.players.get(other.sessionId).x;
     const input=setInterval(()=>mover.send('input',{x:100,z:0}),30);await new Promise(r=>setTimeout(r,500));clearInterval(input);mover.send('input',{x:0,z:0});await until(()=>host.state.players.get(mover.sessionId).x>before+.5);

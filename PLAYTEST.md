@@ -1,3 +1,18 @@
+# Milestone 6C — short laptop + iPhone acceptance pass
+
+Refresh both devices and create a fresh room on the **Construction party polish** build (protocol 15).
+
+1. Inspect the four menu tiles in portrait and landscape. Wheelbarrow and Beam Carry select correctly; Crane and Store remain disabled Coming Soon. Create/join by code and invite link. The normal room defaults to **3-race Championship**; only the host changes 3/5/10, classic 2 or single race.
+2. Check all 12 illustrated material cards: name, hazard and selected mark. Pick different loads on each device; they lock at start and stay selected through later legs. Try keyboard focus and all phone scrolling/close controls around Safari chrome/notch/home indicator.
+3. Run 3 races, then a full 10; try 5 as well. At each entrance look for a flush surface, no flicker/gap, matching barrier wings and a continuous yard. Try the closed next gate and reversing over a completed finish strip. Follow the dump-truck detour.
+4. Finish one worker first and drive/spill in staging. When the last active worker finishes, wait five seconds; both devices show **3, 2, 1, GO!** at the end. The gate opens and next timer begins together. Carts, loads, hazards and earlier scores must not reset.
+5. Background/reconnect the iPhone during the countdown and a late leg. Verify same route, position, material and scores. Compare final cumulative results; staging spills/time must stay excluded. Dismiss/reopen Results, restart, then try single race and two-person Beam Carry.
+6. Watch laptop course reveals and iPhone sustained play for stutter, blur or heat, especially later legs with repeated spills. If anything glitches, note build, course names on both sides of the connection, device/browser and a screenshot or clip if convenient.
+
+Automated suites establish rules and resource bounds; this physical pass establishes actual laptop/iPhone comfort. Keep protocol 13 and the separately deployed protocol 14 gameplay checkpoint recoverable.
+
+---
+
 # Milestone 6B final — laptop + iPhone acceptance
 
 1. Refresh both devices at https://break-time-9n1k.onrender.com and confirm **Ten-course Championship**. Use laptop Wi-Fi and iPhone cellular. Create a fresh room. Verify 2 (accepted 6A), 3, 5 and 10 options; only the host can change length in the lobby.

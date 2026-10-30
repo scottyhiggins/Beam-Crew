@@ -4,6 +4,7 @@ import {assembleRoute,courseSurfacePolygons,courseVisibleFences,type CourseInsta
 type Batch={geometry:THREE.BufferGeometry;material:THREE.Material;matrices:THREE.Matrix4[]};
 export function createModularWorld(){
  const root=new THREE.Group(),geometries=new Map<string,THREE.BufferGeometry>(),materials=new Map<number,THREE.MeshLambertMaterial>();
+ let warmTarget:THREE.WebGLRenderTarget|undefined;const warmed=new Set<THREE.Group>();
  let legacy:ReturnType<typeof legacyWorld>|undefined,key='',groups:{root:THREE.Group;gate:THREE.Group;course:CourseInstance}[]=[];
  const geometry=(kind:string)=>{let g=geometries.get(kind);if(!g){g=kind==='tank'?new THREE.CylinderGeometry(1,1,3,10):kind==='road-disc'?new THREE.CylinderGeometry(2.8,2.8,.05,24):kind==='link'?new THREE.TorusGeometry(.06,.015,3,6):kind==='cone'?new THREE.ConeGeometry(.22,.65,8):kind==='gravel'?new THREE.ConeGeometry(1.2,.65,12):kind==='pipe'?new THREE.CylinderGeometry(.3,.3,4,10,1,true):kind==='tire'?new THREE.CylinderGeometry(.4,.4,.22,10):kind==='stone'?new THREE.IcosahedronGeometry(.12,0):new THREE.BoxGeometry(1,1,1);geometries.set(kind,g);}return g;};
  const material=(color:number)=>{let m=materials.get(color);if(!m){m=new THREE.MeshLambertMaterial({color});materials.set(color,m);}return m;};
@@ -72,11 +73,26 @@ export function createModularWorld(){
   for(const b of batches.values()){const mesh=new THREE.InstancedMesh(b.geometry,b.material,b.matrices.length);b.matrices.forEach((matrix,i)=>mesh.setMatrixAt(i,matrix));mesh.computeBoundingSphere();group.add(mesh);}
   return {root:group,gate,course};
  }
- return {root,update(z:number,leg:number,active:boolean,ids:readonly string[]=[]){
+ return {root,
+ // Upload one nearby section per waiting frame, before it first appears during active racing.
+ // A single 1px target and the existing scene/materials keep memory and shader variants bounded.
+ warmNext(renderer:THREE.WebGLRenderer,scene:THREE.Scene,camera:THREE.Camera,leg:number){
+  const candidate=groups.find((g,i)=>i>=Math.max(0,leg-1)&&i<=leg+2&&!warmed.has(g.root));if(!candidate)return;
+  warmTarget??=new THREE.WebGLRenderTarget(1,1);
+  const target=renderer.getRenderTarget(),visibility=groups.map(g=>g.root.visible),culling:{object:THREE.Object3D;value:boolean}[]=[];
+  try{
+   for(const g of groups)g.root.visible=g===candidate;
+   candidate.root.traverse(object=>{culling.push({object,value:object.frustumCulled});object.frustumCulled=false;});
+   renderer.setRenderTarget(warmTarget);renderer.render(scene,camera);warmed.add(candidate.root);
+  }finally{
+   renderer.setRenderTarget(target);groups.forEach((g,i)=>g.root.visible=visibility[i]);
+   for(const {object,value}of culling)object.frustumCulled=value;
+  }
+ },update(z:number,leg:number,active:boolean,ids:readonly string[]=[]){
   root.visible=active;if(!active)return;
   if(!ids.length){if(!legacy){legacy=legacyWorld();root.add(legacy.root);}legacy.update(z,leg,true);for(const g of groups)g.root.visible=false;return;}
   if(legacy)legacy.root.visible=false;
-  const nextKey=ids.join(',');if(nextKey!==key){for(const g of groups){root.remove(g.root);g.root.traverse(object=>{if(object instanceof THREE.InstancedMesh)object.dispose();if(object instanceof THREE.Mesh&&object.userData.ownedGeometry)object.geometry.dispose();if(object instanceof THREE.LineSegments){object.geometry.dispose();(object.material as THREE.Material).dispose();}});}groups=assembleRoute(ids).map((c,i)=>build(c,i,ids.length));key=nextKey;}
+  const nextKey=ids.join(',');if(nextKey!==key){warmed.clear();for(const g of groups){root.remove(g.root);g.root.traverse(object=>{if(object instanceof THREE.InstancedMesh)object.dispose();if(object instanceof THREE.Mesh&&object.userData.ownedGeometry)object.geometry.dispose();if(object instanceof THREE.LineSegments){object.geometry.dispose();(object.material as THREE.Material).dispose();}});}groups=assembleRoute(ids).map((c,i)=>build(c,i,ids.length));key=nextKey;}
   for(let i=0;i<groups.length;i++){const g=groups[i],distance=Math.max(0,g.course.exit.z-z,z-g.course.entry.z);g.root.visible=Math.abs(i-leg)<=1&&distance<60;g.gate.visible=leg<=i;}
  }};
 }

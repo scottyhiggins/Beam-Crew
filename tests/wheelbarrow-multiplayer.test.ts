@@ -11,7 +11,7 @@ test('two racers synchronize countdown, independent carts, reconnect, finish and
  const client=new Client(endpoint!.replace(/^http/,'ws'));let host:Room|undefined,guest:Room|undefined,timer:ReturnType<typeof setInterval>|undefined;
  try{
   host=await client.create('crew',{name:'Cart host'});guest=await client.joinById(host.roomId,{name:'Cart guest'});
-  await until(()=>host!.state.players?.size===2);guest.send('mode','wheel');await pause(120);assert.equal(host.state.mode,'competitive');
+  await until(()=>host!.state.players?.size===2);guest.send('mode','wheel');await pause(120);assert.equal(host.state.mode,'championship');
   host.send('mode','wheel');await until(()=>guest!.state.mode==='wheel');host.send('start');await until(()=>guest!.state.racePhase==='countdown'&&host!.state.racePhase==='countdown');
   const hx=host.state.players.get(host.sessionId).x,gx=host.state.players.get(guest.sessionId).x;assert.notEqual(hx,gx);
   host.send('input',{x:1,z:0});await pause(250);assert.equal(host.state.players.get(host.sessionId).x,hx);

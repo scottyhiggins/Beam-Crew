@@ -1,3 +1,21 @@
+# Milestone 6C — Championship polish and construction UI
+
+The user physically accepted the protocol 13 ten-course Championship on laptop and iPhone through Course 10/10, with correct results; laptop had an occasional brief stutter. Recovery branch **codex/pre-milestone6c-protocol13-20261029** retains **2081c0c**, with a complete-history **Beam-Crew-pre-milestone6c-protocol13.bundle** outside the repository. All earlier recovery branches remain intact.
+
+Gameplay checkpoint **ba72ae88988fc88afc5c45cc829cfaa36f88e4f3**, protocol **14**, was production-built and passed all **97 local tests**, then deployed to the existing service as **dep-dbi1kmom7kps73bkaisg** and verified live. A clean settled-service run passed **97 public tests**, zero failures/skips, plus HTTPS/WSS smoke. A first public run overlapped retirement of the prior deployment and failed on old three-second rooms/reconnect; the settled complete rerun supersedes it. Preserve **codex/milestone6c-gameplay-checkpoint** and its complete-history external bundle before further UI work.
+
+Current candidate: **BREAK TIME · Championship 6C · Construction party polish**, protocol **15**. New rooms default to a randomized **3-race Championship**. Host-selectable 5/10, classic 2-course route, independent single race and two-person Beam Carry remain. Four illustrated main-menu tiles select Wheelbarrow or Beam Carry before room creation; Crane Challenge and Worker Store are clearly disabled Coming Soon. Twelve vector material cards retain all six categories, authoritative selection/lock and unchanged equal base handling. Custom-styled native selectors preserve keyboard and Safari behavior; safe-area spacing, scrolling, readable focus/selected/disabled states and compact touch HUD remain.
+
+Course surfaces now stop at exact entry/exit planes. The finish neck and yard meet without differently colored coplanar overlap; finite underlying ground no longer overlaps neighboring section slabs. Visible barriers use shared clipped socket fences, with each shared yard owned/rendered once and cap wings rendered once. Tests sample all **90 ordered adjacencies** for surface ownership, covered yards and clear visible connections in addition to existing server collision and natural-route checks. Original yellow pylons/rope, server collision, finish lips and all ten layouts remain.
+
+After the last eligible racer completes a leg, the server starts **five seconds** of intermission. The final seconds show centered **3, 2, 1, GO!**. Gate opening, new leg and timer zero remain one authoritative GO transition. Initial race countdown remains three seconds. Pose, speed, instability, reload, material, prior hazards and frozen score ledger survive; reconnection and DNF reservation rules are unchanged.
+
+Performance changes target avoidable work: reuse spill allocations until record material/quantity changes; avoid rebuilding identical standings; retain route ID arrays; dispose owned ground geometry on replay. Prepare at most one nearby course per waiting frame into a reused 1px graphics target; racing performs no extra preparation pass. Only current/neighbor groups remain visible during play. Resource tests verify bounded scene size and graphics preparation restoring target, visibility and culling, including exceptions. No phone/desktop FPS or thermal improvement is claimed without a physical run.
+
+Production build and the full protocol 15 local suite passed **98 tests**, zero failures/skips (all real network tests enabled, four files concurrently). Final public rollout evidence is recorded separately after deployment. No gameplay for Crane/Store, major Beam changes, new service, plan changes, dependencies, external images/fonts, material coefficients or physics engine changes.
+
+---
+
 # Milestone 6B — ten-course Championship
 
 Build **BREAK TIME · Championship 6B · Ten-course Championship**, protocol **13**. Hosts can choose randomized **3, 5 or 10 races** from ten unique modules. The accepted **2-course 6A route** remains an independent choice, alongside single-race Wheelbarrow and Beam Carry. The server publishes one non-repeating ID order and seed; every client uses the same assembled module transforms. The selected order and named leg results appear in Standings. Restart creates a fresh shuffled route for 3/5/10 and retains the player's load selection.
