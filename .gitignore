@@ -6,3 +6,7 @@ build/
 .pnpm-store/
 /sources/
 /AGENTS.md
+
+# Local Work 14 recovery artifacts
+/recovery/*.bundle
+/recovery/checkpoint.json

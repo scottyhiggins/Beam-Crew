@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {Client,type Room} from 'colyseus.js';
 import {HAT_COLORS,VEST_COLORS,DEFAULT_WORKER_LOOK,validateWorkerLook,type WorkerLook} from '../shared/cosmetics.js';
 import {CrewRoom} from '../server/room.js';
+import {CrewState} from '../server/state.js';
 import type {Client as ServerClient} from '@colyseus/core';
 import * as THREE from 'three';
 import {makeWorker,animateWorker} from '../client/worker.js';
@@ -19,7 +20,7 @@ test('all 72 free looks validate and malformed selections fall back atomically',
 });
 
 test('server join validates cosmetics and ignores attempted gameplay field injection',()=>{
- const room=new CrewRoom();room.onCreate();
+ const room=new CrewRoom();room.setState(new CrewState());
  try{
   for(const [i,cosmetics]of [...invalid,first].entries()){
    const id=String(i);room.onJoin({sessionId:id} as ServerClient,{cosmetics});
@@ -61,7 +62,7 @@ for(const mode of ['wheel','competitive'])test(`cosmetics synchronize by player,
   guest.send('cosmetics',second);await until(()=>synchronized(first,second));
   const token=guest.reconnectionToken;guest.connection.close();await until(()=>!host.state.players.get(guestId).connected);
   guest=await client.reconnect(token);rooms.push(guest);await until(()=>host.state.players.get(guestId).connected&&synchronized(first,second));assert.equal(guest.sessionId,guestId);
-  const resets=host.state.raceResets;host.send('restart');await until(()=>guest.state.raceResets>resets);assert.ok(synchronized(first,second));
+  const resets=host.state.raceResets;await new Promise(r=>setTimeout(r,1100));host.send('restart');await until(()=>guest.state.raceResets>resets);assert.ok(synchronized(first,second));
   host.send('lobby');await until(()=>guest.state.phase==='lobby');host.send('start');await until(()=>guest.state.phase==='test');assert.ok(synchronized(first,second));
   host.send('lobby');await until(()=>guest.state.phase==='lobby');await guest.leave();await until(()=>host.state.players.size===1);
   guest=await client.joinById(host.roomId,{name:'New join',cosmetics:second});rooms.push(guest);await until(()=>guest.state.players?.size===2);assert.deepEqual(look(guest.state.players.get(guest.sessionId)),second);

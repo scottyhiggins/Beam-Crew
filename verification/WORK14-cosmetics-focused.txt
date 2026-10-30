@@ -1,0 +1,13 @@
+✔ all 72 free looks validate and malformed selections fall back atomically (1.5905ms)
+✔ server join validates cosmetics and ignores attempted gameplay field injection (2.7682ms)
+✔ cosmetic models preserve animated limb poses for Wheelbarrow and Beam Carry (6.7766ms)
+✔ cosmetics synchronize by player, survive reconnect and new rounds in wheel (1931.982ms)
+✔ cosmetics synchronize by player, survive reconnect and new rounds in competitive (1930.4631ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4147.2272

@@ -1,15 +1,44 @@
-# Work 14 — Free Worker Store
+# Work 14 — Multiplayer Worker Store handoff
 
-Baseline: Protocol 16, 94122866c5334f2220aab8c0e44aca07c1b64a08.
-Branch: feature/worker-customization.
-Isolated clone: Beam-Crew-worker-store-work14. Local preview: http://localhost:2614.
+## Isolated delivery
 
-The existing Worker Store tile opens a modal with a lit 3D worker on a pedestal. Includes six hard hats, four vests, three expressions, drag / keyboard / button rotation, front view, classic reset, and explicit save. All options are free immediately. No account, currency, purchases, or unlocks.
+- Checkout: `Beam-Crew-worker-store-work14`.
+- Branch: `feature/worker-customization`, based on Protocol 16 / `94122866c5334f2220aab8c0e44aca07c1b64a08`.
+- Approved store design: `04e6822fec1f7a9e2592cf3132431bdf95051ca2`.
+- Development port remains 2614. No other Work directories, branches, terminals, or browsers were changed.
+- No main merge, push, deployment, or production environment changes.
 
-Selections are validated when loaded and saved in browser localStorage under break-time-worker. A storage failure is explained and keeps the look for the current visit. Unsaved changes are discarded on reopening. The saved look is applied to this client's own worker when entering the next room. Other players retain their existing color identity; cosmetics are not network synchronized. No protocol or server changes.
+## Behavior
 
-Integration files: client/main.ts (store tile, installation, own worker look, slogan, input guard), client/worker.ts (optional cosmetic model), client/worker-store.ts (screen and persistence), client/style.css (responsive screen). Main menu slogan now uses WORK HARD. PLAY HARD.
+The approved UI, all 72 free combinations, rotation controls, and local browser persistence remain intact. Creating/joining a room supplies the saved selection. Attaching a room (including reconnect) resubmits the saved selection through the authenticated client connection. Saving while connected also sends the selection.
 
-Validation: production build passed; existing tests 92 passed, 17 skipped, 0 failed. Browser checked tile opening, visible 3D preview, blue hat / green vest / goofy selection, rotation button, save confirmation, and persistence after page reload. Desktop screenshot: worker-store-preview.png. Mobile layout is implemented but has not been visually checked. Network tests were skipped by the existing test configuration.
+The authoritative Player schema now synchronizes `hat`, `vest`, and `expression`. Join options and the `cosmetics` message both use the same allowlist validator. Missing, incomplete, or invalid selections become the full classic look (yellow hat, orange vest, happy expression). Only these three sanitized fields are assigned. A client cannot select another player's ID or inject movement, color slot, or scoring fields.
 
-No merge, push, deployment, production environment changes, or edits to other Work folders. To run locally in PowerShell: set the PORT environment variable to 2614, then run pnpm dev in this clone.
+Clients render every worker from that player's synchronized fields, keyed by session ID. A changed look rebuilds only that worker's decorative model, disposes its old resources, and preserves its position and rotation. Both Wheelbarrow and Beam Carry use this path. Server reservations retain cosmetics across reconnects; round resets leave them untouched. Simulation, collision, scoring, and hitbox code are unchanged.
+
+The wire schema changed, so this isolated branch uses Protocol 17. Client and server must be released together.
+
+## Integration conflict check (no merge performed)
+
+Read-only snapshots were imported into this clone; the other checkouts were not modified. `git merge-tree --write-tree --name-only` checked the complete feature against:
+
+- Work #10 `cffe2dcac37adbf935771ae28b68119a01442691` (`feature/integration-chaos-quickmatch`): content conflicts in `client/main.ts`, `client/style.css`, `server/room.ts`, and `shared/version.ts`. `server/state.ts` merges textually, but its combined schema still needs validation.
+- Work #11 `10ffe3e7ae9f83a4ef8e8350f38b801b989b75ca` (`feature/toolbox-trivia`): content conflict in `client/main.ts` (menu tile additions).
+
+Work #10 already uses Protocol 18. During integration choose a new shared version newer than both (for example 19), retain the approved Worker Store and Trivia tiles, preserve #10's gameplay handlers, and add the cosmetic join option to Quick Match's `joinOrCreate` paths. Keep the cosmetic send in the combined `attach` path so reconnects and public matches receive the saved look. Append both sets of styles. Run the combined full suite after resolution. These are committed snapshot checks; subsequent work in #10/#11 may add conflicts.
+
+## Recovery
+
+The original `../Beam-Crew-protocol16-stable.bundle` remains unchanged. SHA256: `F3A305D9ED778373E7849C4A67EAF233D973B00B669DAE4766E822769362B1FE`.
+
+`recovery/work14-approved-store.bundle` preserves the approved UI commit and complete history. SHA256: `A143C0B631C613FC371A9B1F625EDE2F699D423379FBD06ED92210438E130EB3`.
+
+The final multiplayer checkpoint bundle is created after the final validation commit at `recovery/work14-multiplayer-checkpoint.bundle`; its commit and SHA256 are recorded in `recovery/checkpoint.json`. Bundles are local recovery artifacts, intentionally excluded from Git to avoid embedding repository archives in their own history.
+
+## Validation
+
+Full suite results are recorded in `verification/WORK14-full-suite.txt` after completion. Tests added in `tests/cosmetics.test.ts` cover all 72 allowed combinations; malformed values and safe defaults; authoritative join sanitization; injected fields; cosmetic model colors and both grip poses; two real clients with distinct cosmetics in both modes; changes addressed to the sender; malformed network messages; reconnects; restarts; lobby-to-round starts; and fresh joins.
+
+Await integration approval. Do not merge or deploy this branch automatically.
+
+Final validation: `pnpm test:all` passed the production build and all 114 tests, with 0 failures and 0 skipped (438.35 seconds). The focused live cosmetics run passed all 5 tests. The initial cosmetic test restart wait was corrected to respect the existing one-second server cooldown; gameplay behavior was unchanged. Approved store markup and CSS were compared against 04e6822 and are unchanged.
