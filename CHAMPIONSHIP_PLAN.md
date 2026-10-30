@@ -1,3 +1,9 @@
+# Milestone 6B complete implementation boundary
+
+After the five-course checkpoint passed 94 local/public tests and was deployed, the pool expanded to ten authored local-coordinate modules and enabled host 3/5/10 unique shuffled selections. The fixed accepted 6A 2-course option remains. Module version 2 uses level 5.6m sockets, parallel forward orientation and 16m shared yards; all 90 ordered pairs and all materials/routes are tested. Server-published IDs/seed, generalized leg count and named route display replace two-leg assumptions only for expanded routes. Current/neighbor rendering, cached instances and bounded buffer disposal keep distant sections out of draw work. The existing gameplay/material/network lifecycle is retained. Final awards are outside this focused request; no Crane or Trivia. Physical ten-leg phone acceptance remains the release follow-up.
+
+---
+
 # Milestone 6B checkpoint implementation
 
 The fixed two-course 6A option is preserved. A five-module local-coordinate pool now supports server-selected, unique randomized 3/5 routes. Entry/exit connections remain level, forward-facing, 5.6m wide with 16m shared yards. All ordered pairs are tested. Surfaces, barrier families, static landmark/contact descriptors, drive paths and finish profiles live in shared/course-modules.ts. The server alone chooses and publishes IDs; rendering and simulation use identical assembled transforms. Active/neighbor module culling and cached instances bound visual work. Longer selections stay disabled until their full pool passes tests and the stable five-course checkpoint is deployed.

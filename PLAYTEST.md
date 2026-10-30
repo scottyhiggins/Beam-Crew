@@ -1,3 +1,17 @@
+# Milestone 6B final — laptop + iPhone acceptance
+
+1. Refresh both devices at https://break-time-9n1k.onrender.com and confirm **Ten-course Championship**. Use laptop Wi-Fi and iPhone cellular. Create a fresh room. Verify 2 (accepted 6A), 3, 5 and 10 options; only the host can change length in the lobby.
+2. Run a three- or five-leg series, then a full ten. Open Standings and compare the exact named order on both devices. A ten-race route must include every course exactly once; 3/5 are unique subsets. Ground colors, barrier families, landmarks and turns should clearly change. The original course keeps yellow pylons/rope.
+3. At Dump Truck Haul Road, check the raised/tipped truck bed and gravel pile. Follow the painted left detour; there must be a fair open route and collision only where the obstruction is visible. Check cone/chain and tall-post/tape boundaries, original pylons, later rough strips and steel-deck seams.
+4. Finish one racer first. Drive, bump and spill in the shared yard while the other finishes. Official leg scores freeze and the next gate remains closed. Both devices show the same three-second countdown; GO opens the next section without moving the carts, reloading a scene, changing materials or erasing hazards.
+5. Try reversing into completed legs, including after later countdowns. Reconnect/background the iPhone mid-countdown and on a later leg (including leg 8–10). Confirm order/current leg, cart position, material, hazards and cumulative scores. A permanently departed last racer must become DNF and release progress after the existing reservation; verify host transfer.
+6. Compare all per-leg and cumulative final results. Staging/countdown spills and time must stay out of official totals. Drive/spill after the final result and confirm the board and clock stay frozen. Restart: fresh randomized order, cleared ledger/hazards, same selected material. Verify accepted 2-course mode, independent Wheelbarrow and Beam Carry.
+7. Check iPhone portrait/landscape, safe areas/Safari chrome, controls and scrolling the route/standings/results. Run several long rounds with repeated spills and more players if possible. Report any hiccup, stutter, blur, heat, missing/capped seam, hidden obstacle, or unreadable UI with device/iOS/build and course name. Automated budgets cannot establish phone thermal behavior.
+
+Recovery choices: accepted 6A at codex/pre-milestone6b-20261029; publicly tested five-course checkpoint at codex/milestone6b-five-course-checkpoint. Auto-deploy remains off.
+
+---
+
 # Milestone 6B checkpoint — laptop + iPhone playtest
 
 1. Refresh both clients and verify the current 6B build. Create a fresh room. Try 2 courses (accepted 6A route), then host-selected 3 and 5 races. Both clients must show the same unique order when racing; 10 is unavailable until separately certified.

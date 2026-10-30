@@ -5,7 +5,7 @@ import {assembleRoute,type CourseInstance} from '../shared/course-modules.js';
 const endpoint=process.env.TEST_URL;
 const pause=(ms:number)=>new Promise(r=>setTimeout(r,ms));
 async function until(fn:()=>boolean,timeout=10000){const end=Date.now()+timeout;while(!fn()){if(Date.now()>end)throw Error('Expanded Championship synchronization timeout');await pause(30);}}
-for(const count of [3,5])test(count+' randomized legs synchronize on two clients through every countdown, reconnect, immutable ledger and replay',{skip:!endpoint,timeout:300000},async()=>{
+for(const count of [3,5,10])test(count+' randomized legs synchronize on two clients through every countdown, reconnect, immutable ledger and replay',{skip:!endpoint,timeout:600000},async()=>{
  const client=new Client(endpoint!.replace(/^http/,'ws'));let a:Room|undefined,b:Room|undefined,timer:ReturnType<typeof setInterval>|undefined,route:CourseInstance[]=[];
  const indices=new Map<string,{leg:number;i:number}>();
  function drive(room:Room){const s=room.state,p=s.players?.get(room.sessionId);if(!p||!route[s.leg])return;const c=route[s.leg];let goal;
@@ -15,7 +15,7 @@ for(const count of [3,5])test(count+' randomized legs synchronize on two clients
  }
  try{
   a=await client.create('crew',{name:'Route host'});b=await client.joinById(a.roomId,{name:'Route guest'});await until(()=>a!.state.players?.size===2&&b!.state.players?.size===2);
-  b.send('championshipLength',5);await pause(150);assert.equal(a.state.championshipLength,2);a.send('mode','championship');a.send('championshipLength',count);await until(()=>b!.state.championshipLength===count);a.send('championshipLength',10);await pause(150);assert.equal(b.state.championshipLength,count);
+  b.send('championshipLength',5);await pause(150);assert.equal(a.state.championshipLength,2);a.send('mode','championship');a.send('championshipLength',count);await until(()=>b!.state.championshipLength===count);a.send('championshipLength',11);await pause(150);assert.equal(b.state.championshipLength,count);
   a.send('material',3);b.send('material',8);await until(()=>a!.state.players.get(b!.sessionId).materialId===8&&b!.state.players.get(a!.sessionId).materialId===3);a.send('start');await until(()=>a!.state.routeIds?.length===count&&b!.state.routeIds?.length===count);const ids=[...a.state.routeIds];assert.equal(new Set(ids).size,count);assert.deepEqual([...b.state.routeIds],ids);route=assembleRoute(ids);
   b.send('championshipLength',2);a.send('championshipLength',2);b.send('material',0);await until(()=>a!.state.racePhase==='racing');assert.equal(b.state.championshipLength,count);assert.equal(b.state.players.get(b.sessionId).materialId,8);
   timer=setInterval(()=>{if(a?.connection.isOpen)drive(a);if(b?.connection.isOpen)drive(b);},30);

@@ -5,10 +5,10 @@ import {resetCart,stepCart,finishCarts,onDriveableArea,advanceCartProgress,spill
 import {fenceContact} from '../shared/fences.js';
 import {CrewRoom} from '../server/room.js';
 import {CrewState,Player} from '../server/state.js';
-test('five distinct modules have five surfaces, three barrier families, deterministic unique 3/5 selection and no unfinished length',()=>{
- assert.equal(COURSE_MODULES.length,5);assert.equal(new Set(COURSE_MODULES.map(m=>m.surface)).size,5);assert.equal(new Set(COURSE_MODULES.map(m=>m.barrier)).size,3);
- for(let seed=1;seed<=100;seed++)for(const n of [3,5]){const ids=selectCourseIds(n,seed);assert.equal(ids.length,n);assert.equal(new Set(ids).size,n);assert.deepEqual(ids,selectCourseIds(n,seed));}
- assert.ok(new Set(Array.from({length:20},(_,i)=>selectCourseIds(5,i).join(','))).size>10);for(const bad of [0,1,4,10,'5',NaN])assert.equal(validChampionshipLength(bad),false);assert.throws(()=>selectCourseIds(10,1));assert.throws(()=>assembleRoute(['original','original']));
+test('ten distinct modules have ten surfaces, three barrier families and deterministic unique 3/5/10 selection',()=>{
+ assert.equal(COURSE_MODULES.length,10);assert.equal(new Set(COURSE_MODULES.map(m=>m.surface)).size,10);assert.equal(new Set(COURSE_MODULES.map(m=>m.barrier)).size,3);
+ for(let seed=1;seed<=100;seed++)for(const n of [3,5,10]){const ids=selectCourseIds(n,seed);assert.equal(ids.length,n);assert.equal(new Set(ids).size,n);assert.deepEqual(ids,selectCourseIds(n,seed));}
+ assert.ok(new Set(Array.from({length:20},(_,i)=>selectCourseIds(5,i).join(','))).size>10);for(const bad of [0,1,4,11,'5',NaN])assert.equal(validChampionshipLength(bad),false);assert.throws(()=>selectCourseIds(11,1));assert.throws(()=>assembleRoute(['original','original']));
 });
 test('every legal adjacent pair aligns level sockets with a driveable, uncapped 5.6m connection',()=>{
  for(const a of COURSE_MODULES)for(const b of COURSE_MODULES)if(a!==b){const [first,second]=assembleRoute([a.id,b.id]);assert.deepEqual(first.exit,second.entry);assert.ok(second.exit.z<first.exit.z-40);

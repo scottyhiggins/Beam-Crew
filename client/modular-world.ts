@@ -5,7 +5,7 @@ type Batch={geometry:THREE.BufferGeometry;material:THREE.Material;matrices:THREE
 export function createModularWorld(){
  const root=new THREE.Group(),geometries=new Map<string,THREE.BufferGeometry>(),materials=new Map<number,THREE.MeshLambertMaterial>();
  let legacy:ReturnType<typeof legacyWorld>|undefined,key='',groups:{root:THREE.Group;gate:THREE.Group;course:CourseInstance}[]=[];
- const geometry=(kind:string)=>{let g=geometries.get(kind);if(!g){g=kind==='road-disc'?new THREE.CylinderGeometry(2.8,2.8,.05,24):kind==='link'?new THREE.TorusGeometry(.06,.015,3,6):kind==='cone'?new THREE.ConeGeometry(.22,.65,8):kind==='gravel'?new THREE.ConeGeometry(1.2,.65,12):kind==='pipe'?new THREE.CylinderGeometry(.3,.3,4,10,1,true):kind==='tire'?new THREE.CylinderGeometry(.4,.4,.22,10):kind==='stone'?new THREE.IcosahedronGeometry(.12,0):new THREE.BoxGeometry(1,1,1);geometries.set(kind,g);}return g;};
+ const geometry=(kind:string)=>{let g=geometries.get(kind);if(!g){g=kind==='tank'?new THREE.CylinderGeometry(1,1,3,10):kind==='road-disc'?new THREE.CylinderGeometry(2.8,2.8,.05,24):kind==='link'?new THREE.TorusGeometry(.06,.015,3,6):kind==='cone'?new THREE.ConeGeometry(.22,.65,8):kind==='gravel'?new THREE.ConeGeometry(1.2,.65,12):kind==='pipe'?new THREE.CylinderGeometry(.3,.3,4,10,1,true):kind==='tire'?new THREE.CylinderGeometry(.4,.4,.22,10):kind==='stone'?new THREE.IcosahedronGeometry(.12,0):new THREE.BoxGeometry(1,1,1);geometries.set(kind,g);}return g;};
  const material=(color:number)=>{let m=materials.get(color);if(!m){m=new THREE.MeshLambertMaterial({color});materials.set(color,m);}return m;};
  function build(course:CourseInstance,index:number,total:number){
   const group=new THREE.Group(),gate=new THREE.Group();root.add(group);group.add(gate);const batches=new Map<string,Batch>(),dummy=new THREE.Object3D();
@@ -13,7 +13,7 @@ export function createModularWorld(){
   const box=(w:number,h:number,d:number,c:number,x:number,y:number,z:number,ry=0,rx=0)=>add('box',c,x,y,z,w,h,d,rx,ry);
   const {track:t,module:m,origin:o}=course,cx=(t.staging.minX+t.staging.maxX)/2;
   const xs=t.path.map(p=>p.x),minX=Math.min(...xs),maxX=Math.max(...xs);
-  box(maxX-minX+55,.22,course.entry.z-course.exit.z+8,0xa4a38b,(minX+maxX)/2,-.48,(course.entry.z+course.exit.z)/2);
+  box(maxX-minX+80,.22,course.entry.z-course.exit.z+80,0xa4a38b,(minX+maxX)/2,-.48,(course.entry.z+course.exit.z)/2);
   for(let i=1;i<t.path.length;i++){const a=t.path[i-1],b=t.path[i],dx=b.x-a.x,dz=b.z-a.z,len=Math.hypot(dx,dz),angle=Math.atan2(dx,dz);box(5.6,.05,len,m.surface,(a.x+b.x)/2,.01,(a.z+b.z)/2,angle);}
   for(const p of t.path)add('road-disc',m.surface,p.x,.01,p.z);
   box(16,.04,16,m.surface,cx,.015,t.finishZ-10);
@@ -54,7 +54,14 @@ export function createModularWorld(){
    add('gravel',0x969284,o.x+1.45,.4,o.z-15);for(let n=0;n<10;n++){const a=n*2.4;add('stone',0x777c77,o.x+1.45+Math.sin(a)*.8,.18,o.z-15+Math.cos(a)*.8);}
   }else if(m.landmark==='excavator'){
    const x=minX-7,z=course.entry.z-14;for(const dx of [-1.2,1.2])box(.6,.5,3.5,0x344653,x+dx,.3,z);box(2.7,.7,3,0xe8b536,x,.95,z);box(1.5,1.6,1.7,0x287784,x,2,z);box(.35,3.6,.4,0xf2bf38,x,2.5,z-2,0,.55);box(1.2,.5,1,0x45535a,x,.5,z-4);
+  }else if(m.landmark==='bricks'){
+   for(let pallet=0;pallet<3;pallet++){const x=minX-6-pallet*2.2,z=course.entry.z-16;box(1.8,.16,2.1,0xb98d57,x,.12,z);for(let row=0;row<4;row++)for(let col=0;col<3;col++)for(let depth=0;depth<2;depth++)box(.48,.22,.8,row%2?0xb76a49:0xcf805b,x-.55+col*.55,.32+row*.25,z-.5+depth*.9);}
+  }else if(m.landmark==='roller'){
+   const x=maxX+6,z=course.entry.z-17;box(2.4,.7,3.1,0xeab43a,x,1,z);add('tire',0x75848a,x,.72,z-1.2,1.8,10,1.8,0,0,Math.PI/2);for(const dx of [-1.15,1.15])add('tire',0x28353a,x+dx,.55,z+1,1.3,1.5,1.3,0,0,Math.PI/2);box(1.5,1.7,1.5,0x347d86,x,2,z+.7);box(2,.13,2,0xefca57,x,2.9,z+.7);
+  }else if(m.landmark==='tanks'){
+   for(let n=0;n<3;n++){const x=minX-6-n*2.6,z=course.entry.z-17;add('tank',0xa0b5b0,x,1.6,z);box(.1,2.5,.1,0xe8be4f,x+1.05,1.25,z);for(let row=0;row<5;row++)box(.65,.08,.08,0xe8be4f,x+1.1,.4+row*.45,z);}
   }else if(m.landmark==='pipes'||m.landmark==='scaffold'){
+   if(m.id==='steel-deck')for(let n=1;n<7;n++)box(5.2,.025,.08,0x344f5f,o.x,.055,o.z-n*1.1);
    const x=minX-6,z=course.entry.z-12;for(let n=0;n<6;n++)add('pipe',m.landmark==='pipes'?0x5e858e:0xbac7c5,x+n%3*.65,.35+Math.floor(n/3)*.65,z,1,1,1,Math.PI/2);
   }
   for(let n=0;n<6;n++)box(3,.16,.4,0xc59156,maxX+6,.2+n*.18,course.entry.z-26);

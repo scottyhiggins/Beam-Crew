@@ -1,3 +1,19 @@
+# Milestone 6B — ten-course Championship
+
+Build **BREAK TIME · Championship 6B · Ten-course Championship**, protocol **13**. Hosts can choose randomized **3, 5 or 10 races** from ten unique modules. The accepted **2-course 6A route** remains an independent choice, alongside single-race Wheelbarrow and Beam Carry. The server publishes one non-repeating ID order and seed; every client uses the same assembled module transforms. The selected order and named leg results appear in Standings. Restart creates a fresh shuffled route for 3/5/10 and retains the player's load selection.
+
+The requested five-course checkpoint was implemented, production-built, passed **94 local and 94 public tests with zero failures/skips**, then deployed and verified **before** expanding to ten. Checkpoint source **4a3048cc6bf60fd47ac4d24d05248f01129551c9**, Render deploy **dep-dbhu1hijnfac73cbp0l0**, recovery branch **codex/milestone6b-five-course-checkpoint**, external **Beam-Crew-milestone6b-five-course-checkpoint.bundle**. The accepted 6A recovery branch/bundle and prior public deploy are also preserved. No destructive reset/clean or untracked-helper edits.
+
+The final pool is Original Jobsite (sandy tan, original yellow pylons/rope), Concrete Scaffold (gray concrete), Dump Truck Haul Road (dark asphalt, raised-bed truck and gravel obstruction), Earthworks Dig (brown dirt), Utility Green (green grass), Brickworks Red (red masonry dust and brick pallets), Gravel Grade (pale compacted gravel and roller), Steel Deck Crossing (blue-gray deck/scaffolding), Service Court (cream concrete and tanks), and Clay Cut (ochre clay/excavator). New sections use orange cones with plastic chain links or tall delineators with red-and-white tape. All surfaces retain identical material-independent handling. The truck chassis and gravel use shared authoritative contacts; arrows show the fair route past the partially blocking heap.
+
+Every legal ordered pair uses the same level, forward-facing 5.6m socket and 16m shared yard. The server preserves physical cart pose/speed/reload/instability, room/session, chosen load and permanent hazards across each synchronized three-second transition. Completed finish strips retain reverse protection. Per-leg official snapshots exclude staging/countdown spills and time, and cumulative scores use fewest racing spills then combined racing time. Existing reconnect reservation, host transfer, DNF progression and replay remain authoritative. Tests cover all 90 ordered adjacencies, all 12 loads on all ten natural routes, gate anti-shortcuts, a ten-leg eight-worker lifecycle with a later departure and countdown reloads, and real two-client 3/5/10 races/reconnect/replay.
+
+The finite city uses cached geometry/materials and instanced scenery/barriers. At most current/neighbor course groups render; distant debris meshes are hidden without deleting server state. Replay disposes retired instance/line buffers and keeps scene growth bounded. Extended finite ground underlay avoids a visible void behind the starting yard. Automated active scene limits remain 130 course draw batches / 100k triangles across the ten-course pool; these are scene budgets, not a claim of physical iPhone frame rate or thermal performance. The accepted 6A pixel budget remains. No new assets/fonts, physics engine, postprocessing, paid service, plan/settings change, Crane Challenge or Toolbox Trivia.
+
+Final validation and public release evidence will be recorded after rollout. Physical laptop/iPhone ten-leg acceptance is still required, particularly the previously reported brief hiccup and sustained heat/frame rate. See PLAYTEST.md.
+
+---
+
 # Milestone 6B — five-course checkpoint
 
 The user accepted the 6A two-course Championship on laptop and iPhone, including cumulative scoring and multiplayer; one brief iPhone hiccup recovered. Accepted source 5728952 and live deployment dep-dbhsrhu7bikc73fs924g remain recoverable. Recovery branch codex/pre-milestone6b-20261029 at 0763bb4 and an external Beam-Crew-pre-milestone6b-20261029.bundle preserve the full local baseline. Existing untracked helpers are untouched.
@@ -8,7 +24,7 @@ Five reusable sections: Original Jobsite (sandy tan, original yellow pylons/rope
 
 Scenery uses shared geometry/material caches and instancing; only nearby current/neighbor modules render. Distant debris meshes are hidden without deleting server hazards. Replay replaces course batches and disposes retired buffers. Automated budgets cap active course draw batches and triangles and check bounded replay scene growth. The dump-truck browser preview showed 48 draws and about 56k triangles before the final road-edge trim. This measures scene complexity, not physical iPhone frame rate or heat.
 
-Validation and deployment evidence follow after the final checkpoint run. No Render plan/settings changes; automatic deployment remains off. No Crane or Trivia work.
+The five-course checkpoint production build and complete local/public suites passed 94 tests, zero failures/skips. Source 4a3048c was verified live as dep-dbhu1hijnfac73cbp0l0 with protocol 12; HTTPS/WSS smoke and browser checks passed before ten-course work began. No Render plan/settings changes; automatic deployment remains off. No Crane or Trivia work.
 
 ---
 

@@ -2,7 +2,7 @@ import {corridorFences,type Fence,type Point} from './fences.js';
 import {WHEEL_TRACK,WHEEL_CONFIG,onDriveableArea,type WheelTrack} from './wheelbarrow.js';
 export const MODULE_VERSION=2;
 export type BarrierStyle='rope'|'chain'|'tape';
-export type CourseModule={id:string;name:string;surface:number;surfaceName:string;barrier:BarrierStyle;landmark:'original'|'scaffold'|'dump'|'excavator'|'pipes';track:WheelTrack;drivePath:Point[]};
+export type CourseModule={id:string;name:string;surface:number;surfaceName:string;barrier:BarrierStyle;landmark:'original'|'scaffold'|'dump'|'excavator'|'pipes'|'bricks'|'roller'|'tanks';track:WheelTrack;drivePath:Point[]};
 export type CourseInstance={module:CourseModule;track:WheelTrack;origin:Point;entry:Point;exit:Point;drivePath:Point[]};
 const r=WHEEL_CONFIG.corridorRadius;
 const edge=(x:number,z:number,bx:number,bz:number):Fence=>({a:{x,z},b:{x:bx,z:bz}});
@@ -37,10 +37,22 @@ export const COURSE_MODULES:CourseModule[]=[
  {id:'earthworks',name:'Earthworks Dig',surface:0x946648,surfaceName:'Brown dirt',barrier:'tape',landmark:'excavator',track:track('earthworks',dirt),drivePath:dirt},
  {id:'utility-green',name:'Utility Green',surface:0x698652,surfaceName:'Green grass',barrier:'tape',landmark:'pipes',track:track('utility-green',grass),drivePath:grass},
 ];
-export const AVAILABLE_LENGTHS=[2,3,5] as const;
+const brick=points([[0,0],[0,-10],[-6,-16],[2,-24],[2,-34],[2,-43]]);
+const grade=points([[0,0],[0,-24],[5,-31],[5,-42]]);
+const steel=points([[0,0],[0,-8],[7,-16],[7,-25],[-3,-33],[-3,-44]]);
+const service=points([[0,0],[0,-12],[-7,-20],[-1,-27],[5,-34],[5,-44]]);
+const clay=points([[0,0],[0,-9],[9,-17],[2,-25],[-6,-33],[-6,-45]]);
+COURSE_MODULES.push(
+ {id:'brickworks-red',name:'Brickworks Red',surface:0xb47762,surfaceName:'Red masonry dust',barrier:'tape',landmark:'bricks',track:track('brickworks-red',brick),drivePath:brick},
+ {id:'gravel-grade',name:'Gravel Grade',surface:0xaaa489,surfaceName:'Pale compacted gravel',barrier:'chain',landmark:'roller',track:track('gravel-grade',grade),drivePath:grade},
+ {id:'steel-deck',name:'Steel Deck Crossing',surface:0x667c87,surfaceName:'Blue-gray steel deck',barrier:'tape',landmark:'scaffold',track:track('steel-deck',steel),drivePath:steel},
+ {id:'service-court',name:'Service Court',surface:0xc6bea3,surfaceName:'Cream concrete',barrier:'chain',landmark:'tanks',track:track('service-court',service),drivePath:service},
+ {id:'clay-cut',name:'Clay Cut',surface:0xad844b,surfaceName:'Ochre clay',barrier:'tape',landmark:'excavator',track:track('clay-cut',clay),drivePath:clay}
+);
+export const AVAILABLE_LENGTHS=[2,3,5,10] as const;
 export function validChampionshipLength(value:unknown):value is number{return typeof value==='number'&&AVAILABLE_LENGTHS.some(n=>n===value);}
 export function selectCourseIds(count:number,seed:number){
- if(count!==3&&count!==5)throw Error('Uncertified Championship length');
+ if(count!==3&&count!==5&&count!==10)throw Error('Uncertified Championship length');
  const ids=COURSE_MODULES.map(m=>m.id);let value=seed>>>0||0x9e3779b9;
  const random=()=>{value+=0x6d2b79f5;let t=value;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296;};
  for(let i=ids.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[ids[i],ids[j]]=[ids[j],ids[i]];}
