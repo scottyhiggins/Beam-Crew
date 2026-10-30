@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 import {PublicWheelRoom} from './public-room.js';
-=======
 import {TriviaRoom,triviaRooms} from './trivia-room.js';
->>>>>>> 10ffe3e7ae9f83a4ef8e8350f38b801b989b75ca
 import express from 'express';
 import { createServer } from 'node:http';
 import { Server } from '@colyseus/core';
@@ -16,12 +13,9 @@ const startedAt=new Date().toISOString();
 const app=express();const http=createServer(app);
 const server=new Server({transport:new WebSocketTransport({server:http})});
 server.define('crew',CrewRoom);
-<<<<<<< HEAD
 server.define('wheel_public',PublicWheelRoom);
-=======
 server.define('trivia',TriviaRoom);
 app.get('/api/trivia/:code',(req,res)=>{const room=triviaRooms.get(req.params.code.toUpperCase());if(!room){res.status(404).json({error:'Trivia room not found'});return;}if(room.game.phase!=='lobby'){res.status(409).json({error:'Round in progress. Reconnect or wait for the lobby.'});return;}res.json({roomId:room.roomId});});
->>>>>>> 10ffe3e7ae9f83a4ef8e8350f38b801b989b75ca
 app.get('/api/rooms/:code',(req,res)=>{
   const room=roomsByCode.get(req.params.code.toUpperCase());
   if(!room){res.status(404).json({error:'Room not found'});return;}

@@ -1,4 +1,5 @@
 import {validBeamMap,stepChaosTeam,recoverTeam} from '../shared/beam-chaos.js';
+import {validateWorkerLook} from '../shared/cosmetics.js';
 import {selectCourseIds,assembleRoute,routeWorld,validChampionshipLength,type CourseInstance} from '../shared/course-modules.js';
 import {championshipTrack,COURSE_TWO} from '../shared/championship.js';
 import { Room, Client, ServerError } from '@colyseus/core';
@@ -28,6 +29,7 @@ export class CrewRoom extends Room<CrewState> {
     do {this.state.code=Array.from({length:5},()=>alphabet[randomInt(alphabet.length)]).join('');}while(roomsByCode.has(this.state.code));
     roomsByCode.set(this.state.code,this);this.setMetadata({code:this.state.code});this.setPatchRate(50);
     this.setSimulationInterval(dt=>{this.accumulator+=Math.min(dt/1000,.1);const step=1/CONFIG.tickRate;while(this.accumulator>=step){this.tick(step);this.accumulator-=step;}},1000/CONFIG.tickRate);
+    this.onMessage('cosmetics',(c,value)=>{const p=this.state.players.get(c.sessionId);if(p)Object.assign(p,validateWorkerLook(value));});
     this.onMessage('input',(c,data)=>{const p=this.state.players.get(c.sessionId);if(!p||!data||!Number.isFinite(data.x)||!Number.isFinite(data.z))return;p.inputX=Math.max(-1,Math.min(1,data.x));p.inputZ=Math.max(-1,Math.min(1,data.z));p.lastInput=Date.now();});
     this.onMessage('action',c=>{
       const p=this.state.players.get(c.sessionId);
@@ -85,9 +87,9 @@ export class CrewRoom extends Room<CrewState> {
     return true;
   }
   positionCarrier(p:Player){const point=gripPosition(this.state.mode==='competitive'?this.state.teams[p.team]:this.state.beam,p.grip);p.x=point.x;p.z=point.z;p.rotation=(this.state.mode==='competitive'?this.state.teams[p.team]:this.state.beam).angle-GRIPS[p.grip].side*Math.PI/2;}
-  onJoin(c:Client,options:{name?:unknown}){
+  onJoin(c:Client,options:{name?:unknown;cosmetics?:unknown}){
     if(this.state.phase!=='lobby')throw new ServerError(409,'The test has already started');
-    const p=new Player();p.name=typeof options.name==='string'?options.name.trim().replace(/[\u0000-\u001f]/g,'').slice(0,18)||'Worker':'Worker';
+    const p=new Player();Object.assign(p,validateWorkerLook(options.cosmetics));p.name=typeof options.name==='string'?options.name.trim().replace(/[\u0000-\u001f]/g,'').slice(0,18)||'Worker':'Worker';
     const used=new Set(Array.from(this.state.players.values(),p=>p.color));p.color=Array.from({length:8},(_,i)=>i).find(i=>!used.has(i))??0;
     p.x=(p.color%4)*2-3;p.z=Math.floor(p.color/4)*2;p.lastInput=Date.now();this.state.players.set(c.sessionId,p);
     if(!this.state.host)this.state.host=c.sessionId;

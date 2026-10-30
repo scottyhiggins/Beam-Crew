@@ -1,0 +1,15 @@
+94628a11554baf6d839c495d4aa179ba5d89ba55
+client/main.ts
+client/style.css
+server/room.ts
+shared/version.ts
+
+Auto-merging client/main.ts
+CONFLICT (content): Merge conflict in client/main.ts
+Auto-merging client/style.css
+CONFLICT (content): Merge conflict in client/style.css
+Auto-merging server/room.ts
+CONFLICT (content): Merge conflict in server/room.ts
+Auto-merging server/state.ts
+Auto-merging shared/version.ts
+CONFLICT (content): Merge conflict in shared/version.ts
