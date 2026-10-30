@@ -77,3 +77,15 @@ input,select{border:2px solid #abbeb4;border-radius:7px;background:#fffdf2;color
 
 #beamOverview,#beamRescue{position:absolute;right:0;max-width:120px;min-height:44px}#beamOverview{top:52px}#beamRescue{top:104px;background:#fff8e7;border:2px solid #e3ad47}#beamMapLabel{display:block;margin:12px 0}#beamMapDescription{font-size:12px;color:var(--muted)}
 #quickMatch{background:#ffbf35;color:#172d3c;font-size:1.2rem;font-weight:900;min-height:56px;width:100%}
+/* Portrait Championship controls occupy rows, never absolute offsets over score text. */
+@media(max-width:600px) and (orientation:portrait){
+ #hud.championship-hud{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:start;top:calc(var(--safe-top) + 12px);left:calc(var(--safe-left) + 12px);right:calc(var(--safe-right) + 12px)}
+ #hud.championship-hud #hudText{grid-column:1;grid-row:1;max-width:none;min-width:0;overflow-wrap:anywhere}
+ #hud.championship-hud #menu{position:static;grid-column:2;grid-row:1;min-height:44px;min-width:64px}
+ #hud.championship-hud #beamStatus{grid-column:1 / -1;grid-row:2;max-width:none;width:100%;min-width:0;margin:0;white-space:pre-line;overflow-wrap:anywhere}
+ #hud.championship-hud #crewSignals{grid-column:1 / -1;grid-row:3;max-width:none;margin:0;min-width:0;overflow-wrap:anywhere}
+ #hud.championship-hud #standings.championship{position:relative;grid-column:1;grid-row:4;top:auto;right:auto;justify-self:start;min-width:0}
+ #hud.championship-hud #standings.championship summary{min-height:44px}
+ #hud.championship-hud #standingsList{position:absolute;top:100%;left:0;width:min(300px,calc(100vw - var(--safe-left) - var(--safe-right) - 24px));max-height:min(35dvh,250px);z-index:5}
+ #hud.championship-hud #showResults{position:static;grid-column:2;grid-row:4;min-height:44px}
+}

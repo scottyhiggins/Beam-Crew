@@ -8,6 +8,7 @@ import { CONFIG, movement } from '../shared/movement.js';
 import { BEAM_CONFIG, GRIPS, gripPosition, nearestGrip, resetBeam, stepBeam, workerCollides } from '../shared/beam.js';
 import { collideStagingCarts, WHEEL_CONFIG, resetCart, stepCart, finishCarts, spillMaterial, stepMaterial, compareResults, shouldEndRace } from '../shared/wheelbarrow.js';
 import {validMaterial} from '../shared/materials.js';
+import {beamActionState,WAITING_FOR_TEAMMATE} from '../shared/beam-session.js';
 export const roomsByCode=new Map<string,CrewRoom>();
 const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 export class CrewRoom extends Room<CrewState> {
@@ -30,7 +31,7 @@ export class CrewRoom extends Room<CrewState> {
     this.onMessage('input',(c,data)=>{const p=this.state.players.get(c.sessionId);if(!p||!data||!Number.isFinite(data.x)||!Number.isFinite(data.z))return;p.inputX=Math.max(-1,Math.min(1,data.x));p.inputZ=Math.max(-1,Math.min(1,data.z));p.lastInput=Date.now();});
     this.onMessage('action',c=>{
       const p=this.state.players.get(c.sessionId);
-      if((this.state.mode==='wheel'||this.state.mode==='championship')||!p||this.state.phase!=='test'||Date.now()-p.lastAction<=200)return;
+      if(!p||!beamActionState(this.state,p).enabled||Date.now()-p.lastAction<=200)return;
       p.lastAction=Date.now();p.actions++;
       if(p.grip>=0){p.grip=-1;p.vx=p.vz=0;this.feedback(p,'Released');return;}
       const beam=this.state.mode==='competitive'?this.state.teams[p.team]:this.state.beam;
@@ -47,7 +48,7 @@ export class CrewRoom extends Room<CrewState> {
     this.onMessage('rescue',c=>{const p=this.state.players.get(c.sessionId),b=p&&this.state.teams[p.team];if(this.state.mode==='competitive'&&this.state.racePhase==='racing'&&b&&!b.delivered&&!b.dnf&&b.protection===0)recoverTeam(b,[...this.state.players.values()].filter(q=>q.team===p!.team));});
     this.onMessage('championshipLength',(c,value)=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='lobby'&&validChampionshipLength(value))this.state.championshipLength=value;});
     this.onMessage('material',(c,id)=>{const p=this.state.players.get(c.sessionId);if(p&&this.state.phase==='lobby'&&validMaterial(id))p.materialId=id;});
-    this.onMessage('start',c=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='lobby'&&this.clients.length>=2){this.restart(false);this.state.phase='test';this.lock();}});
+    this.onMessage('start',c=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='lobby'&&(this.state.mode==='competitive'||this.clients.length>=2)&&this.restart(false)){this.state.phase='test';this.lock();}});
     this.onMessage('reset',c=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='test'&&Date.now()-this.lastReset>1000){this.restart(true);}});
     this.onMessage('restart',c=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='test'&&Date.now()-this.lastReset>1000){this.restart(false);}});
     this.onMessage('lobby',c=>{if(!this.publicMatch&&c.sessionId===this.state.host){this.state.phase='lobby';this.unlock();for(const p of this.state.players.values()){p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;}}});
@@ -55,6 +56,12 @@ export class CrewRoom extends Room<CrewState> {
   private lastReset=0;
   feedback(p:Player,text:string){p.feedback=text;p.feedbackUntil=Date.now()+2500;}
   restart(checkpoint:boolean){
+    const players=[...this.state.players.entries()].filter(([,p])=>p.connected);
+    // Reject before clearing teams, results, positions, timers or reset counters.
+    if(this.state.mode==='competitive'&&players.length<2){
+      for(const [,p] of players){this.feedback(p,WAITING_FOR_TEAMMATE);p.feedbackUntil=Date.now()+8000;}
+      return false;
+    }
     this.lastReset=Date.now();
     this.routePlan=[];this.routeMaterialWorld=undefined;this.state.routeIds.clear();
     if(this.state.mode==='championship'&&this.state.championshipLength>2){
@@ -62,20 +69,20 @@ export class CrewRoom extends Room<CrewState> {
     }
     if(this.state.mode==='competitive'){
       this.state.raceResets=Math.max(this.state.raceResets,...this.state.teams.map(b=>b.resets))+1;this.state.teams.clear();this.state.elapsed=0;this.state.racePhase='countdown';this.state.countdown=3;
-      const players=[...this.state.players.entries()].filter(([,p])=>p.connected);
       for(const p of this.state.players.values()){p.team=p.end=p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;}
       for(let i=0;i+1<players.length;i+=2){const b=new BeamTeam();b.resets=this.state.raceResets;b.name='Team '+(i/2+1);b.members=players[i][1].name+' + '+players[i+1][1].name;this.state.teams.push(b);
         for(let end=0;end<2;end++){const p=players[i+end][1];p.team=i/2;p.end=end===0?0:7;p.rotation=b.angle-GRIPS[p.end].side*Math.PI/2;const point=gripPosition(b,p.end);p.x=point.x;p.z=point.z;}}
       for(const [,p] of players)if(p.team<0){p.x=8;p.z=7;this.feedback(p,'Spectating this round — Wheelbarrow supports odd counts');}
-      return;
+      return true;
     }
-    if((this.state.mode==='wheel'||this.state.mode==='championship')){this.state.leg=0;this.state.legResults.clear();this.state.standings.clear();for(const [id,p]of this.state.players){p.legSpills=0;const total=new ChampionshipResult();Object.assign(total,{playerId:id,name:p.name,color:p.color});this.state.standings.push(total);}this.state.racePhase='countdown';this.state.countdown=WHEEL_CONFIG.countdownSeconds;this.state.elapsed=0;this.state.raceResets++;this.state.finishCount=0;this.state.firstFinishAt=-1;this.state.results.clear();this.state.material.clear();let slot=0;for(const p of this.state.players.values()){resetCart(p,slot++,this.state.players.size);p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;p.lastInput=0;}return;}
+    if((this.state.mode==='wheel'||this.state.mode==='championship')){this.state.leg=0;this.state.legResults.clear();this.state.standings.clear();for(const [id,p]of this.state.players){p.legSpills=0;const total=new ChampionshipResult();Object.assign(total,{playerId:id,name:p.name,color:p.color});this.state.standings.push(total);}this.state.racePhase='countdown';this.state.countdown=WHEEL_CONFIG.countdownSeconds;this.state.elapsed=0;this.state.raceResets++;this.state.finishCount=0;this.state.firstFinishAt=-1;this.state.results.clear();this.state.material.clear();let slot=0;for(const p of this.state.players.values()){resetCart(p,slot++,this.state.players.size);p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;p.lastInput=0;}return true;}
     resetBeam(this.state.beam,checkpoint);this.state.beam.resets++;
     for(const p of this.state.players.values()){
       p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;p.lastInput=0;p.feedback='';
       const spawnGrip=[0,7,2,5,1,6,3,4][p.color];const point=gripPosition(this.state.beam,spawnGrip);p.x=point.x;p.z=point.z;
       p.rotation=this.state.beam.angle-GRIPS[spawnGrip].side*Math.PI/2;
     }
+    return true;
   }
   positionCarrier(p:Player){const point=gripPosition(this.state.mode==='competitive'?this.state.teams[p.team]:this.state.beam,p.grip);p.x=point.x;p.z=point.z;p.rotation=(this.state.mode==='competitive'?this.state.teams[p.team]:this.state.beam).angle-GRIPS[p.grip].side*Math.PI/2;}
   onJoin(c:Client,options:{name?:unknown}){
@@ -160,7 +167,7 @@ export class CrewRoom extends Room<CrewState> {
       this.state.teams.forEach((b,index)=>{
         if(b.delivered||b.dnf)return;
         const members=[...this.state.players.values()].filter(p=>p.team===index);
-        if(members.length<2){b.dnf=true;return;}
+        if(members.length<2){b.dnf=true;for(const p of members){p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;}return;}
         const reconnecting=members.some(p=>!p.connected);if(reconnecting)b.waiting+=dt;
         const inputs=members.map(p=>[p.inputX,p.inputZ]);
         members.forEach(p=>{if(reconnecting||now-p.lastInput>=300)p.inputX=p.inputZ=0;});
@@ -168,6 +175,7 @@ export class CrewRoom extends Room<CrewState> {
         members.forEach((p,i)=>{p.inputX=inputs[i][0];p.inputZ=inputs[i][1];if(p.grip>=0)this.positionCarrier(p);});
         if(b.delivered)b.finishTime=this.state.elapsed+b.penalty;
         if(!b.delivered&&this.state.elapsed>=240)b.dnf=true;
+        if(b.delivered||b.dnf)for(const p of members){p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;}
 
       });
       [...this.state.teams].filter(b=>b.delivered).sort((a,b)=>a.finishTime-b.finishTime).forEach((b,i)=>b.place=i+1);

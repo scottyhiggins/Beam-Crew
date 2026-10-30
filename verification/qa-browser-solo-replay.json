@@ -1,0 +1,26 @@
+[
+  {
+    "disabled": false,
+    "hidden": false,
+    "id": "beamStatus",
+    "text": "Waiting for a teammate — return to lobby to invite another worker."
+  },
+  {
+    "disabled": true,
+    "hidden": true,
+    "id": "grab",
+    "text": "GRAB · Space"
+  },
+  {
+    "disabled": true,
+    "hidden": true,
+    "id": "action",
+    "text": "ACTION"
+  },
+  {
+    "disabled": false,
+    "hidden": false,
+    "id": "resultsList",
+    "text": "Team 1 · Worker + Worker · DNF"
+  }
+]

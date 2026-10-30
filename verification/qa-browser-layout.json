@@ -1,0 +1,268 @@
+[
+  {
+    "requested": "319x700",
+    "actualWidth": 319,
+    "score": {
+      "bottom": 174.171875,
+      "height": 46,
+      "left": 12,
+      "right": 307,
+      "top": 128.171875,
+      "width": 295,
+      "x": 12,
+      "y": 128.171875
+    },
+    "standings": {
+      "bottom": 224.171875,
+      "height": 44,
+      "left": 12,
+      "right": 100.578125,
+      "top": 180.171875,
+      "width": 88.578125,
+      "x": 12,
+      "y": 180.171875
+    },
+    "status": {
+      "bottom": 122.171875,
+      "height": 60.171875,
+      "left": 12,
+      "right": 307,
+      "top": 62,
+      "width": 295,
+      "x": 12,
+      "y": 62
+    },
+    "scoreOverlap": false,
+    "statusOverlap": false,
+    "menuHeight": 44,
+    "standingsHeight": 44
+  },
+  {
+    "requested": "320x700",
+    "actualWidth": 320,
+    "score": {
+      "bottom": 174.171875,
+      "height": 46,
+      "left": 12,
+      "right": 308,
+      "top": 128.171875,
+      "width": 296,
+      "x": 12,
+      "y": 128.171875
+    },
+    "standings": {
+      "bottom": 224.171875,
+      "height": 44,
+      "left": 12,
+      "right": 100.578125,
+      "top": 180.171875,
+      "width": 88.578125,
+      "x": 12,
+      "y": 180.171875
+    },
+    "status": {
+      "bottom": 122.171875,
+      "height": 60.171875,
+      "left": 12,
+      "right": 308,
+      "top": 62,
+      "width": 296,
+      "x": 12,
+      "y": 62
+    },
+    "scoreOverlap": false,
+    "statusOverlap": false,
+    "menuHeight": 44,
+    "standingsHeight": 44
+  },
+  {
+    "requested": "375x812",
+    "actualWidth": 375,
+    "score": {
+      "bottom": 159.171875,
+      "height": 31,
+      "left": 12,
+      "right": 363,
+      "top": 128.171875,
+      "width": 351,
+      "x": 12,
+      "y": 128.171875
+    },
+    "standings": {
+      "bottom": 209.171875,
+      "height": 44,
+      "left": 12,
+      "right": 100.578125,
+      "top": 165.171875,
+      "width": 88.578125,
+      "x": 12,
+      "y": 165.171875
+    },
+    "status": {
+      "bottom": 122.171875,
+      "height": 60.171875,
+      "left": 12,
+      "right": 363,
+      "top": 62,
+      "width": 351,
+      "x": 12,
+      "y": 62
+    },
+    "scoreOverlap": false,
+    "statusOverlap": false,
+    "menuHeight": 44,
+    "standingsHeight": 44
+  },
+  {
+    "requested": "390x844",
+    "actualWidth": 390,
+    "score": {
+      "bottom": 159.171875,
+      "height": 31,
+      "left": 12,
+      "right": 378,
+      "top": 128.171875,
+      "width": 366,
+      "x": 12,
+      "y": 128.171875
+    },
+    "standings": {
+      "bottom": 209.171875,
+      "height": 44,
+      "left": 12,
+      "right": 100.578125,
+      "top": 165.171875,
+      "width": 88.578125,
+      "x": 12,
+      "y": 165.171875
+    },
+    "status": {
+      "bottom": 122.171875,
+      "height": 60.171875,
+      "left": 12,
+      "right": 378,
+      "top": 62,
+      "width": 366,
+      "x": 12,
+      "y": 62
+    },
+    "scoreOverlap": false,
+    "statusOverlap": false,
+    "menuHeight": 44,
+    "standingsHeight": 44
+  },
+  {
+    "requested": "430x932",
+    "actualWidth": 430,
+    "score": {
+      "bottom": 159.171875,
+      "height": 31,
+      "left": 12,
+      "right": 418,
+      "top": 128.171875,
+      "width": 406,
+      "x": 12,
+      "y": 128.171875
+    },
+    "standings": {
+      "bottom": 209.171875,
+      "height": 44,
+      "left": 12,
+      "right": 100.578125,
+      "top": 165.171875,
+      "width": 88.578125,
+      "x": 12,
+      "y": 165.171875
+    },
+    "status": {
+      "bottom": 122.171875,
+      "height": 60.171875,
+      "left": 12,
+      "right": 418,
+      "top": 62,
+      "width": 406,
+      "x": 12,
+      "y": 62
+    },
+    "scoreOverlap": false,
+    "statusOverlap": false,
+    "menuHeight": 44,
+    "standingsHeight": 44
+  },
+  {
+    "requested": "844x390",
+    "actualWidth": 844,
+    "score": {
+      "bottom": 175.5625,
+      "height": 33,
+      "left": 12,
+      "right": 421.296875,
+      "top": 142.5625,
+      "width": 409.296875,
+      "x": 12,
+      "y": 142.5625
+    },
+    "standings": {
+      "bottom": 152,
+      "height": 44,
+      "left": 743.421875,
+      "right": 832,
+      "top": 108,
+      "width": 88.578125,
+      "x": 743.421875,
+      "y": 108
+    },
+    "status": {
+      "bottom": 134.5625,
+      "height": 72.5625,
+      "left": 12,
+      "right": 235.109375,
+      "top": 62,
+      "width": 223.109375,
+      "x": 12,
+      "y": 62
+    },
+    "scoreOverlap": false,
+    "statusOverlap": false,
+    "menuHeight": 44,
+    "standingsHeight": 44
+  },
+  {
+    "requested": "1280x720",
+    "actualWidth": 1280,
+    "score": {
+      "bottom": 175.5625,
+      "height": 33,
+      "left": 12,
+      "right": 421.296875,
+      "top": 142.5625,
+      "width": 409.296875,
+      "x": 12,
+      "y": 142.5625
+    },
+    "standings": {
+      "bottom": 152,
+      "height": 44,
+      "left": 1179.421875,
+      "right": 1268,
+      "top": 108,
+      "width": 88.578125,
+      "x": 1179.421875,
+      "y": 108
+    },
+    "status": {
+      "bottom": 134.5625,
+      "height": 72.5625,
+      "left": 12,
+      "right": 235.109375,
+      "top": 62,
+      "width": 223.109375,
+      "x": 12,
+      "y": 62
+    },
+    "scoreOverlap": false,
+    "statusOverlap": false,
+    "menuHeight": 44,
+    "standingsHeight": 44
+  }
+]

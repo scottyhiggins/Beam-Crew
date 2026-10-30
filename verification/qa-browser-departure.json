@@ -1,0 +1,23 @@
+[
+  {
+    "classes": "",
+    "disabled": true,
+    "hidden": true,
+    "id": "grab",
+    "text": "GRAB · Space"
+  },
+  {
+    "classes": "",
+    "disabled": true,
+    "hidden": true,
+    "id": "action",
+    "text": "ACTION"
+  },
+  {
+    "classes": "",
+    "disabled": false,
+    "hidden": false,
+    "id": "resultsList",
+    "text": "Team 1 · Worker + Worker · DNF"
+  }
+]

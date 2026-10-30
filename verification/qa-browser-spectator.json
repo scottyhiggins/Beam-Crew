@@ -1,0 +1,30 @@
+[
+  {
+    "classes": "",
+    "disabled": false,
+    "hidden": false,
+    "id": "beamStatus",
+    "text": "Spectating this round — no active team assignment."
+  },
+  {
+    "classes": "",
+    "disabled": true,
+    "hidden": true,
+    "id": "grab",
+    "text": "GRAB · Space"
+  },
+  {
+    "classes": "",
+    "disabled": false,
+    "hidden": true,
+    "id": "signals",
+    "text": "LIFTWAITLEFTRIGHT"
+  },
+  {
+    "classes": "",
+    "disabled": true,
+    "hidden": true,
+    "id": "action",
+    "text": "ACTION"
+  }
+]

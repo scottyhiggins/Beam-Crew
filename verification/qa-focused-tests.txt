@@ -1,0 +1,22 @@
+✔ QA: actual desktop and mobile control adapter clears stale RELEASE and attached styling when inactive (1.1798ms)
+✔ QA: eligible workers regain both action buttons with neutral labels after replay/reconnect (0.3679ms)
+✔ QA real clients: guest departure DNF rejects restart/reset and solo start, preserves results, then accepts teammate replay (6917.2852ms)
+✔ QA real clients: host transfer and reserved disconnect count only connected workers for replay (6638.2554ms)
+✔ QA: reject solo Beam replay before mutating the completed round (5.6486ms)
+✔ QA: reserved disconnected worker is ineligible until reconnected (2.1026ms)
+✔ QA: valid 2-worker Beam replay keeps exactly two workers per beam (2.4271ms)
+✔ QA: valid 4-worker Beam replay keeps exactly two workers per beam (1.8768ms)
+✔ QA: valid 6-worker Beam replay keeps exactly two workers per beam (1.5659ms)
+✔ QA: valid 8-worker Beam replay keeps exactly two workers per beam (1.4441ms)
+✔ QA: no connected workers cannot create a spectator-only round; odd counts keep full teams (1.8653ms)
+✔ QA: action policy clears stale attached state for spectators, missing teams, countdown, DNF and results (4.5204ms)
+✔ QA: lost/reconnecting partner, protection and completed delivery hide action until eligible again (1.3117ms)
+✔ QA: team DNF and delivery release grips and stop stale controls (2.1452ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13843.6282

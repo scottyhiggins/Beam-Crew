@@ -1,3 +1,5 @@
+import {beamActionState,WAITING_FOR_TEAMMATE} from '../shared/beam-session';
+import {resetBeamActionControls} from './beam-action-controls';
 import {BEAM_MAPS,EXCAVATOR,excavatorAngle,beamWorld} from '../shared/beam-chaos';
 import {createModularWorld} from './modular-world';
 import {assembleRoute,routeHeight,type CourseInstance} from '../shared/course-modules';
@@ -102,7 +104,7 @@ el('showResults').onclick=()=>{dismissedResults='';renderResults(room?.state);};
 el('closeResults').onclick=()=>{dismissedResults=shownResults;el('raceResults').hidden=true;};
 function renderResults(state:any){
   el('playAgain').hidden=!state?.publicMatch||state?.racePhase!=='results';
-  const ready=state?.phase==='test'&&state.racePhase==='results';el('showResults').hidden=!ready;
+  const ready=state?.phase==='test'&&state.racePhase==='results'&&(state.mode!=='competitive'||state.teams.length>0);el('showResults').hidden=!ready;
   const key=ready?room?.roomId+':'+state.mode+':'+state.raceResets:'';
   if(!ready){el('raceResults').hidden=true;shownResults='';dismissedResults='';return;}
   shownResults=key;el('raceResults').hidden=dismissedResults===key;
@@ -118,7 +120,7 @@ function renderResults(state:any){
   el('resultsList').replaceChildren(...entries.map((r:any)=>{const li=document.createElement('li');li.textContent=isWheel(state)?'#'+r.place+' '+r.name+' · '+r.spills+' spills · '+r.time.toFixed(2)+'s':r.name+' · '+r.members+' · '+(r.dnf?'DNF':'#'+r.place+' · '+r.finishTime.toFixed(2)+'s');return li;}));
 }
 el('menu').onclick=()=>{menuOpen=!menuOpen;if(menuOpen)stopInput();render();};
-function action(){if(room?.state.phase==='test')room.send('action');}
+function action(){if(room&&beamActionState(room.state,room.state.players?.get(room.sessionId)).enabled)room.send('action');}
 el('grab').onclick=action;
 el('action').addEventListener('pointerdown',e=>{e.preventDefault();action();});
 document.querySelectorAll<HTMLButtonElement>('[data-signal]').forEach(button=>button.onclick=()=>room?.send('signal',button.dataset.signal));
@@ -130,7 +132,7 @@ joystick.onpointerdown=e=>{joyPointer=e.pointerId;joystick.setPointerCapture(e.p
 joystick.onpointerup=joystick.onpointercancel=()=>{joyPointer=null;joyX=joyZ=0;el('stick').style.transform='translate(0px,0px)';if(room?.state.mode==='competitive')room.send('input',{x:0,z:0});};
 joystick.addEventListener('lostpointercapture',()=>{if(room?.state.mode==='competitive'){joyPointer=null;joyX=joyZ=0;el('stick').style.transform='translate(0px,0px)';room.send('input',{x:0,z:0});}});
 setInterval(()=>{if(room?.state.phase==='test'&&!document.hidden){room.send('input',{x:(Number(keys.has('KeyD'))-Number(keys.has('KeyA')))+joyX,z:(Number(keys.has('KeyS'))-Number(keys.has('KeyW')))+joyZ});}},1000/30);
-function render(){el('retryConnection').hidden=serverCompatible||verifying;el('cancelReconnect').hidden=!recovery;el('menu').textContent=currentPresentation.compact?'Menu':'Lobby controls';el('panel').classList.toggle('connected',!!room);el('hud').classList.toggle('menu-open',menuOpen);const state=room?.state,playing=state?.phase==='test';el('room').hidden=!room;el('panel').classList.toggle('playing',!!playing&&!menuOpen);el('hud').hidden=!playing;el('touch').hidden=!playing||menuOpen;renderResults(state);
+function render(){el('hud').classList.toggle('championship-hud',room?.state?.mode==='championship');el('retryConnection').hidden=serverCompatible||verifying;el('cancelReconnect').hidden=!recovery;el('menu').textContent=currentPresentation.compact?'Menu':'Lobby controls';el('panel').classList.toggle('connected',!!room);el('hud').classList.toggle('menu-open',menuOpen);const state=room?.state,playing=state?.phase==='test';el('room').hidden=!room;el('panel').classList.toggle('playing',!!playing&&!menuOpen);el('hud').hidden=!playing;el('touch').hidden=!playing||menuOpen;renderResults(state);
   el<HTMLButtonElement>('quickMatch').disabled=busy||!!room||!serverCompatible;el('cancelMatch').hidden=!(busy&&!recovery)||!!room;
   el<HTMLButtonElement>('create').disabled=busy||!!room||!serverCompatible;el<HTMLButtonElement>('join').disabled=busy||!!room||!serverCompatible;
   if(!state?.players)return;
@@ -154,11 +156,11 @@ function render(){el('retryConnection').hidden=serverCompatible||verifying;el('c
   if(state.mode==='competitive'){
     el('reset').hidden=true;
     el('hudText').textContent=state.racePhase==='countdown'?Math.ceil(state.countdown)+' · GET READY':state.racePhase==='results'?'TEAM RESULTS':state.elapsed.toFixed(1)+'s';
-    if(me?.team<0)el('beamStatus').textContent='Spectating - odd worker sits out this round.';else el('hudText').textContent+=' | '+BEAM_MAPS[state.beamMap].name+' | Team '+(me.team+1)+' | End '+(me.end===0?'1':'2');
+    if(me?.team>=0&&state.teams[me.team]) el('hudText').textContent+=' | '+BEAM_MAPS[state.beamMap].name+' | Team '+(me.team+1)+' | End '+(me.end===0?'1':'2');
     signalReadout.textContent=Array.from(state.teams as Iterable<any>).map((b,i)=>'Team '+(i+1)+' · '+b.members+' · '+(b.dnf?'DNF':b.delivered?'#'+b.place+' · '+b.finishTime.toFixed(2)+'s':('racing · +'+b.penalty+'s'))).join(' | ');
   }
   if(isWheel(state)){renderWheelHud(state,me);el('reset').hidden=true;}
-  el('grab').hidden=el('action').hidden=el('signals').hidden=isWheel(state);
+  const beamActive=beamActionState(state,me).enabled;el('grab').hidden=el('action').hidden=el('signals').hidden=!beamActive;el('beamRescue').hidden=el('beamRescue').hidden||!beamActive;
   updateStandings(state);
   const signals:string[]=[];state.players.forEach((p:any)=>{if(p.signal)signals.push(`${p.name}: ${p.signal}`);});if(state.mode==='beam')signalReadout.textContent=signals.join(' · ');
   if(state.publicMatch){el('share').hidden=true;el('modeLabel').hidden=true;el('championshipLengthLabel').hidden=true;el('roomCode').textContent='Quick Match · '+connected+'/8 workers';el('leave').textContent=playing?'Leave match':'Cancel matchmaking';status(playing?'Public Wheelbarrow Championship':connected<2?'Waiting for workers · '+connected+'/8':'Waiting for workers · '+connected+'/8 · Starts in '+Math.ceil(state.matchCountdown||15)+'s');return;}el('share').hidden=false;el('leave').textContent='Leave room';
@@ -289,8 +291,16 @@ let displayedBeam={...COURSE.start,leftHeight:BEAM_CONFIG.groundedHeight,rightHe
 const otherBeams:THREE.Group[]=[];
 let displayedResets=-1;
 function renderBeamHud(state:any,me:any){
+  const activity=beamActionState(state,me);
+  resetBeamActionControls(activity.enabled,el<HTMLButtonElement>('grab'),el<HTMLButtonElement>('action'));
   if(isWheel(state))return;
-  const b=state.mode==='competitive'?state.teams[me?.team]:state.beam;if(!b)return;
+  const b=state.mode==='competitive'?state.teams[me?.team]:state.beam;
+  if(!activity.enabled||!b){
+    const alone=state.mode==='competitive'&&[...state.players.values()].filter((p:any)=>p.connected).length<2;
+    const message=alone?WAITING_FOR_TEAMMATE:activity.message;
+    el('beamStatus').textContent=message;
+    el('help').textContent=message;return;
+  }
   const occupied=new Set<number>();state.players.forEach((p:any)=>{if(p.grip>=0&&p.team===me?.team)occupied.add(p.grip);});
   let nearest=-1,distance=BEAM_CONFIG.grabRadius;
   if(me)GRIPS.forEach((_,i)=>{if(state.mode==='competitive'&&i!==me.end)return;const point=gripPosition(b,i),d=Math.hypot(point.x-me.x,point.z-me.z);if(!occupied.has(i)&&d<distance){nearest=i;distance=d;}});

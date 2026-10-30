@@ -1,0 +1,16 @@
+[
+  {
+    "classes": "attached",
+    "disabled": false,
+    "hidden": false,
+    "id": "grab",
+    "text": "RELEASE · Space"
+  },
+  {
+    "classes": "attached",
+    "disabled": false,
+    "hidden": false,
+    "id": "action",
+    "text": "RELEASE"
+  }
+]
