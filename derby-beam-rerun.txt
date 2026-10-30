@@ -1,0 +1,7 @@
+Recorded isolated rerun after the concurrent full suite timed out on the unchanged Beam Carry delivery test.
+Command: TEST_URL=http://127.0.0.1:2616 node --test build/tests/beam-multiplayer.test.js
+Actual result:
+PASS two clients carry, release, reject non-host reset, reconnect, complete and replay the course (41316.8349ms)
+tests 1; pass 1; fail 0; cancelled 0; skipped 0; todo 0
+duration_ms 41683.0452
+The initial full-suite failure remains in derby-regression-results.txt. This is a separate rerun, not a clean full-suite rerun.
