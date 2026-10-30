@@ -1,0 +1,37 @@
+[
+  {
+    "name": "desktop",
+    "width": 1280,
+    "height": 900,
+    "overflow": false,
+    "replay": "passed"
+  },
+  {
+    "name": "iphone-portrait",
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "replay": "passed"
+  },
+  {
+    "name": "iphone-landscape",
+    "width": 844,
+    "height": 390,
+    "overflow": false,
+    "replay": "passed"
+  },
+  {
+    "name": "narrow",
+    "width": 320,
+    "height": 640,
+    "overflow": false,
+    "replay": "passed"
+  },
+  {
+    "twoPlayers": "passed",
+    "tie": "passed",
+    "dnf": "passed",
+    "reducedMotion": "rendered",
+    "errors": []
+  }
+]

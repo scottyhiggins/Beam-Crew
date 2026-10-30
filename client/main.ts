@@ -1,3 +1,5 @@
+import {Podium} from './podium';
+import {crewPodium} from '../shared/podium';
 import {beamActionState,WAITING_FOR_TEAMMATE} from '../shared/beam-session';
 import {resetBeamActionControls} from './beam-action-controls';
 import {BEAM_MAPS,EXCAVATOR,excavatorAngle,beamWorld} from '../shared/beam-chaos';
@@ -65,7 +67,7 @@ async function quickMatch(){
 }
 el('quickMatch').onclick=()=>void quickMatch();
 el('cancelMatch').onclick=()=>{const old=room;room=null;stopInput();cancelRecovery('Matchmaking canceled.');void old?.leave();};
-el('playAgain').onclick=async()=>{const old=room;room=null;stopInput();cancelRecovery('Searching for workers...');await old?.leave();void quickMatch();};
+el('playAgain').onclick=async()=>{if(!room?.state.publicMatch){room?.send('lobby');return;}const old=room;room=null;stopInput();cancelRecovery('Searching for workers...');await old?.leave();void quickMatch();};
 function attach(joined:Room){room=joined;joined.send('cosmetics',getWorkerLook());recovery=false;storage('beam-token',joined.reconnectionToken);storage('beam-until',String(Date.now()+RESERVATION_MS));menuOpen=false;status('Connected');
   joined.onStateChange(()=>{if(room===joined){rememberReservation();render();}});joined.onError((code,message)=>{if(room===joined)status(`Connection error ${code}: ${message}`);});
   joined.onLeave(code=>{if(room!==joined)return;room=null;stopInput();render();if(code!==1000&&code!==4000){void reconnect(joined.reconnectionToken,Date.now()+RESERVATION_MS,!!joined.state?.publicMatch&&joined.state.phase==='lobby');}else{cancelRecovery('Left room. Create or join a room.');}});render();}
@@ -102,15 +104,17 @@ el('reset').onclick=()=>{stopInput();room?.send('reset');menuOpen=false;render()
 el('restart').onclick=()=>{stopInput();room?.send('restart');menuOpen=false;render();};el('back').onclick=()=>{stopInput();room?.send('lobby');menuOpen=false;};
 el('leave').onclick=()=>{const old=room;stopInput();room=null;cancelRecovery('Left room. Create or join a room.');void old?.leave();};
 el('share').onclick=async()=>{if(!room?.state.code)return;const url=new URL(location.href);url.search='';url.searchParams.set('room',room.state.code);try{await navigator.clipboard.writeText(url.href);status('Join link copied');}catch{status(`Join link: ${url.href}`);}};
+const awardsHost=document.createElement('div');el('resultsList').before(awardsHost);const awards=new Podium(awardsHost);
 let shownResults='',dismissedResults='';
 el('showResults').onclick=()=>{dismissedResults='';renderResults(room?.state);};
-el('closeResults').onclick=()=>{dismissedResults=shownResults;el('raceResults').hidden=true;};
+el('closeResults').onclick=()=>{dismissedResults=shownResults;awards.clear();el('raceResults').hidden=true;};
 function renderResults(state:any){
-  el('playAgain').hidden=!state?.publicMatch||state?.racePhase!=='results';
+  el('playAgain').hidden=state?.racePhase!=='results';el('playAgain').textContent=state?.publicMatch?'Play Again - Quick Match':room?.sessionId===state?.host?'Play Again - Return to lobby':'Play Again - Waiting for host';(el('playAgain') as HTMLButtonElement).disabled=!state?.publicMatch&&room?.sessionId!==state?.host;
   const ready=state?.phase==='test'&&state.racePhase==='results'&&(state.mode!=='competitive'||state.teams.length>0);el('showResults').hidden=!ready;
   const key=ready?room?.roomId+':'+state.mode+':'+state.raceResets:'';
-  if(!ready){el('raceResults').hidden=true;shownResults='';dismissedResults='';return;}
+  if(!ready){awards.clear();el('raceResults').hidden=true;shownResults='';dismissedResults='';return;}
   shownResults=key;el('raceResults').hidden=dismissedResults===key;
+  if(dismissedResults!==key)awards.update(crewPodium(state));
   el('resultsTitle').textContent=state.mode==='championship'?'Championship results':'Final results';
   if(state.mode==='championship'){
     el('resultsRule').textContent=legCount(state)+' courses · Fewest cumulative spills wins · Combined racing time breaks ties';
