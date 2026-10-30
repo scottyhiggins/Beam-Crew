@@ -1,0 +1,45 @@
+✔ all 72 free looks validate and malformed selections fall back atomically (2.6955ms)
+✔ server join validates cosmetics and ignores attempted gameplay field injection (6.1472ms)
+✔ cosmetic models preserve animated limb poses for Wheelbarrow and Beam Carry (12.3101ms)
+✔ cosmetics synchronize by player, survive reconnect and new rounds in wheel (1946.3989ms)
+✔ cosmetics synchronize by player, survive reconnect and new rounds in competitive (1899.3138ms)
+✔ final integration: Quick Match cosmetics survive waiting cancel, countdown, reconnect and fresh replay (15530.4634ms)
+✔ QA: actual desktop and mobile control adapter clears stale RELEASE and attached styling when inactive (1.7091ms)
+✔ QA: eligible workers regain both action buttons with neutral labels after replay/reconnect (0.301ms)
+✔ QA real clients: guest departure DNF rejects restart/reset and solo start, preserves results, then accepts teammate replay (6880.935ms)
+✔ QA real clients: host transfer and reserved disconnect count only connected workers for replay (6645.6576ms)
+✔ QA: reject solo Beam replay before mutating the completed round (4.01ms)
+✔ QA: reserved disconnected worker is ineligible until reconnected (1.8094ms)
+✔ QA: valid 2-worker Beam replay keeps exactly two workers per beam (1.6699ms)
+✔ QA: valid 4-worker Beam replay keeps exactly two workers per beam (1.488ms)
+✔ QA: valid 6-worker Beam replay keeps exactly two workers per beam (1.181ms)
+✔ QA: valid 8-worker Beam replay keeps exactly two workers per beam (1.0304ms)
+✔ QA: no connected workers cannot create a spectator-only round; odd counts keep full teams (1.6537ms)
+✔ QA: action policy clears stale attached state for spectators, missing teams, countdown, DNF and results (1.0094ms)
+✔ QA: lost/reconnecting partner, protection and completed delivery hide action until eligible again (0.8721ms)
+✔ QA: team DNF and delivery release grips and stop stale controls (1.3509ms)
+✔ production server identifies its build and serves the mode selector assets (92.4027ms)
+✔ launcher preflight accepts an available port (134.319ms)
+✔ launcher preflight identifies occupied port instead of appearing to start (150.0877ms)
+✔ live Trivia: 8 players, private code, roles, forged team, reconnect, timeout, transfer and replay (26605.9663ms)
+✔ live Trivia 2 players: complete five-question round, podium and replay (31004.2533ms)
+✔ live Trivia 4 players: complete five-question round, podium and replay (30997.0148ms)
+✔ live Trivia 6 players: complete five-question round, podium and replay (30717.8815ms)
+✔ 42 original questions cover six categories and have four distinct choices (3.1321ms)
+✔ 2 workers finish 15 questions in fixed pairs with alternating private roles and exact scoring (4.0961ms)
+✔ 4 workers finish 15 questions in fixed pairs with alternating private roles and exact scoring (1.4198ms)
+✔ 6 workers finish 15 questions in fixed pairs with alternating private roles and exact scoring (2.6046ms)
+✔ 8 workers finish 15 questions in fixed pairs with alternating private roles and exact scoring (3.9736ms)
+✔ invalid starts, host controls, answer replay, wrong answers and timeouts are rejected or scored safely (0.5908ms)
+✔ disconnect reserves pairs, transfers host, blocks disconnected submissions and restores reconnect role (0.4404ms)
+✔ standings count only correct answer time, with no hidden data for non-members (0.3165ms)
+✔ host returning to lobby preserves a disconnected teammate reservation (0.5564ms)
+✔ scores do not disclose correctness until all teams lock or timeout (0.3761ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 119700.6222

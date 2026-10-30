@@ -16,7 +16,7 @@ test('integrated schema: simultaneous public matching and private Chaos rescue/r
  server.define('integration_private',CrewRoom);server.define('integration_public',PublicWheelRoom);
  const clients:Room[]=[];const ids:string[]=[];let code='';
  try{
- assert.equal(PROTOCOL_VERSION,18);
+ assert.equal(PROTOCOL_VERSION,19);
  await server.listen(0,'127.0.0.1');const client=new Client('ws://127.0.0.1:'+(http.address() as {port:number}).port);
  const host=await client.create('integration_private');clients.push(host);ids.push(host.roomId);
  const partner=await client.joinById(host.roomId);clients.push(partner);

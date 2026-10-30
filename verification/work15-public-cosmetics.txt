@@ -1,0 +1,9 @@
+✔ final integration: Quick Match cosmetics survive waiting cancel, countdown, reconnect and fresh replay (15455.7229ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15657.3574

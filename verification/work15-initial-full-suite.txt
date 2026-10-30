@@ -1,0 +1,243 @@
+$ pnpm build && node scripts/test-live.mjs
+$ tsc --noEmit && tsc -p tsconfig.server.json && vite build
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 84 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                    0.44 kB │ gzip:   0.30 kB
+dist/trivia.html                   0.46 kB │ gzip:   0.32 kB
+dist/assets/trivia-BaPAlC2s.css    3.15 kB │ gzip:   1.25 kB
+dist/assets/main-DVb3RWoG.css     25.90 kB │ gzip:   6.19 kB
+dist/assets/trivia-G9QBSh36.js     6.81 kB │ gzip:   3.08 kB
+dist/assets/index-BAtg3o-v.js    128.39 kB │ gzip:  41.04 kB
+dist/assets/main-BYsuomcT.js     615.36 kB │ gzip: 168.51 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.93s
+✔ four real clients: host map authority, team-local rescue, reconnect and replay (4740.5074ms)
+✔ stationary beam is pushed by a moving load with no remaining overlap (15.6896ms)
+✔ stationary free worker is pushed out of a load (0.6712ms)
+✔ impossible opposing wall constraints report failure instead of pinning forever (0.6319ms)
+✔ touching boxes do not jitter; penetrating rotated boxes separate (0.1803ms)
+✔ map 1: falling worker resets both workers and beam at checkpoint (0.5877ms)
+✔ map 2: falling worker resets both workers and beam at checkpoint (0.595ms)
+✔ a falling beam recovers even when free workers are safe (0.5392ms)
+✔ respawn freezes team briefly, charges once and clears motion (0.2517ms)
+✔ maps have distinct fall boundaries and validation rejects malformed IDs (0.1815ms)
+✔ excavator sweep is deterministic, bounded and server collision geometry covers its tip (3.9093ms)
+✔ bounded substeps prevent moving load tunneling across a stationary assembly (42.6635ms)
+✔ 2 players: recovery is team-local and replay clears penalties (2.2467ms)
+✔ 4 players: recovery is team-local and replay clears penalties (0.6815ms)
+✔ 6 players: recovery is team-local and replay clears penalties (0.6767ms)
+✔ 8 players: recovery is team-local and replay clears penalties (0.7196ms)
+✔ disconnected teammate pauses assembly; round timeout resolves missing partners (1.3833ms)
+✔ hazards still push stationary teams while a partner reconnects (6.686ms)
+✔ penalty-adjusted team ranking is fair and completed times stay immutable (1.0709ms)
+✔ latest checkpoint retains the completed turn on recovery (0.7784ms)
+✔ hazard knockback beyond a worker boundary recovers rather than blocking all future input (0.5019ms)
+✔ replay reset numbers remain monotonic after several automatic recoveries (0.54ms)
+✔ excavator contact moves or recovers a stationary beam assembly authoritatively (1.7145ms)
+✔ full course 0: timed load crossings, recovery, checkpoints and supported delivery (90.2227ms)
+✔ full course 1: timed load crossings, recovery, checkpoints and supported delivery (63.4696ms)
+✔ full course 2: timed load crossings, recovery, checkpoints and supported delivery (197.4104ms)
+✔ 2 workers form 1 independent pairs and immutable team deliveries (12.616ms)
+✔ 4 workers form 2 independent pairs and immutable team deliveries (20.0082ms)
+✔ 6 workers form 3 independent pairs and immutable team deliveries (29.4138ms)
+✔ 8 workers form 4 independent pairs and immutable team deliveries (21.2045ms)
+✔ moving loads block free workers at the server time, and later clear the same location (0.313ms)
+✔ real WebSockets synchronize 2 workers and every assigned grip (3243.449ms)
+✔ real WebSockets synchronize 4 workers and every assigned grip (3255.4325ms)
+✔ real WebSockets synchronize 6 workers and every assigned grip (3264.6927ms)
+✔ real WebSockets synchronize 8 workers and every assigned grip (3318.2209ms)
+✔ two clients carry, release, reject non-host reset, reconnect, complete and replay the course (46333.7833ms)
+✔ same input translates a fully supported beam without unintended rotation (4.1688ms)
+✔ opposite crosswise inputs deliberately rotate; opposite axial inputs cancel (2.5761ms)
+✔ unsupported end lowers and materially reduces movement effectiveness (1.3424ms)
+✔ diagonal input is normalized; idle carriers cannot create motion (0.8575ms)
+✔ grips respect proximity and occupancy (0.2434ms)
+✔ beam cannot cross a doorway wall, column or platform boundary (5.589ms)
+✔ doorway, intentional ninety-degree turn and destination are reachable (13.4827ms)
+✔ checkpoint reset clears grips-independent motion and delivery; full restart clears checkpoint (0.2184ms)
+✔ beam simulation is deterministic and settles after neutral input (6.482ms)
+✔ moving loads use deterministic server time and block beam and worker collisions (0.4045ms)
+✔ delivery requires both assigned ends, not a dropped beam in the goal (1.8494ms)
+✔ two real clients race both courses, reconnect during countdown and Course 2, retain materials and frozen ledgers, replay and switch modes (42826.0815ms)
+✔ ten-leg eight-worker lifecycle preserves late DNF history, countdown reloads, permanent debris and immutable official totals (148.6264ms)
+✔ Championship keeps Course 1 unchanged and the socket has continuous driveable ground and matching fences (8.2063ms)
+✔ last racer starts exactly one five-second countdown; GO preserves every pose, load and physical state (17.1044ms)
+✔ staging and countdown spills stay physical while both official leg and cumulative snapshots stay frozen (16.1045ms)
+✔ reserved racers remain eligible; a permanently departed last racer becomes DNF and releases the transition (12.0133ms)
+✔ cumulative score uses spills then racing time, and replay clears the ledger and world (5.2977ms)
+✔ all twelve loads traverse Course 2 without a seam teleport, and the second spike lip blocks reverse (430.3397ms)
+✔ completed Course 1 cannot be reentered after next GO, including an arrival still on the wedge (8.5686ms)
+✔ Course 2 rejects early finish and preserves each material load and hazard quantities (0.4522ms)
+✔ 3 randomized legs synchronize on two clients through every countdown, reconnect, immutable ledger and replay (71963.8506ms)
+✔ 5 randomized legs synchronize on two clients through every countdown, reconnect, immutable ledger and replay (119357.3725ms)
+✔ 10 randomized legs synchronize on two clients through every countdown, reconnect, immutable ledger and replay (245776.1144ms)
+✔ ten distinct modules have ten surfaces, three barrier families and deterministic unique 3/5/10 selection (3.3748ms)
+✔ every legal adjacent pair aligns level sockets with a driveable, uncapped 5.6m connection (33.1504ms)
+✔ all twelve materials naturally drive every module including the marked gravel detour with continuous positions (559.7109ms)
+✔ gravel blocks the visible part of the haul road and leaves a fair left route; truck footprint is authoritative (0.4132ms)
+✔ module gates reject skipped and reverse finishes and accept ordered crossing across the lane (0.5393ms)
+✔ five-leg room freezes each ledger, runs one five-second transition, preserves physical state, hazards and chosen loads (43.8778ms)
+✔ loads have real material shapes, fit trays, and every selection creates bounded geometry (14.3437ms)
+✔ continuous shared fence closes gaps between posts and blocks full-speed lateral shortcut attempts (4.517ms)
+✔ all staging directions remain strictly beyond the finish and preserve immutable results (69.7174ms)
+✔ last finisher freezes timer and atomically publishes ranked results; staging still moves (5.9808ms)
+✔ a reserved disconnect waits for reconnect; permanent last-racer departure resolves results without another racing tick (1.3299ms)
+✔ finish records a continuous pose and velocity, then drives over the wedge into the connected yard (13.2881ms)
+✔ post-finish spills use the normal reload and bounded persistent hazards without changing official scores or time (10.0204ms)
+✔ staging carts bump and yield to an unfinished arrival instead of forming an immovable finish wall (0.6047ms)
+✔ connected yard opens the old end cap while preserving both finish-approach ropes (0.4145ms)
+✔ all 90 connections have owned non-overlapping surfaces, covered yards and clear visible socket barriers (86.7244ms)
+✔ all 72 free looks validate and malformed selections fall back atomically (1.5175ms)
+✔ server join validates cosmetics and ignores attempted gameplay field injection (2.7235ms)
+✔ cosmetic models preserve animated limb poses for Wheelbarrow and Beam Carry (7.0765ms)
+✔ cosmetics synchronize by player, survive reconnect and new rounds in wheel (1912.5538ms)
+✔ cosmetics synchronize by player, survive reconnect and new rounds in competitive (1928.0842ms)
+✔ all 12 material meshes fit their shared authoritative contact shapes, including rotation and aggregation (149.642ms)
+✔ empty slots have no server effect while visible debris retains all six material behaviors (4.021ms)
+✔ a loose load is one heap and gravel is individually scattered at full size (0.3372ms)
+✔ two real clients finish the missed-checkpoint route, receive scores, freeze time and reconnect in staging (41616.915ms)
+✔ reported legal fence-line route finishes without touching the hidden old checkpoint circle (19.5455ms)
+✔ legal inner hairpin route cannot get stuck on an invisible apex requirement (10.1669ms)
+✔ every ordered gate accepts the full lane, including both edges (1.2299ms)
+✔ the leading edge crossing the painted stripe finishes immediately and only once (12.0588ms)
+✔ backward, outside-lane, stationary-beyond-line and missing-checkpoint attempts do not finish (0.4844ms)
+
+       ___      _
+      / __\___ | |_   _ ___  ___ _   _ ___
+     / /  / _ \| | | | / __|/ _ \ | | / __|
+    / /__| (_) | | |_| \__ \  __/ |_| \__ \
+    \____/\___/|_|\__, |___/\___|\__,_|___/
+                  |___/
+
+     · Multiplayer Framework for Node.js ·
+
+💖 Consider becoming a Sponsor on GitHub → https://github.com/sponsors/endel
+🌟 Give us a star on GitHub → https://github.com/colyseus/colyseus
+☁️  Deploy and scale your project on Colyseus Cloud → https://cloud.colyseus.io
+
+
+✔ FIFO schema removal reaches two real clients and late reconnect snapshots without altering recorded results (469.081ms)
+✖ integrated schema: simultaneous public matching and private Chaos rescue/reconnect clean up independently (134.7423ms)
+✔ server locks duplicate material choices at countdown and pairs eight clients authoritatively (4426.4455ms)
+✔ 12 materials in six vertical pairs and strict input validation (0.8763ms)
+✔ all twelve loaded carts have identical speed steering risk and spill thresholds (11.6377ms)
+✔ six spill behaviors: sticky, rolling, fixed, heavy, bumpy and rough (2.0576ms)
+✔ mixed repeated spills stay bounded and preserve material identity (17.33ms)
+✔ finished racers retain normal cart handling, staging hazards and a single finish (1.2949ms)
+✔ competitive pairs assign opposite ends, independent beams, and odd spectator (6.4565ms)
+✔ competitive results record team time once and departure gives DNF (4.9069ms)
+✔ beam goal cannot bypass the doorway checkpoint (1.3333ms)
+✔ diagonal input does not exceed movement speed (2.2357ms)
+✔ floor boundaries contain players even with sustained input (1.0734ms)
+✔ releasing input brings a worker to rest (0.1613ms)
+✔ identical input streams produce identical movement (0.7625ms)
+✔ eight clients synchronize, reject invalid joins, transfer host, reconnect and replay (4446.8641ms)
+✔ compact framing activates only for short touch landscape and keeps the player and route in view (2.1241ms)
+✔ landscape styling retains safe areas, touch targets, a collapsible board and dismissible results (0.7884ms)
+✔ QA: actual desktop and mobile control adapter clears stale RELEASE and attached styling when inactive (0.8209ms)
+✔ QA: eligible workers regain both action buttons with neutral labels after replay/reconnect (0.1763ms)
+✔ QA real clients: guest departure DNF rejects restart/reset and solo start, preserves results, then accepts teammate replay (6858.1496ms)
+✔ QA real clients: host transfer and reserved disconnect count only connected workers for replay (6746.3954ms)
+✔ QA: reject solo Beam replay before mutating the completed round (3.4059ms)
+✔ QA: reserved disconnected worker is ineligible until reconnected (0.9427ms)
+✔ QA: valid 2-worker Beam replay keeps exactly two workers per beam (1.0094ms)
+✔ QA: valid 4-worker Beam replay keeps exactly two workers per beam (0.6091ms)
+✔ QA: valid 6-worker Beam replay keeps exactly two workers per beam (0.6141ms)
+✔ QA: valid 8-worker Beam replay keeps exactly two workers per beam (0.9565ms)
+✔ QA: no connected workers cannot create a spectator-only round; odd counts keep full teams (0.7205ms)
+✔ QA: action policy clears stale attached state for spectators, missing teams, countdown, DNF and results (0.8831ms)
+✔ QA: lost/reconnecting partner, protection and completed delivery hide action until eligible again (0.5156ms)
+✔ QA: team DNF and delivery release grips and stop stale controls (0.9013ms)
+colyseus.js - onError => (409) Already assigned to a public match
+Room connection was closed unexpectedly (4002):
+colyseus.js - onError => (4002)
+✔ real sockets: public/private separation, concurrent capacity, cancellation, countdown, reconnect and replay (15996.0285ms)
+✔ public room creation is bounded and abandoned waiting rooms release capacity (897.9169ms)
+✔ public countdown requires two connected workers, cancels below two, accepts eight and rejects duplicates (3.9655ms)
+✔ FIFO removes only spilled hazards and preserves score snapshots and permanent geometry (3.026ms)
+✔ default cap survives connected courses and real spill generation without changing counters (35.5834ms)
+✔ refresh/drop reconnect, host transfer, cancellation and new-room join work over real sockets (30914.9781ms)
+✔ saved reservation deadline survives reload and cannot be extended by retries (1.0107ms)
+✔ a stalled Safari/offline request expires and releases a late connection (55.354ms)
+✔ Cancel immediately unlocks recovery and a late success cannot attach (15.7958ms)
+✔ expired tokens stop immediately; valid reconnect retains its session (1.0849ms)
+✔ temporary network failure retries within the original reservation (1006.4105ms)
+✔ phone sharpness rises from 1.5x to 2x within a bounded pixel budget (0.873ms)
+✔ adaptive sharpness ignores isolated/background gaps and avoids rapid resolution changes (1.5776ms)
+✔ ten-course scene batches repeated geometry, culls distant legs and reuses a bounded scene on replay (187.3762ms)
+✔ waiting-frame GPU warmup is nearby, once per section, reuses its target and restores visibility/culling even on failure (21.1616ms)
+✔ room schema encodes eight workers and subsequent changes (6.0381ms)
+✔ all 12 materials spill once across two real clients with identical one-load presentation (92581.964ms)
+✔ one real server spill has exactly one load of solid objects or loose volume, for all twelve materials (64.2157ms)
+✔ mixed repeated spills and cap aggregation conserve quantities with bounded visible geometry (2.3875ms)
+✔ production server identifies its build and serves the mode selector assets (54.6072ms)
+✔ launcher preflight accepts an available port (84.309ms)
+✔ launcher preflight identifies occupied port instead of appearing to start (102.8675ms)
+✔ live Trivia: 8 players, private code, roles, forged team, reconnect, timeout, transfer and replay (26820.7265ms)
+✔ live Trivia 2 players: complete five-question round, podium and replay (31177.9563ms)
+✔ live Trivia 4 players: complete five-question round, podium and replay (31162.1138ms)
+✔ live Trivia 6 players: complete five-question round, podium and replay (31434.9623ms)
+✔ 42 original questions cover six categories and have four distinct choices (2.5014ms)
+✔ 2 workers finish 15 questions in fixed pairs with alternating private roles and exact scoring (2.5081ms)
+✔ 4 workers finish 15 questions in fixed pairs with alternating private roles and exact scoring (0.9088ms)
+✔ 6 workers finish 15 questions in fixed pairs with alternating private roles and exact scoring (1.4829ms)
+✔ 8 workers finish 15 questions in fixed pairs with alternating private roles and exact scoring (1.3726ms)
+✔ invalid starts, host controls, answer replay, wrong answers and timeouts are rejected or scored safely (0.3112ms)
+✔ disconnect reserves pairs, transfers host, blocks disconnected submissions and restores reconnect role (0.2155ms)
+✔ standings count only correct answer time, with no hidden data for non-members (0.1499ms)
+✔ host returning to lobby preserves a disconnected teammate reservation (0.2882ms)
+✔ scores do not disclose correctness until all teams lock or timeout (0.2563ms)
+✔ two racers synchronize countdown, independent carts, reconnect, finish and host replay (34234.0956ms)
+✔ spilled material synchronizes to both racers and survives reload and reconnect until restart (10041.222ms)
+✔ server keeps unfinished racer active and reranks a slower clean finish ahead of a spilled first finish (4.2905ms)
+✔ server generates one persistent spill, another racer moves it, and restart clears it (9.2828ms)
+✔ cart reset and independent starts (1.0131ms)
+✔ fast sharp steering is risky; slower driving avoids spill (2.5739ms)
+✔ neutral input recovers instability and brakes (1.4912ms)
+✔ threshold spills once, holds during reload, resets predictably (0.2748ms)
+✔ rough terrain is spatial and fast driving risks more than careful driving (0.2396ms)
+✔ solid posts brake and destabilize a severe impact more than a slow impact (0.2855ms)
+✔ spilled material persists, moves when another cart hits, and ignores finished racers (5.7331ms)
+✔ eight-player repeated spills preserve all material within a bounded number of piles (60.9377ms)
+✔ ranking prioritizes spills, then time, with finish order only an exact tie breaker (0.7961ms)
+✔ one finisher never ends the race by default; grace timeout is an explicit option (0.2462ms)
+✔ ordered checkpoints prevent shortcut finish; results remain immutable (0.1937ms)
+✔ controlled driver traverses the complete marked course (9.0229ms)
+✔ wheel grip reaches handles behind the tray and stumble bends/steps then settles (5.8775ms)
+ℹ tests 175
+ℹ suites 0
+ℹ pass 174
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 443272.5042
+
+✖ failing tests:
+
+test at build\tests\integration-network.test.js:17:1
+✖ integrated schema: simultaneous public matching and private Chaos rescue/reconnect clean up independently (134.7423ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  19 !== 18
+
+      at TestContext.<anonymous> (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-final-integration/build/tests/integration-network.test.js:25:16)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 19,
+    expected: 18,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+[ELIFECYCLE] Command failed with exit code 1.
