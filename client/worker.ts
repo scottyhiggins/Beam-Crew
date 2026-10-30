@@ -2,7 +2,8 @@ import * as THREE from 'three';
 
 // Decorative meshes only. Nothing here participates in the simulation.
 function block(g:THREE.Object3D,w:number,h:number,d:number,c:number,x:number,y:number,z:number){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshLambertMaterial({color:c}));m.position.set(x,y,z);g.add(m);return m;}
-export type WorkerLook={hat:number;vest:number;expression:"happy"|"serious"|"goofy"};
+import type {WorkerLook} from '../shared/cosmetics.js';
+export type {WorkerLook} from '../shared/cosmetics.js';
 export function makeWorker(color:number,look?:WorkerLook){
  color=look?.vest??color;
  const g=new THREE.Group();
