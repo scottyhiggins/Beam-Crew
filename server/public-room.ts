@@ -10,7 +10,7 @@ export class PublicWheelRoom extends CrewRoom {
     super.onCreate();publicRooms.add(this);
     roomsByCode.delete(this.state.code);this.state.code='';this.state.host='';
     this.state.publicMatch=true;this.state.mode='championship';this.state.championshipLength=3;
-    this.setMetadata({publicMatch:true});
+    this.setMetadata({publicMatch:true,code:''});
     // Colyseus auto-disposes empty rooms after their outstanding seat reservations expire.
   }
   onJoin(client:Client,options:{name?:unknown;matchKey?:unknown}){
@@ -41,5 +41,5 @@ export class PublicWheelRoom extends CrewRoom {
     }
     super.tick(dt);
   }
-  onDispose(){for(const id of this.keys.keys())this.release(id);publicRooms.delete(this);super.onDispose();}
+  onDispose(){for(const id of this.keys.keys())this.release(id);publicRooms.delete(this);if(this.state)super.onDispose();}
 }

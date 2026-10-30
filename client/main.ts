@@ -46,7 +46,7 @@ async function connect(create:boolean){if(busy||room||!serverCompatible)return;b
   else {const code=el<HTMLInputElement>('code').value.trim().toUpperCase();if(!/^[A-Z2-9]{5}$/.test(code))throw Error('Enter a five-character room code');const response=await fetch(`/api/rooms/${code}`);const result=await response.json();if(!response.ok)throw Error(result.error);joined=await client.joinById(result.roomId,{name});}
   attach(joined);if(create)joined.send('mode',preferredMode);
 }catch(error){status(`Could not join: ${error instanceof Error?error.message:String(error)}. Check the code; active or full rooms cannot accept new players.`);}finally{busy=false;render();}}
-const matchKey=crypto.randomUUID();
+const matchKey=crypto.randomUUID?.()??Array.from(crypto.getRandomValues(new Uint8Array(16)),b=>b.toString(16).padStart(2,'0')).join('');
 async function quickMatch(){
   if(busy||room||!serverCompatible)return;
   busy=true;const epoch=++connectionEpoch;status('Searching for workers…');render();
@@ -61,11 +61,11 @@ el('quickMatch').onclick=()=>void quickMatch();
 el('cancelMatch').onclick=()=>{const old=room;room=null;stopInput();cancelRecovery('Matchmaking canceled.');void old?.leave();};
 el('playAgain').onclick=async()=>{const old=room;room=null;stopInput();cancelRecovery('Searching for workers…');await old?.leave();void quickMatch();};
 function attach(joined:Room){room=joined;recovery=false;storage('beam-token',joined.reconnectionToken);storage('beam-until',String(Date.now()+RESERVATION_MS));menuOpen=false;status('Connected');
-  joined.onStateChange(()=>{if(room===joined)render();});joined.onError((code,message)=>{if(room===joined)status(`Connection error ${code}: ${message}`);});
+  joined.onStateChange(()=>{if(room===joined){rememberReservation();render();}});joined.onError((code,message)=>{if(room===joined)status(`Connection error ${code}: ${message}`);});
   joined.onLeave(code=>{if(room!==joined)return;room=null;stopInput();render();if(code!==1000&&code!==4000){void reconnect(joined.reconnectionToken,Date.now()+RESERVATION_MS,!!joined.state?.publicMatch&&joined.state.phase==='lobby');}else{cancelRecovery('Left room. Create or join a room.');}});render();}
 function cancelRecovery(message='Reconnect canceled. Create or join a room.'){
   connectionEpoch++;recoveryRun?.cancel();recoveryRun=null;recovery=false;busy=false;
-  storage('beam-token',null);storage('beam-until',null);status(message);render();
+  storage('beam-token',null);storage('beam-until',null);storage('beam-public-wait',null);status(message);render();
 }
 async function reconnect(token:string,until:number,publicWaiting=false){
   if(recovery||room)return;
@@ -81,7 +81,7 @@ async function reconnect(token:string,until:number,publicWaiting=false){
   }catch{if(epoch===connectionEpoch)cancelRecovery('Connection failed. Create or join a room.');}finally{clearInterval(countdown);}
 }
 el('cancelReconnect').onclick=()=>cancelRecovery();
-function rememberReservation(){if(room){storage('beam-token',room.reconnectionToken);storage('beam-until',String(Date.now()+RESERVATION_MS));}}
+function rememberReservation(){if(room){storage('beam-token',room.reconnectionToken);storage('beam-until',String(Date.now()+RESERVATION_MS));storage('beam-public-wait',room.state?.publicMatch&&room.state.phase==='lobby'?'1':null);}}
 setInterval(rememberReservation,1000);window.addEventListener('pagehide',rememberReservation);
 function chooseMode(mode:string){preferredMode=mode;el('quickMatch').hidden=mode==='competitive';for(const [id,value]of [['chooseWheel','championship'],['chooseBeam','competitive']]){el(id).classList.toggle('selected',mode===value);el(id).setAttribute('aria-pressed',String(mode===value));}}
 el('chooseWheel').onclick=()=>chooseMode('championship');el('chooseBeam').onclick=()=>chooseMode('competitive');
@@ -438,7 +438,7 @@ async function verifyServer(){
       if(oldStart!==start)storage('beam-token',null);
       storage('beam-server-start',start);
       const token=sessionStorage.getItem('beam-token');
-      if(token)void reconnect(token,Number(sessionStorage.getItem('beam-until')));
+      if(token)void reconnect(token,Number(sessionStorage.getItem('beam-until')),sessionStorage.getItem('beam-public-wait')==='1');
     }catch{}
   }
   catch(error){status(error instanceof Error?error.message:'Could not verify the server. Check Start-BeamCrew.cmd.');}

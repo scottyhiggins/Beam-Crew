@@ -16,7 +16,7 @@ test('real sockets: public/private separation, concurrent capacity, cancellation
  const others=await Promise.all(Array.from({length:7},()=>join()));
  assert.ok(others.every(r=>r.roomId===first.roomId));await until(()=>first.state.players.size===8);
  await assert.rejects(()=>client.joinById(first.roomId,{matchKey:randomUUID()}));
- const ninth=await join();assert.notEqual(ninth.roomId,first.roomId);await ninth.leave();await until(()=>!ninth.connection.isOpen);
+ const ninth=await join();assert.notEqual(ninth.roomId,first.roomId);await ninth.leave();await until(()=>!ninth.connection.isOpen);await pause(150);await assert.rejects(()=>client.joinById(ninth.roomId,{matchKey:randomUUID()}));
  assert.equal(privateRoom.state.players.size,1);const hidden=await fetch(endpoint+'/api/rooms/'+first.state.code);assert.equal(hidden.status,404);
  first.send('mode','competitive');first.send('championshipLength',10);first.send('start');await pause(150);assert.equal(first.state.phase,'lobby');assert.equal(first.state.mode,'championship');assert.equal(first.state.championshipLength,3);
  for(const r of others)await r.leave();await until(()=>first.state.players.size===1&&first.state.matchCountdown===0);
@@ -29,5 +29,16 @@ test('real sockets: public/private separation, concurrent capacity, cancellation
  const resumed=await client.reconnect(token);rooms.push(resumed);await until(()=>first.state.players.get(id).connected&&resumed.state.players?.has(id));assert.equal(resumed.sessionId,id);
  const late=await join();assert.notEqual(late.roomId,first.roomId);await late.leave();
  await resumed.leave();await first.leave();const replay=await join(key);assert.notEqual(replay.roomId,first.roomId);await until(()=>replay.state.phase==='lobby');
+ }finally{await Promise.allSettled(rooms.filter(r=>r.connection.isOpen).map(r=>r.leave()));}
+});
+
+test('public room creation is bounded and abandoned waiting rooms release capacity',{skip:!endpoint,timeout:45000},async()=>{
+ const client=new Client(endpoint!.replace(/^http/,'ws')),rooms:Room[]=[];
+ try{
+ await pause(250);
+ for(let i=0;i<64;i++)rooms.push(await client.create('wheel_public',{name:'Capacity probe',matchKey:randomUUID()}));
+ await assert.rejects(()=>client.create('wheel_public',{matchKey:randomUUID()}),/busy/);
+ await Promise.all(rooms.map(r=>r.leave()));await pause(250);
+ const replacement=await client.joinOrCreate('wheel_public',{matchKey:randomUUID()});rooms.push(replacement);await until(()=>replacement.state.players?.size===1);
  }finally{await Promise.allSettled(rooms.filter(r=>r.connection.isOpen).map(r=>r.leave()));}
 });
