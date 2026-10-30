@@ -1,0 +1,11 @@
+✔ production server identifies its build and serves the mode selector assets (57.2268ms)
+✔ launcher preflight accepts an available port (84.331ms)
+✔ launcher preflight identifies occupied port instead of appearing to start (100.8146ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 331.3707

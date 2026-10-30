@@ -1,3 +1,4 @@
+import {PublicWheelRoom} from './public-room.js';
 import express from 'express';
 import { createServer } from 'node:http';
 import { Server } from '@colyseus/core';
@@ -11,6 +12,7 @@ const startedAt=new Date().toISOString();
 const app=express();const http=createServer(app);
 const server=new Server({transport:new WebSocketTransport({server:http})});
 server.define('crew',CrewRoom);
+server.define('wheel_public',PublicWheelRoom);
 app.get('/api/rooms/:code',(req,res)=>{
   const room=roomsByCode.get(req.params.code.toUpperCase());
   if(!room){res.status(404).json({error:'Room not found'});return;}

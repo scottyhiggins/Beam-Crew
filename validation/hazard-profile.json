@@ -1,0 +1,29 @@
+{
+  "description": "Local Node server simulation only; excludes browser rendering, network patches and iPhone performance.",
+  "samples": [
+    {
+      "players": 8,
+      "hazards": 75,
+      "meanMs": 0.12444499999999857,
+      "p95Ms": 0.24849999999997863,
+      "p99Ms": 0.41130000000003974,
+      "maxMs": 0.6562999999999874
+    },
+    {
+      "players": 8,
+      "hazards": 150,
+      "meanMs": 0.1997011000000008,
+      "p95Ms": 0.35410000000001673,
+      "p99Ms": 0.503400000000056,
+      "maxMs": 0.6009000000000242
+    },
+    {
+      "players": 8,
+      "hazards": 192,
+      "meanMs": 0.2888287000000004,
+      "p95Ms": 0.47649999999998727,
+      "p99Ms": 0.6206000000000813,
+      "maxMs": 1.3804999999999836
+    }
+  ]
+}

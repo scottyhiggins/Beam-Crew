@@ -12,11 +12,17 @@ export const roomsByCode=new Map<string,CrewRoom>();
 const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 export class CrewRoom extends Room<CrewState> {
   maxClients=CONFIG.maxPlayers;
+  publicMatch=false;
+  // Server-owned per-room setting. Keep below the legacy aggregation threshold so
+  // every new hazard reaches the FIFO insertion path.
+  hazardCap=150;
+  trimHazards(material:SpilledMaterial[]){const excess=Math.max(0,this.state.material.length-this.hazardCap);if(excess){this.state.material.splice(0,excess);material.splice(0,excess);}}
   private accumulator=0;
   routePlan:CourseInstance[]=[];
   private routeMaterialWorld:ReturnType<typeof routeWorld>|undefined;
   currentTrack(){return this.routePlan[this.state.leg]?.track??championshipTrack(this.state.leg); }
   onCreate(){
+    if(!Number.isInteger(this.hazardCap)||this.hazardCap<1||this.hazardCap>=WHEEL_CONFIG.maxMaterial)throw new Error('Invalid spilled hazard cap');
     this.setState(new CrewState());
     do {this.state.code=Array.from({length:5},()=>alphabet[randomInt(alphabet.length)]).join('');}while(roomsByCode.has(this.state.code));
     roomsByCode.set(this.state.code,this);this.setMetadata({code:this.state.code});this.setPatchRate(50);
@@ -36,15 +42,15 @@ export class CrewRoom extends Room<CrewState> {
       p.grip=grip;p.vx=p.vz=0;this.positionCarrier(p);this.feedback(p,`Gripping ${grip+1} — press again to release`);
     });
     this.onMessage('signal',(c,value)=>{const p=this.state.players.get(c.sessionId);if(p&&['LIFT','WAIT','LEFT','RIGHT'].includes(value)&&Date.now()-p.lastSignal>500){p.signal=value;p.lastSignal=Date.now();p.signalUntil=Date.now()+2000;}});
-    this.onMessage('mode',(c,value)=>{if(c.sessionId===this.state.host&&this.state.phase==='lobby'&&['beam','wheel','competitive','championship'].includes(value))this.state.mode=value==='beam'?'competitive':value;});
-    this.onMessage('beamMap',(c,value)=>{if(c.sessionId===this.state.host&&this.state.phase==='lobby'&&validBeamMap(value))this.state.beamMap=value;});
+    this.onMessage('mode',(c,value)=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='lobby'&&['beam','wheel','competitive','championship'].includes(value))this.state.mode=value==='beam'?'competitive':value;});
+    this.onMessage('beamMap',(c,value)=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='lobby'&&validBeamMap(value))this.state.beamMap=value;});
     this.onMessage('rescue',c=>{const p=this.state.players.get(c.sessionId),b=p&&this.state.teams[p.team];if(this.state.mode==='competitive'&&this.state.racePhase==='racing'&&b&&!b.delivered&&!b.dnf&&b.protection===0)recoverTeam(b,[...this.state.players.values()].filter(q=>q.team===p!.team));});
-    this.onMessage('championshipLength',(c,value)=>{if(c.sessionId===this.state.host&&this.state.phase==='lobby'&&validChampionshipLength(value))this.state.championshipLength=value;});
+    this.onMessage('championshipLength',(c,value)=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='lobby'&&validChampionshipLength(value))this.state.championshipLength=value;});
     this.onMessage('material',(c,id)=>{const p=this.state.players.get(c.sessionId);if(p&&this.state.phase==='lobby'&&validMaterial(id))p.materialId=id;});
-    this.onMessage('start',c=>{if(c.sessionId===this.state.host&&this.state.phase==='lobby'&&this.clients.length>=2){this.restart(false);this.state.phase='test';this.lock();}});
-    this.onMessage('reset',c=>{if(c.sessionId===this.state.host&&this.state.phase==='test'&&Date.now()-this.lastReset>1000){this.restart(true);}});
-    this.onMessage('restart',c=>{if(c.sessionId===this.state.host&&this.state.phase==='test'&&Date.now()-this.lastReset>1000){this.restart(false);}});
-    this.onMessage('lobby',c=>{if(c.sessionId===this.state.host){this.state.phase='lobby';this.unlock();for(const p of this.state.players.values()){p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;}}});
+    this.onMessage('start',c=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='lobby'&&this.clients.length>=2){this.restart(false);this.state.phase='test';this.lock();}});
+    this.onMessage('reset',c=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='test'&&Date.now()-this.lastReset>1000){this.restart(true);}});
+    this.onMessage('restart',c=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='test'&&Date.now()-this.lastReset>1000){this.restart(false);}});
+    this.onMessage('lobby',c=>{if(!this.publicMatch&&c.sessionId===this.state.host){this.state.phase='lobby';this.unlock();for(const p of this.state.players.values()){p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;}}});
   }
   private lastReset=0;
   feedback(p:Player,text:string){p.feedback=text;p.feedbackUntil=Date.now()+2500;}
@@ -129,7 +135,7 @@ export class CrewRoom extends Room<CrewState> {
     for(const p of players){const active=p.connected&&now-p.lastInput<300,spills=p.spills,previousZ=p.z,racing=this.state.racePhase==='racing'&&!p.finishOrder;
       stepCart(p,active?p.inputX:0,active?p.inputZ:0,dt,material,track);
       if(this.state.leg>0){const previous=this.routePlan[this.state.leg-1]?.track??championshipTrack(0),limit=Math.max(previous.ramp.edgeZ-WHEEL_CONFIG.cartRadius-WHEEL_CONFIG.cartOffset,Math.min(previousZ,previous.finishZ+WHEEL_CONFIG.cartOffset+WHEEL_CONFIG.cartRadius));if(p.z>limit){p.z=limit;p.speed=0;}}
-      if(p.spills>spills){if(racing)p.legSpills+=p.spills-spills;spillMaterial(p,material,value=>{const b=new SpilledMaterial();Object.assign(b,value);this.state.material.push(b);material.push(b);},track);}
+      if(p.spills>spills){if(racing)p.legSpills+=p.spills-spills;spillMaterial(p,material,value=>{const b=new SpilledMaterial();Object.assign(b,value);this.state.material.push(b);material.push(b);this.trimHazards(material);},track);}
     }
     collideStagingCarts(players,track);
     if(this.state.racePhase==='racing'){this.state.finishCount=finishCarts(players,this.state.elapsed,this.state.finishCount,track);this.reconcileChampionship();}
@@ -175,7 +181,7 @@ export class CrewRoom extends Room<CrewState> {
       const material=Array.from(this.state.material);
       stepMaterial(material,dt);
       for(const p of players){const active=p.connected&&now-p.lastInput<300,spills=p.spills;stepCart(p,active?p.inputX:0,active?p.inputZ:0,dt,material);
-        if(p.spills>spills)spillMaterial(p,material,value=>{const brick=new SpilledMaterial();Object.assign(brick,value);this.state.material.push(brick);material.push(brick);});
+        if(p.spills>spills)spillMaterial(p,material,value=>{const brick=new SpilledMaterial();Object.assign(brick,value);this.state.material.push(brick);material.push(brick);this.trimHazards(material);});
       }
       collideStagingCarts(players);
       this.state.finishCount=finishCarts(players,this.state.elapsed,this.state.finishCount);
