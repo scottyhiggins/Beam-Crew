@@ -1,3 +1,9 @@
+# Milestone 6B checkpoint implementation
+
+The fixed two-course 6A option is preserved. A five-module local-coordinate pool now supports server-selected, unique randomized 3/5 routes. Entry/exit connections remain level, forward-facing, 5.6m wide with 16m shared yards. All ordered pairs are tested. Surfaces, barrier families, static landmark/contact descriptors, drive paths and finish profiles live in shared/course-modules.ts. The server alone chooses and publishes IDs; rendering and simulation use identical assembled transforms. Active/neighbor module culling and cached instances bound visual work. Longer selections stay disabled until their full pool passes tests and the stable five-course checkpoint is deployed.
+
+---
+
 # Milestone 6A implementation boundary — October 29, 2026
 
 Implemented: the fixed Original → Scaffold Switchback two-course Championship; a local-coordinate course contract and continuous level 5.6m-wide socket; shared yard and visible authoritative gate; synchronized three-second transition; permanent debris and material/pose persistence; immutable per-course scores and cumulative standings; disconnect reservation/DNF progression; separate single-race and Beam Carry modes; finite batched city scenery with distance culling. See PROJECT_STATUS.md for validation and PLAYTEST.md for the physical gate.

@@ -1,3 +1,17 @@
+# Milestone 6B — five-course checkpoint
+
+The user accepted the 6A two-course Championship on laptop and iPhone, including cumulative scoring and multiplayer; one brief iPhone hiccup recovered. Accepted source 5728952 and live deployment dep-dbhsrhu7bikc73fs924g remain recoverable. Recovery branch codex/pre-milestone6b-20261029 at 0763bb4 and an external Beam-Crew-pre-milestone6b-20261029.bundle preserve the full local baseline. Existing untracked helpers are untouched.
+
+Build **BREAK TIME · Championship 6B · Five-course checkpoint**, protocol **12**. The accepted fixed two-course route remains selectable. Hosts can choose 3 or 5 races; the server shuffles five unique module IDs without replacement and synchronizes the exact order and seed. Clients assemble only the published IDs. Ten remains unavailable in this checkpoint. Lobby-only host controls and strict length validation prevent bypassing unfinished options.
+
+Five reusable sections: Original Jobsite (sandy tan, original yellow pylons/rope), Concrete Scaffold (gray concrete, orange cones/plastic chain), Dump Truck Haul Road (dark asphalt, tipped truck and partially blocking gravel), Earthworks Dig (brown dirt, tall delineators/red-white tape), Utility Green (green grass, utility pipes). Surface colors do not change handling or material behavior. Truck chassis and gravel footprints are authoritative; painted arrows lead along the open side of the pile. Every ordered adjacency has matching level 5.6m sockets and a shared 16m staging yard; the next gate stays closed until synchronized GO. No position/load/room reset occurs between legs. Finish lips, official/staging spill separation, frozen per-leg results, cumulative standings, host transfer and reconnect/DNF handling are retained.
+
+Scenery uses shared geometry/material caches and instancing; only nearby current/neighbor modules render. Distant debris meshes are hidden without deleting server hazards. Replay replaces course batches and disposes retired buffers. Automated budgets cap active course draw batches and triangles and check bounded replay scene growth. The dump-truck browser preview showed 48 draws and about 56k triangles before the final road-edge trim. This measures scene complexity, not physical iPhone frame rate or heat.
+
+Validation and deployment evidence follow after the final checkpoint run. No Render plan/settings changes; automatic deployment remains off. No Crane or Trivia work.
+
+---
+
 # Milestone 6A — two-course Wheelbarrow Championship
 
 Build **BREAK TIME · Championship 6A**, protocol **11**, October 29, 2026. The separately selectable **Wheelbarrow Championship · 2 courses** preserves the original Course 1 and continues through its existing yard into Scaffold Switchback. Beam Carry and the independent single-race Wheelbarrow option remain available. Refresh both devices after deployment and create a fresh room.

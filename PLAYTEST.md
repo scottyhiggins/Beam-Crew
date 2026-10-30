@@ -1,3 +1,14 @@
+# Milestone 6B checkpoint — laptop + iPhone playtest
+
+1. Refresh both clients and verify the current 6B build. Create a fresh room. Try 2 courses (accepted 6A route), then host-selected 3 and 5 races. Both clients must show the same unique order when racing; 10 is unavailable until separately certified.
+2. Confirm five distinct surfaces and the original yellow pylons/rope, orange cones/chain and tall posts/red-white tape. On the dark haul road, inspect the tipped dump truck and gravel pile. Follow the arrows around the open left side; the visible pile and truck must block appropriately without a hidden full-width obstruction.
+3. Finish ahead of the other racer. Drive and spill in staging while their race continues. The official leg result stays frozen. The next gate remains closed until the last eligible finish and a synchronized three-second countdown; GO must preserve actual position, speed/reload state, chosen load and prior debris.
+4. Repeat all transitions. Try reversing across completed finish strips. Background/reconnect the phone during a countdown and a later leg; verify route, current course, cart, material and scores. Explicit Leave/30-second expiry must not block the remaining racer; a permanently departed worker is DNF.
+5. Compare every leg and final cumulative result on both screens; staging/countdown spills and time must not change official totals. Replay, return to lobby, and test single-race Wheelbarrow and Beam Carry.
+6. Test iPhone portrait/landscape/Safari chrome and scroll standings/results. Run repeated five-leg rounds with many spills and, if possible, more players. Record any hiccup, blur, heat, missing barrier/ground, frame-rate drop or reconnect problem with device/iOS/build/course name. Physical testing remains necessary despite automated rendering budgets.
+
+---
+
 # Milestone 6A — laptop + iPhone acceptance
 
 1. Refresh both devices at https://break-time-9n1k.onrender.com and confirm **Championship 6A**. Use laptop Wi-Fi and iPhone cellular. Create a fresh room and select **Wheelbarrow Championship · 2 courses**. Choose different loads.

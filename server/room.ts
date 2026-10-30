@@ -1,3 +1,4 @@
+import {selectCourseIds,assembleRoute,routeWorld,validChampionshipLength,type CourseInstance} from '../shared/course-modules.js';
 import {championshipTrack,COURSE_TWO} from '../shared/championship.js';
 import { Room, Client, ServerError } from '@colyseus/core';
 import { randomInt } from 'node:crypto';
@@ -11,6 +12,9 @@ const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 export class CrewRoom extends Room<CrewState> {
   maxClients=CONFIG.maxPlayers;
   private accumulator=0;
+  routePlan:CourseInstance[]=[];
+  private routeMaterialWorld:ReturnType<typeof routeWorld>|undefined;
+  currentTrack(){return this.routePlan[this.state.leg]?.track??championshipTrack(this.state.leg); }
   onCreate(){
     this.setState(new CrewState());
     do {this.state.code=Array.from({length:5},()=>alphabet[randomInt(alphabet.length)]).join('');}while(roomsByCode.has(this.state.code));
@@ -32,6 +36,7 @@ export class CrewRoom extends Room<CrewState> {
     });
     this.onMessage('signal',(c,value)=>{const p=this.state.players.get(c.sessionId);if(p&&['LIFT','WAIT','LEFT','RIGHT'].includes(value)&&Date.now()-p.lastSignal>500){p.signal=value;p.lastSignal=Date.now();p.signalUntil=Date.now()+2000;}});
     this.onMessage('mode',(c,value)=>{if(c.sessionId===this.state.host&&this.state.phase==='lobby'&&['beam','wheel','competitive','championship'].includes(value))this.state.mode=value==='beam'?'competitive':value;});
+    this.onMessage('championshipLength',(c,value)=>{if(c.sessionId===this.state.host&&this.state.phase==='lobby'&&validChampionshipLength(value))this.state.championshipLength=value;});
     this.onMessage('material',(c,id)=>{const p=this.state.players.get(c.sessionId);if(p&&this.state.phase==='lobby'&&validMaterial(id))p.materialId=id;});
     this.onMessage('start',c=>{if(c.sessionId===this.state.host&&this.state.phase==='lobby'&&this.clients.length>=2){this.restart(false);this.state.phase='test';this.lock();}});
     this.onMessage('reset',c=>{if(c.sessionId===this.state.host&&this.state.phase==='test'&&Date.now()-this.lastReset>1000){this.restart(true);}});
@@ -42,6 +47,10 @@ export class CrewRoom extends Room<CrewState> {
   feedback(p:Player,text:string){p.feedback=text;p.feedbackUntil=Date.now()+2500;}
   restart(checkpoint:boolean){
     this.lastReset=Date.now();
+    this.routePlan=[];this.routeMaterialWorld=undefined;this.state.routeIds.clear();
+    if(this.state.mode==='championship'&&this.state.championshipLength>2){
+      this.state.routeSeed=randomInt(0x100000000);const ids=selectCourseIds(this.state.championshipLength,this.state.routeSeed);this.state.routeIds.push(...ids);this.routePlan=assembleRoute(ids);this.routeMaterialWorld=routeWorld(this.routePlan);
+    }
     if(this.state.mode==='competitive'){
       this.state.teams.clear();this.state.raceResets++;this.state.elapsed=0;this.state.racePhase='countdown';this.state.countdown=3;
       const players=[...this.state.players.entries()].filter(([,p])=>p.connected);
@@ -93,12 +102,12 @@ export class CrewRoom extends Room<CrewState> {
     const leg=this.state.legResults.filter(r=>r.leg===this.state.leg&&!r.dnf);[...leg].sort(compareResults).forEach((r,i)=>r.place=i+1);
     this.rankChampionship();
     if([...this.state.players.values()].every(p=>p.finishOrder>0)){
-      if(this.state.leg===0&&this.state.players.size){this.state.racePhase='intermission';this.state.countdown=3;}
+      if(this.state.leg<(this.routePlan.length||2)-1&&this.state.players.size){this.state.racePhase='intermission';this.state.countdown=3;}
       else this.state.racePhase='results';
     }
   }
   beginSecondLeg(){
-    this.state.leg=1;this.state.elapsed=0;this.state.finishCount=0;this.state.firstFinishAt=-1;this.state.racePhase='racing';this.state.countdown=0;
+    this.state.leg++;this.state.elapsed=0;this.state.finishCount=0;this.state.firstFinishAt=-1;this.state.racePhase='racing';this.state.countdown=0;
     // Keep positions, speed, instability, reload, materials and every earlier snapshot.
     for(const p of this.state.players.values()){p.checkpoint=1;p.finishOrder=0;p.finishTime=0;p.finishCrossed=false;p.legSpills=0;}
   }
@@ -109,14 +118,14 @@ export class CrewRoom extends Room<CrewState> {
       this.state.countdown=Math.max(0,this.state.countdown-dt);
       if(this.state.countdown<1e-8){this.beginSecondLeg();return;}
     }
-    const track=championshipTrack(this.state.leg),players=[...this.state.players.values()],material=[...this.state.material];
+    const track=this.currentTrack(),players=[...this.state.players.values()],material=[...this.state.material];
     if(this.state.racePhase==='racing')this.state.elapsed+=dt;
     // Offscreen debris remains live in both courses; this world context includes both.
     const world={...COURSE_TWO,startArea:(x:number,z:number)=>COURSE_TWO.startArea!(x,z)||championshipTrack(0).path.some((a,i,path)=>i>0&&distanceToSegment(x,z,path[i-1],a)<2.8)};
-    stepMaterial(material,dt,world);
+    stepMaterial(material,dt,this.routeMaterialWorld??world);
     for(const p of players){const active=p.connected&&now-p.lastInput<300,spills=p.spills,previousZ=p.z,racing=this.state.racePhase==='racing'&&!p.finishOrder;
       stepCart(p,active?p.inputX:0,active?p.inputZ:0,dt,material,track);
-      if(this.state.leg===1){const limit=Math.max(-19.95,Math.min(previousZ,-16.25));if(p.z>limit){p.z=limit;p.speed=0;}}
+      if(this.state.leg>0){const previous=this.routePlan[this.state.leg-1]?.track??championshipTrack(0),limit=Math.max(previous.ramp.edgeZ-WHEEL_CONFIG.cartRadius-WHEEL_CONFIG.cartOffset,Math.min(previousZ,previous.finishZ+WHEEL_CONFIG.cartOffset+WHEEL_CONFIG.cartRadius));if(p.z>limit){p.z=limit;p.speed=0;}}
       if(p.spills>spills){if(racing)p.legSpills+=p.spills-spills;spillMaterial(p,material,value=>{const b=new SpilledMaterial();Object.assign(b,value);this.state.material.push(b);material.push(b);},track);}
     }
     collideStagingCarts(players,track);

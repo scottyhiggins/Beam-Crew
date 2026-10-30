@@ -1,4 +1,11 @@
-import {createChampionshipWorld} from './championship-world';
+import {createModularWorld} from './modular-world';
+import {assembleRoute,routeHeight,type CourseInstance} from '../shared/course-modules';
+let routeKey='',displayRoute:CourseInstance[]=[];
+function clientRoute(state:any){const ids=Array.from(state?.routeIds??[]) as string[],key=ids.join(',');if(key!==routeKey){displayRoute=ids.length?assembleRoute(ids):[];routeKey=key;}return displayRoute;}
+function currentCourse(state:any){return clientRoute(state)[state.leg];}
+function currentTrack(state:any){return currentCourse(state)?.track??championshipTrack(state.leg);}
+function championshipRise(state:any,x:number,z:number){const route=clientRoute(state);return route.length?routeHeight(route,x,z):championshipHeight(x,z);}
+function legCount(state:any){return state.championshipLength??2;}
 import {championshipTrack,championshipHeight} from '../shared/championship';
 const isWheel=(state:any)=>state?.mode==='wheel'||state?.mode==='championship';
 import {ReconnectRun,RESERVATION_MS,reservationValid} from './reconnect';
@@ -19,7 +26,7 @@ import {MATERIAL_CATEGORIES,MATERIALS,MATERIAL_COLORS} from '../shared/materials
 import {FINISH_STAGING} from '../shared/wheelbarrow';
 const colors=[0xffad32,0x35b9ff,0xff5985,0x59d595,0xa38aff,0xf2ee57,0xffffff,0x965c42];
 const app=document.querySelector<HTMLDivElement>('#app')!;
-app.innerHTML=`<main id="panel"><h1>BREAK TIME</h1><p id="buildLabel">${BUILD_LABEL}</p><p class="eyebrow">CLOCK OUT. PLAY HARD.</p><p>A little teamwork. A lot of spilled cement.</p><label>Your name <input id="name" maxlength="18" value="Worker" autocomplete="nickname"></label><button id="create">Create room</button><div class="join"><input id="code" maxlength="5" placeholder="ROOM CODE" aria-label="Room code"><button id="join">Join</button></div><p id="status" role="status"></p><button id="retryConnection" hidden>Retry connection</button><button id="cancelReconnect" hidden>Cancel reconnect / Return to landing</button><section id="room" hidden><h2 id="roomCode"></h2><button id="share">Copy join link</button><ul id="players"></ul><label id="modeLabel">Game mode <select id="mode"><option value="competitive">Beam Carry · two-player teams</option><option value="wheel">Wheelbarrow Race</option><option value="championship">Wheelbarrow Championship · 2 courses</option></select></label><section id="materials" hidden><h3>Choose your load</h3><p>Same cart handling. Your spill creates this hazard. Duplicates allowed; locked at countdown.</p><div id="materialGrid"></div><p id="chosenLoad" role="status"></p></section><button id="start">Let’s get to work</button><button id="back">Return to lobby</button><button id="reset" hidden>Reset to checkpoint</button><button id="restart" hidden>Restart course</button><button id="leave">Leave room</button></section><p id="help">WASD to move · Space to grab/release<br>On phones: joystick + ACTION</p></main><div id="hud" hidden><span id="hudText"></span><div id="beamStatus" role="status"></div><button id="grab">GRAB · Space</button><div id="signals"><button data-signal="LIFT">LIFT</button><button data-signal="WAIT">WAIT</button><button data-signal="LEFT">LEFT</button><button data-signal="RIGHT">RIGHT</button></div><details id="standings" hidden><summary>Standings</summary><ol id="standingsList"></ol></details><button id="showResults" hidden>Results</button><button id="menu">Lobby controls</button></div><div id="touch" hidden><div id="joystick" aria-label="Movement joystick"><div id="stick"></div></div><button id="action">ACTION</button></div><section id="raceResults" hidden role="region" aria-live="polite" aria-labelledby="resultsTitle"><h2 id="resultsTitle">Final results</h2><p id="resultsRule"></p><ol id="resultsList"></ol><button id="closeResults">Keep driving in staging</button></section>`;
+app.innerHTML=`<main id="panel"><h1>BREAK TIME</h1><p id="buildLabel">${BUILD_LABEL}</p><p class="eyebrow">CLOCK OUT. PLAY HARD.</p><p>A little teamwork. A lot of spilled cement.</p><label>Your name <input id="name" maxlength="18" value="Worker" autocomplete="nickname"></label><button id="create">Create room</button><div class="join"><input id="code" maxlength="5" placeholder="ROOM CODE" aria-label="Room code"><button id="join">Join</button></div><p id="status" role="status"></p><button id="retryConnection" hidden>Retry connection</button><button id="cancelReconnect" hidden>Cancel reconnect / Return to landing</button><section id="room" hidden><h2 id="roomCode"></h2><button id="share">Copy join link</button><ul id="players"></ul><label id="modeLabel">Game mode <select id="mode"><option value="competitive">Beam Carry · two-player teams</option><option value="wheel">Wheelbarrow Race</option><option value="championship">Wheelbarrow Championship</option></select></label><label id="championshipLengthLabel" hidden>Championship length <select id="championshipLength"><option value="2">2 courses · accepted 6A route</option><option value="3">3 races · random unique courses</option><option value="5">5 races · full checkpoint pool</option><option value="10" disabled>10 races · future expansion</option></select></label><section id="materials" hidden><h3>Choose your load</h3><p>Same cart handling. Your spill creates this hazard. Duplicates allowed; locked at countdown.</p><div id="materialGrid"></div><p id="chosenLoad" role="status"></p></section><button id="start">Let’s get to work</button><button id="back">Return to lobby</button><button id="reset" hidden>Reset to checkpoint</button><button id="restart" hidden>Restart course</button><button id="leave">Leave room</button></section><p id="help">WASD to move · Space to grab/release<br>On phones: joystick + ACTION</p></main><div id="hud" hidden><span id="hudText"></span><div id="beamStatus" role="status"></div><button id="grab">GRAB · Space</button><div id="signals"><button data-signal="LIFT">LIFT</button><button data-signal="WAIT">WAIT</button><button data-signal="LEFT">LEFT</button><button data-signal="RIGHT">RIGHT</button></div><details id="standings" hidden><summary>Standings</summary><ol id="standingsList"></ol></details><button id="showResults" hidden>Results</button><button id="menu">Lobby controls</button></div><div id="touch" hidden><div id="joystick" aria-label="Movement joystick"><div id="stick"></div></div><button id="action">ACTION</button></div><section id="raceResults" hidden role="region" aria-live="polite" aria-labelledby="resultsTitle"><h2 id="resultsTitle">Final results</h2><p id="resultsRule"></p><ol id="resultsList"></ol><button id="closeResults">Keep driving in staging</button></section>`;
 const el=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 for(const category of MATERIAL_CATEGORIES){const column=document.createElement('div');const heading=document.createElement('strong');heading.textContent=category.name;column.append(heading);for(const name of category.items){const m=MATERIALS.find(m=>m.name===name)!;const button=document.createElement('button');button.type='button';button.dataset.material=String(m.id);button.textContent=m.name+' · '+m.effect;button.onclick=()=>room?.send('material',m.id);column.append(button);}el('materialGrid').append(column);}
 const signalReadout=document.createElement('div');signalReadout.id='crewSignals';el('hud').append(signalReadout);
@@ -62,6 +69,7 @@ function rememberReservation(){if(room){storage('beam-token',room.reconnectionTo
 setInterval(rememberReservation,1000);window.addEventListener('pagehide',rememberReservation);
 el('create').onclick=()=>void connect(true);el('join').onclick=()=>void connect(false);
 el<HTMLSelectElement>('mode').onchange=()=>room?.send('mode',el<HTMLSelectElement>('mode').value);
+el<HTMLSelectElement>('championshipLength').onchange=()=>room?.send('championshipLength',Number(el<HTMLSelectElement>('championshipLength').value));
 el('start').onclick=()=>room?.send('start');
 el('reset').onclick=()=>{stopInput();room?.send('reset');menuOpen=false;render();};
 el('restart').onclick=()=>{stopInput();room?.send('restart');menuOpen=false;render();};el('back').onclick=()=>{stopInput();room?.send('lobby');menuOpen=false;};
@@ -77,9 +85,9 @@ function renderResults(state:any){
   shownResults=key;el('raceResults').hidden=dismissedResults===key;
   el('resultsTitle').textContent=state.mode==='championship'?'Championship results':'Final results';
   if(state.mode==='championship'){
-    el('resultsRule').textContent='Two courses · Fewest cumulative spills wins · Combined racing time breaks ties';
+    el('resultsRule').textContent=legCount(state)+' courses · Fewest cumulative spills wins · Combined racing time breaks ties';
     el('closeResults').textContent='Keep driving in staging';
-    el('resultsList').replaceChildren(...[...state.standings].sort((a:any,b:any)=>a.place-b.place).map((r:any)=>{const li=document.createElement('li');li.textContent='#'+r.place+' '+r.name+' · '+(r.dnf?'DNF · ':'')+r.spills+' spills · '+r.time.toFixed(2)+'s · '+r.completed+'/2 courses';return li;}));return;
+    el('resultsList').replaceChildren(...[...state.standings].sort((a:any,b:any)=>a.place-b.place).map((r:any)=>{const li=document.createElement('li');li.textContent='#'+r.place+' '+r.name+' · '+(r.dnf?'DNF · ':'')+r.spills+' spills · '+r.time.toFixed(2)+'s · '+r.completed+'/'+legCount(state)+' courses';return li;}));return;
   }
   el('resultsRule').textContent=isWheel(state)?'Fewest spills wins · Fastest time breaks ties · Race time '+state.elapsed.toFixed(2)+'s':'Two workers per beam · Fastest team wins';
   el('closeResults').textContent=currentPresentation.compact?'Close':isWheel(state)?'Keep driving in staging':'Close results';
@@ -107,6 +115,7 @@ function render(){el('retryConnection').hidden=serverCompatible||verifying;el('c
   el('restart').textContent=state.mode==='championship'?'Restart Championship':'Restart course';
   el('back').textContent=playing?'Return to lobby / change game mode':'Return to lobby';
   el('help').innerHTML=isWheel(state)?'Protect the load: fewest spills wins; time breaks ties.<br>WASD / joystick to push. Follow painted arrows; brake before turns.':'WASD to move · Space to grab/release<br>On phones: joystick + ACTION';
+  el('championshipLengthLabel').hidden=playing||state.mode!=='championship';el<HTMLSelectElement>('championshipLength').disabled=!host;el<HTMLSelectElement>('championshipLength').value=String(legCount(state));
   el('modeLabel').hidden=playing;el<HTMLSelectElement>('mode').disabled=!host;el<HTMLSelectElement>('mode').value=state.mode;
   const me=state.players.get(room?.sessionId);
   el('materials').hidden=playing||!isWheel(state);el('panel').classList.toggle('selecting',!playing&&isWheel(state));
@@ -144,7 +153,7 @@ resizeRenderer();new ResizeObserver(resizeRenderer).observe(renderer.domElement)
 window.visualViewport?.addEventListener('resize',resizeRenderer);
 scene.add(new THREE.HemisphereLight(0xffffff,0x728f8b,2.2));const sun=new THREE.DirectionalLight(0xffebc5,2.3);sun.position.set(8,20,10);scene.add(sun);
 const originalScenery=scenery(scene);
-const championshipWorld=createChampionshipWorld();scene.add(championshipWorld.root);
+const championshipWorld=createModularWorld();scene.add(championshipWorld.root);
 renderer.outputColorSpace=THREE.SRGBColorSpace;
 renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;
 function box(w:number,h:number,d:number,color:number,x:number,y:number,z:number,parent:THREE.Object3D=scene){const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshLambertMaterial({color}));mesh.position.set(x,y,z);parent.add(mesh);return mesh;}
@@ -162,7 +171,7 @@ function worker(color:number){const g=makeWorker(color);scene.add(g);return g;}
 let previous=performance.now();
 function frame(now:number){requestAnimationFrame(frame);const frameMs=now-previous;const dt=Math.min(frameMs/1000,.1);previous=now;if(resolution.sample(frameMs,!document.hidden)||displayDpr!==devicePixelRatio)resizeRenderer();const state=room?.state;lobbyCrew.visible=!room;
   for(const [id,g]of workers){if(!state?.players?.has(id)){disposeVisual(g);workers.delete(id);}}
-  state?.players?.forEach((p:any,id:string)=>{let g=workers.get(id);if(!g){g=worker(colors[p.color]);g.position.set(p.x,0,p.z);workers.set(id,g);}const wheel=state.phase==='test'&&isWheel(state),wx=p.x-(wheel?Math.sin(p.rotation)*.7:0),wz=p.z-(wheel?Math.cos(p.rotation)*.7:0);animateWorker(g,wheel?Math.abs(p.speed):Math.hypot(p.x-g.position.x,p.z-g.position.z)*8,wheel||p.grip>=0,wheel&&p.reload>0?(2.4-p.reload)*1000:wheel&&state.racePhase!=='results'?state.elapsed*1000:now,wheel?Math.max(p.instability*.35,p.reload/2.4):0,wheel);const blend=1-Math.exp(-18*dt);g.position.x+=(wx-g.position.x)*blend;g.position.z+=(wz-g.position.z)*blend;const difference=Math.atan2(Math.sin(p.rotation-g.rotation.y),Math.cos(p.rotation-g.rotation.y));g.rotation.y+=difference*blend;g.position.y=(isWheel(state)?state.mode==='championship'?championshipHeight(p.x,p.z):rampHeight(p.x,p.z):0)+Math.sin(now*.008+p.color)*.025;g.visible=p.connected;});
+  state?.players?.forEach((p:any,id:string)=>{let g=workers.get(id);if(!g){g=worker(colors[p.color]);g.position.set(p.x,0,p.z);workers.set(id,g);}const wheel=state.phase==='test'&&isWheel(state),wx=p.x-(wheel?Math.sin(p.rotation)*.7:0),wz=p.z-(wheel?Math.cos(p.rotation)*.7:0);animateWorker(g,wheel?Math.abs(p.speed):Math.hypot(p.x-g.position.x,p.z-g.position.z)*8,wheel||p.grip>=0,wheel&&p.reload>0?(2.4-p.reload)*1000:wheel&&state.racePhase!=='results'?state.elapsed*1000:now,wheel?Math.max(p.instability*.35,p.reload/2.4):0,wheel);const blend=1-Math.exp(-18*dt);g.position.x+=(wx-g.position.x)*blend;g.position.z+=(wz-g.position.z)*blend;const difference=Math.atan2(Math.sin(p.rotation-g.rotation.y),Math.cos(p.rotation-g.rotation.y));g.rotation.y+=difference*blend;g.position.y=(isWheel(state)?state.mode==='championship'?championshipRise(state,p.x,p.z):rampHeight(p.x,p.z):0)+Math.sin(now*.008+p.color)*.025;g.visible=p.connected;});
   const me=room&&workers.get(room.sessionId);const target=me?.position??new THREE.Vector3();camera.position.lerp(new THREE.Vector3(target.x,currentPresentation.cameraY,target.z+currentPresentation.cameraZ),1-Math.exp(-4*dt));camera.lookAt(target.x,0,target.z-currentPresentation.lookAhead);
   for(const sprite of worldLabels){sprite.scale.set(sprite.userData.width*currentPresentation.labelScale,sprite.userData.height*currentPresentation.labelScale,1);}updateBeamVisual(state,dt,now);updateWheelVisual(state,dt,now);renderer.render(scene,camera);
 }
@@ -302,12 +311,12 @@ let wheelReset=-1;
 function renderWheelHud(state:any,me:any){
   if(!me)return;
   if(state.mode==='championship'){
-    const gates=championshipTrack(state.leg).gates,waiting=state.racePhase==='intermission',counting=waiting||state.racePhase==='countdown';
-    el('hudText').textContent='Course '+(state.leg+1)+'/2 · '+(counting?Math.ceil(state.countdown)+' · '+(waiting?'NEXT COURSE':'READY'):state.racePhase==='results'?'CHAMPIONSHIP COMPLETE':me.finishOrder?'FINISHED · shared yard':state.elapsed.toFixed(1)+'s');
+    const gates=currentTrack(state).gates,waiting=state.racePhase==='intermission',counting=waiting||state.racePhase==='countdown';
+    el('hudText').textContent='Course '+(state.leg+1)+'/'+legCount(state)+' · '+(counting?Math.ceil(state.countdown)+' · '+(waiting?'NEXT COURSE':'READY'):state.racePhase==='results'?'CHAMPIONSHIP COMPLETE':me.finishOrder?'FINISHED · shared yard':state.elapsed.toFixed(1)+'s');
     const total=[...state.standings].find((r:any)=>r.playerId===room?.sessionId);
-    el('beamStatus').textContent=(me.reload>0?'Reload '+me.reload.toFixed(1)+'s':me.instability>.7?'CAREFUL — LOAD TIPPING!':me.finishOrder?'Drive in staging · next gate opens at GO':'Next: '+(gates[me.checkpoint-1]?.label??'Finish'))+' · '+me.legSpills+' racing spills'+(total?'\nOfficial total: '+total.spills+' spills · '+total.time.toFixed(2)+'s':'');
+    el('beamStatus').textContent=(me.reload>0?'Reload '+me.reload.toFixed(1)+'s':me.instability>.7?'CAREFUL — LOAD TIPPING!':me.finishOrder?'Drive in staging · next gate opens at GO':'Next: '+(gates[me.checkpoint-1]?.label??'Finish'))+' · '+me.legSpills+' racing spills'+(currentCourse(state)?'\n'+currentCourse(state)!.module.name+' · '+currentCourse(state)!.module.surfaceName:'')+(total?'\nOfficial total: '+total.spills+' spills · '+total.time.toFixed(2)+'s':'');
     el('beamStatus').style.borderLeft=me.instability>.7?'8px solid #ff6849':'8px solid #59d595';
-    signalReadout.textContent=currentPresentation.compact?'':waiting?'Course 1 scores frozen · Course 2 opens after the countdown':me.finishOrder?'Official score frozen · staging spills do not count':'Fewest cumulative spills wins · Combined racing time breaks ties';return;
+    signalReadout.textContent=currentPresentation.compact?'':waiting?'Course scores frozen · next gate opens after the countdown':me.finishOrder?'Official score frozen · staging spills do not count':'Fewest cumulative spills wins · Combined racing time breaks ties';return;
   }
   const countdown=state.racePhase==='countdown';
   el('hudText').textContent=countdown?String(Math.ceil(state.countdown))+' • GET READY':state.racePhase==='results'?'FINAL RESULTS':me.finishOrder?'FINISHED · drive in staging':'GO • '+state.elapsed.toFixed(1)+'s';
@@ -324,7 +333,7 @@ function renderWheelHud(state:any,me:any){
 function updateWheelVisual(state:any,dt:number,now:number){
   const active=state?.phase==='test'&&isWheel(state);wheelCourseVisual.visible=active;for(const o of baseVisuals)o.visible=!active;
   const championship=active&&state.mode==='championship';originalRopes.visible=!championship;originalScenery.visible=!championship;
-  championshipWorld.update(state?.players?.get(room?.sessionId)?.z??0,state?.leg??0,championship);
+  championshipWorld.update(state?.players?.get(room?.sessionId)?.z??0,state?.leg??0,championship,Array.from(state?.routeIds??[]));wheelCourseVisual.visible=active&&!(championship&&state.routeIds.length);
   if(!active)el('beamStatus').style.borderLeft='';
   if(active&&wheelReset!==state.raceResets){wheelReset=state.raceResets;stopInput();for(const c of carts.values())disposeVisual(c.root);carts.clear();}
   for(const [id,c]of carts){c.root.visible=active&&!!state?.players.get(id)?.connected;if(!state?.players.has(id)){disposeVisual(c.root);carts.delete(id);}}
@@ -336,7 +345,7 @@ function updateWheelVisual(state:any,dt:number,now:number){
       const born=visual?.userData.born??now;if(visual)scene.remove(visual);
       visual=createSpillVisual(plan);visual.userData.born=born;scene.add(visual);materialMeshes[i]=visual;
     }
-    visual.position.set(b.x,.045,b.z);visual.rotation.y=debrisRotation(i);
+    visual.visible=state.mode!=='championship'||Math.abs(b.z-(state.players.get(room?.sessionId)?.z??b.z))<45;visual.position.set(b.x,.045,b.z);visual.rotation.y=debrisRotation(i);
     updateSpillVisual(visual,plan,(now-visual.userData.born)/1000);
   });
   state.players.forEach((p:any,id:string)=>{
@@ -355,7 +364,7 @@ function updateWheelVisual(state:any,dt:number,now:number){
       c={root,tray,load,tag};carts.set(id,c);root.position.set(p.x,0,p.z);root.rotation.y=p.rotation;
     }
     c.tag.visible=!currentPresentation.compact||id===room?.sessionId||Math.hypot(p.x-(state.players.get(room?.sessionId)?.x??p.x),p.z-(state.players.get(room?.sessionId)?.z??p.z))<7;
-    c.root.visible=p.connected;c.root.position.y=(state.mode==='championship'?championshipHeight:rampHeight)(p.x+Math.sin(p.rotation)*WHEEL_CONFIG.cartOffset,p.z+Math.cos(p.rotation)*WHEEL_CONFIG.cartOffset);
+    c.root.visible=p.connected;c.root.position.y=(state.mode==='championship'?(x:number,z:number)=>championshipRise(state,x,z):rampHeight)(p.x+Math.sin(p.rotation)*WHEEL_CONFIG.cartOffset,p.z+Math.cos(p.rotation)*WHEEL_CONFIG.cartOffset);
     const w=workers.get(id);if(w)w.visible=p.connected;
     const blend=1-Math.exp(-18*dt);c.root.position.x+=(p.x-c.root.position.x)*blend;c.root.position.z+=(p.z-c.root.position.z)*blend;c.root.rotation.y+=Math.atan2(Math.sin(p.rotation-c.root.rotation.y),Math.cos(p.rotation-c.root.rotation.y))*blend;
     if(w){w.position.x=c.root.position.x-Math.sin(c.root.rotation.y)*.7;w.position.z=c.root.position.z-Math.cos(c.root.rotation.y)*.7;w.rotation.y=c.root.rotation.y;}
@@ -389,7 +398,7 @@ function updateStandings(state:any){
  const active=state?.phase==='test'&&(currentPresentation.compact||state.mode==='championship');el('standings').hidden=!active;el('standings').classList.toggle('championship',state?.mode==='championship');if(!active)return;
   if(state.mode==='championship'){
    const lines:HTMLLIElement[]=[];const line=(text:string)=>{const li=document.createElement('li');li.textContent=text;lines.push(li);};
-   line('Cumulative official standings');for(const r of [...state.standings].sort((a:any,b:any)=>a.place-b.place))line('#'+r.place+' '+r.name+' · '+(r.dnf?'DNF · ':'')+r.spills+' spills · '+r.time.toFixed(2)+'s · '+r.completed+'/2');
+   line('Cumulative official standings');for(const r of [...state.standings].sort((a:any,b:any)=>a.place-b.place))line('#'+r.place+' '+r.name+' · '+(r.dnf?'DNF · ':'')+r.spills+' spills · '+r.time.toFixed(2)+'s · '+r.completed+'/'+legCount(state));
    for(let leg=0;leg<=state.leg;leg++){const results=[...state.legResults].filter((r:any)=>r.leg===leg).sort((a:any,b:any)=>(a.place||99)-(b.place||99));if(results.length){line('Course '+(leg+1)+' results');for(const r of results)line((r.dnf?'DNF':'#'+r.place)+' '+r.name+' · '+r.spills+' spills · '+r.time.toFixed(2)+'s');}}
    el('standingsList').replaceChildren(...lines);return;
  }

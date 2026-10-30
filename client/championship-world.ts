@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {COURSE_TWO,COURSE_TWO_PATH,SHARED_EXIT} from '../shared/championship';
+import {COURSE_TWO,COURSE_TWO_PATH,SHARED_EXIT} from '../shared/championship.js';
 // Shared box geometry, palette and instanced batches; a finite corridor with actual culling.
 export function createChampionshipWorld(){
  const root=new THREE.Group(),gate=new THREE.Group();root.add(gate);
