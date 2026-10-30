@@ -6,3 +6,4 @@ build/
 .pnpm-store/
 /sources/
 /AGENTS.md
+/crane-playtest.pid

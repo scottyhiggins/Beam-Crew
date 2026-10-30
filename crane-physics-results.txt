@@ -1,0 +1,22 @@
+✔ held/airborne loads never score; stable levels count in 10-foot increments (6.4932ms)
+✔ acceleration produces predictable lag; stopping and reversing oscillate (2.1916ms)
+✔ release inherits swing position, lateral velocity, vertical velocity and rotation (0.3361ms)
+✔ off-centre landings slide and rotate; falling bodies remain visible before cleanup (3.5372ms)
+✔ unsupported elevated bodies cannot score and fall under gravity (0.9678ms)
+✔ removing a supporting body collapses its descendants and clears elevated scores (1.2488ms)
+✔ tower centre of mass beyond a lower footprint triggers tipping (0.399ms)
+✔ pickup range, movement bounds, ties and replay arena reset (0.7084ms)
+✔ timeout occurs on exactly tick 1800 with deterministic ties for 2–8 players (56.0338ms)
+✔ 100-foot supported stack instantly wins, all snapshots agree and remain private (1.6608ms)
+✔ same-tick 100-foot arrivals use join order; 90 feet never ends early (0.5806ms)
+✔ target cannot be configured; host replay clears swing, score, timer and results (1.3018ms)
+✔ digital left/right/action controls can build a stable 100-foot tower within 60 seconds (28.207ms)
+✔ scheduler jitter catches up fixed physics steps without extending the 60-second round (6.3807ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 591.6112
