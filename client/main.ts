@@ -283,7 +283,7 @@ function renderBeamHud(state:any,me:any){
   const support=b.leftSupported&&b.rightSupported?'Both ends carried':b.leftSupported||b.rightSupported?'One end DRAGGING':'Both ends grounded';
   const instruction=b.delivered?'DELIVERED | #'+b.place+' | '+b.finishTime.toFixed(2)+'s':attached?'Move together to carry. Different directions turn the beam.':nearest>=0?`Grip ${nearest+1} nearby — Space / ACTION to grab`:'Approach a white grip ring. Space / ACTION toggles grab.';
   el('beamStatus').textContent=`${instruction}\n${support} · ${b.blocked?'Blocked — coordinate a turn':b.checkpoint?'Checkpoint saved | time the moving loads':'Doorway → turn right → moving loads → green delivery'}${me?.feedback?'\n'+me.feedback:''}`;
-  if(state.mode==='competitive'){const partner=[...state.players.values()].find((p:any)=>p.team===me?.team&&p.end!==me?.end);el('beamStatus').textContent+=(b.protection>0?'\nTEAM RECOVERED · +5s · ready in '+b.protection.toFixed(1)+'s':partner&&!partner.connected?'\nPartner reconnecting — team paused':'\n'+b.recoveries+' recoveries · +'+b.penalty+'s · 4 minute round limit');}
+  if(state.mode==='competitive'){const partner=[...state.players.values()].find((p:any)=>p.team===me?.team&&p.end!==me?.end);el('beamStatus').textContent+=(b.protection>0?'\nTEAM RECOVERED · +5s · ready in '+b.protection.toFixed(1)+'s':partner&&!partner.connected?'\nPartner reconnecting — controls paused':'\n'+b.recoveries+' recoveries · +'+b.penalty+'s · 4 minute round limit');}
   el('reset').textContent=b.checkpoint?'Reset to doorway checkpoint':'Reset to start';
   el('grab').classList.toggle('attached',attached);el('action').classList.toggle('attached',attached);
 }

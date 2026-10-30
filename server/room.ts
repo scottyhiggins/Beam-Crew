@@ -155,9 +155,9 @@ export class CrewRoom extends Room<CrewState> {
         if(b.delivered||b.dnf)return;
         const members=[...this.state.players.values()].filter(p=>p.team===index);
         if(members.length<2){b.dnf=true;return;}
-        if(members.some(p=>!p.connected)){b.leftSupported=members.some(p=>p.connected&&p.grip===0);b.rightSupported=members.some(p=>p.connected&&p.grip===7);b.waiting+=dt;if(this.state.elapsed>=240)b.dnf=true;return;}
+        const reconnecting=members.some(p=>!p.connected);if(reconnecting)b.waiting+=dt;
         const inputs=members.map(p=>[p.inputX,p.inputZ]);
-        members.forEach(p=>{if(now-p.lastInput>=300)p.inputX=p.inputZ=0;});
+        members.forEach(p=>{if(reconnecting||now-p.lastInput>=300)p.inputX=p.inputZ=0;});
         stepChaosTeam(b,members,dt,this.state.elapsed,this.state.beamMap);
         members.forEach((p,i)=>{p.inputX=inputs[i][0];p.inputZ=inputs[i][1];if(p.grip>=0)this.positionCarrier(p);});
         if(b.delivered)b.finishTime=this.state.elapsed+b.penalty;

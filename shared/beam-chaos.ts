@@ -71,7 +71,7 @@ export function recoverTeam(b:ChaosBeam,members:ChaosWorker[]){
 }
 export function stepChaosTeam(b:ChaosBeam,members:ChaosWorker[],dt:number,seconds:number,mapId:number){
  if(b.protection>0){b.protection=Math.max(0,b.protection-dt);return;}
- const world=beamWorld(mapId),carriers=members.filter(p=>p.grip===p.end).map(p=>({grip:p.end,inputX:p.inputX,inputZ:p.inputZ}));
+ const world=beamWorld(mapId),carriers=members.filter(p=>p.connected&&p.grip===p.end).map(p=>({grip:p.end,inputX:p.inputX,inputZ:p.inputZ}));
  // Max hazard tip speed is under 3 world units/s; <= 1/120 s gives < .025 units.
  const count=Math.max(1,Math.ceil(dt*120)),slice=dt/count;
  for(let i=0;i<count;i++){
@@ -83,7 +83,7 @@ export function stepChaosTeam(b:ChaosBeam,members:ChaosWorker[],dt:number,second
   if(b.checkpoint)b.stage=Math.max(b.stage,1);
   if(b.checkpoint&&b.x>3&&b.x<9&&b.z<-6.5&&Math.abs(b.angle)<.15)b.stage=2;
   for(const p of members){
-   if(p.grip===p.end)Object.assign(p,gripPosition(b,p.end));
+   if(p.connected&&p.grip===p.end)Object.assign(p,gripPosition(b,p.end));
    else {
     const n=Math.max(1,Math.hypot(p.inputX,p.inputZ));p.x+=p.inputX/n*3.6*slice;p.z+=p.inputZ/n*3.6*slice;
     if(!pushWorker(p,obstacles)){recoverTeam(b,members);return;}

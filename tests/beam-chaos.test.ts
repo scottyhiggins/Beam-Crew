@@ -70,6 +70,16 @@ test('disconnected teammate pauses assembly; round timeout resolves missing part
  const x=r.state.teams[0].x;r.tick(1/30);assert.equal(r.state.teams[0].x,x);assert.ok(r.state.teams[0].waiting>0);
  r.state.elapsed=240;r.tick(1/30);assert.equal(r.state.racePhase,'results');assert.ok(r.state.teams[0].dnf);
 });
+test('hazards still push stationary teams while a partner reconnects',()=>{
+ const r=new CrewRoom();r.setState(new CrewState());r.state.mode='competitive';for(let i=0;i<2;i++)r.state.players.set(String(i),new Player());
+ r.restart(false);r.state.phase='test';r.state.racePhase='racing';r.state.elapsed=5;
+ const b=r.state.teams[0];Object.assign(b,{x:13,z:-7.3,angle:0});const members=[...r.state.players.values()];
+ members.forEach(p=>{p.grip=p.end;Object.assign(p,gripPosition(b,p.end));});members[1].connected=false;members[1].grip=-1;
+ for(let i=0;i<120;i++)r.tick(1/120);
+ assert.ok(b.x!==13||b.z!==-7.3||b.recoveries>0);
+ if(!b.protection)assert.equal(beamCollides(b,r.state.elapsed,beamWorld(0)),false);
+ assert.equal(b.rightSupported,false);
+});
 test('penalty-adjusted team ranking is fair and completed times stay immutable',()=>{
  const r=new CrewRoom();r.setState(new CrewState());r.state.mode='competitive';for(let i=0;i<4;i++)r.state.players.set(String(i),new Player());
  r.restart(false);r.state.phase='test';r.state.racePhase='racing';
