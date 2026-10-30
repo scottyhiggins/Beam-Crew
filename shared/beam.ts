@@ -22,6 +22,8 @@ export const COURSE = {
   ] satisfies Obstacle[],
   goal: {x:26,z:-7.5,halfX:4.6,halfZ:1.8},
 };
+export type BeamWorld = {obstacles:Obstacle[]; hazards:(seconds:number)=>Obstacle[]};
+export const DEFAULT_BEAM_WORLD:BeamWorld = {obstacles:COURSE.obstacles,hazards:movingLoads};
 // Moving loads cross the haul corridor. Server elapsed time is the only clock.
 export function movingLoads(seconds:number):Obstacle[] {
   return [
@@ -62,21 +64,21 @@ export function beamCorners(b:Pick<BeamMotion,'x'|'z'|'angle'>) {
     z:b.z+s*end*BEAM_CONFIG.length/2+c*side*BEAM_CONFIG.width/2,
   })));
 }
-export function beamCollides(b:Pick<BeamMotion,'x'|'z'|'angle'>,seconds=0) {
+export function beamCollides(b:Pick<BeamMotion,'x'|'z'|'angle'>,seconds=0,world:BeamWorld=DEFAULT_BEAM_WORLD) {
   const c=Math.cos(b.angle),s=Math.sin(b.angle),half=BEAM_CONFIG.length/2;
   const width=BEAM_CONFIG.width/2+BEAM_CONFIG.collisionMargin;
   if(beamCorners(b).some(p=>(p.x < -BEAM_CONFIG.halfSize+.1 || p.x > BEAM_CONFIG.halfSizeX-.1)||Math.abs(p.z)>BEAM_CONFIG.halfSize-.1))return true;
-  return [...COURSE.obstacles,...movingLoads(seconds)].some(o=>[[1,0],[0,1],[c,s],[-s,c]].every(([ax,az])=>{
+  return [...world.obstacles,...world.hazards(seconds)].some(o=>[[1,0],[0,1],[c,s],[-s,c]].every(([ax,az])=>{
     const distance=Math.abs((b.x-o.x)*ax+(b.z-o.z)*az);
     const beamRadius=half*Math.abs(c*ax+s*az)+width*Math.abs(-s*ax+c*az);
     const boxRadius=o.halfX*Math.abs(ax)+o.halfZ*Math.abs(az);
     return distance<beamRadius+boxRadius;
   }));
 }
-export function workerCollides(x:number,z:number,radius=.45,seconds=0) {
-  return [...COURSE.obstacles,...movingLoads(seconds)].some(o=>Math.hypot(Math.max(Math.abs(x-o.x)-o.halfX,0),Math.max(Math.abs(z-o.z)-o.halfZ,0))<radius);
+export function workerCollides(x:number,z:number,radius=.45,seconds=0,world:BeamWorld=DEFAULT_BEAM_WORLD) {
+  return [...world.obstacles,...world.hazards(seconds)].some(o=>Math.hypot(Math.max(Math.abs(x-o.x)-o.halfX,0),Math.max(Math.abs(z-o.z)-o.halfZ,0))<radius);
 }
-export function stepBeam(b:BeamMotion,carriers:Carrier[],dt:number,seconds=0) {
+export function stepBeam(b:BeamMotion,carriers:Carrier[],dt:number,seconds=0,world:BeamWorld=DEFAULT_BEAM_WORLD) {
   const wasBeforeDoor=beamCorners(b).some(p=>p.z>=COURSE.doorwayZ-.5);
   const cfg=BEAM_CONFIG, c=Math.cos(b.angle),s=Math.sin(b.angle);
   b.leftSupported=carriers.some(p=>GRIPS[p.grip]?.u<0);
@@ -101,7 +103,7 @@ export function stepBeam(b:BeamMotion,carriers:Carrier[],dt:number,seconds=0) {
   b.vx+=((lx+rx)/2-b.vx)*response;b.vz+=((lz+rz)/2-b.vz)*response;
   const targetTurn=(-s*(rx-lx)+c*(rz-lz))/(2*half);
   b.angularVelocity+=(targetTurn-b.angularVelocity)*response;
-  const collides=()=>beamCollides(b,seconds)||carriers.some(p=>{const point=gripPosition(b,p.grip);return workerCollides(point.x,point.z,.45,seconds)||(point.x < -cfg.halfSize+.45 || point.x > cfg.halfSizeX-.45)||Math.abs(point.z)>cfg.halfSize-.45;});
+  const collides=()=>beamCollides(b,seconds,world)||carriers.some(p=>{const point=gripPosition(b,p.grip);return workerCollides(point.x,point.z,.45,seconds,world)||(point.x < -cfg.halfSize+.45 || point.x > cfg.halfSizeX-.45)||Math.abs(point.z)>cfg.halfSize-.45;});
   b.blocked=false;
   if(b.delivered){b.vx=b.vz=b.angularVelocity=0;return;}
   // Tiny deterministic substeps prevent tunneling; split axes permit wall sliding.
