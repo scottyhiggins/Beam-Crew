@@ -219,7 +219,7 @@ const skyDecks=BEAM_MAPS.map(map=>{
  const g=new THREE.Group();courseVisual.add(g);if(!map.elevated)return g;
  box(19,1,20,0x9d8b70,-.5,-.55,0,g);box(7,1,20,0x9d8b70,28.5,-.55,0,g);
  box(16,1,map.edge+10,0x87929a,17,-.55,(-10+map.edge)/2,g);
- box(44,.25,20,0x3d525c,12,-4.5,0,g);
+ box(44,.25,20,0x3d525c,12,-4.5,0,g);if(map.excavator)box(2.5,4.5,2,0x66747b,20,-2.25,-2.6,g);
  for(const z of [-9.9,map.edge-.12]){box(16,.06,.16,0xffce43,17,.02,z,g);for(let x=10;x<25;x+=2)box(.3,.1,.3,0x273e4b,x,.04,z,g);}
  for(const x of [10,17,24])box(.55,4,.55,0x526373,x,-2,-7.5,g);
  return g;
