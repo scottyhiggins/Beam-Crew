@@ -7,8 +7,8 @@ const server=spawn(process.execPath,['build/server/index.js'],{env:{...process.e
 const children=[];let exitCode=1;
 try{
  const deadline=Date.now()+15000;let ready=false;while(Date.now()<deadline){if(server.exitCode!==null)throw Error('Test server exited: '+logs);try{const health=await fetch(endpoint+'/health');ready=health.ok;}catch{}if(ready)break;await new Promise(r=>setTimeout(r,100));}if(!ready)throw Error('Test server not ready');
- const files=fs.readdirSync('build/tests').filter(p=>p.endsWith('.test.js')).map(p=>'build/tests/'+p);
- const tests=spawn(process.execPath,['--test',...files],{env:{...process.env,TEST_URL:endpoint},stdio:'inherit'});children.push(tests);
+ const files=fs.readdirSync('build/tests').filter(p=>p.endsWith('.test.js')&&(!process.argv[2]||p.startsWith(process.argv[2]))).map(p=>'build/tests/'+p);
+ const tests=spawn(process.execPath,['--test','--test-concurrency=4',...files],{env:{...process.env,TEST_URL:endpoint},stdio:'inherit'});children.push(tests);
  exitCode=await new Promise(r=>{tests.on('error',e=>{console.error(e);r(1);});tests.on('exit',code=>r(code??1));});
 }catch(error){console.error(error.message);}finally{for(const child of children)if(child.exitCode===null)child.kill();server.kill();}
 process.exitCode=exitCode;

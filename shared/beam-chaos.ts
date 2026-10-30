@@ -9,18 +9,19 @@ export function excavatorBoxes(seconds:number):Obstacle[]{
 }
 export const BEAM_MAPS=[
  {name:'1 · Crew training',description:'Doorway, tight turn and moving loads.',elevated:false,edge:-10,excavator:false},
- {name:'2 · Skyway haul',description:'Elevated crossing. Watch both ends and the platform edges.',elevated:true,edge:-4.4,excavator:false},
+ {name:'2 · Skyway haul',description:'Elevated dogleg around a parked load. Watch both ends and the edges.',elevated:true,edge:-4.4,excavator:false},
  {name:'3 · Excavator alley',description:'Narrow skyway and a sweeping excavator. Wait for your opening.',elevated:true,edge:-5.1,excavator:true},
 ] as const;
 export function validBeamMap(id:unknown):id is number{return Number.isInteger(id)&&Number(id)>=0&&Number(id)<BEAM_MAPS.length;}
 export function beamWorld(id:number):BeamWorld {
  const map=BEAM_MAPS[id]??BEAM_MAPS[0];
- return {obstacles:[...COURSE.obstacles,...(map.excavator?[{x:20,z:-2.6,halfX:1.15,halfZ:.8}]:[])],
+ const fixed=id===1?[...COURSE.obstacles.filter(o=>o.x!==17),{x:17,z:-5,halfX:1.2,halfZ:.35}]:COURSE.obstacles;
+ return {obstacles:[...fixed,...(map.excavator?[{x:20,z:-2.6,halfX:1.15,halfZ:.8}]:[])],
  hazards:t=>[...movingLoads(t),...(map.excavator?excavatorBoxes(t):[])]};
 }
-export function onBeamPlatform(x:number,z:number,mapId:number){
+export function onBeamPlatform(x:number,z:number,mapId:number,margin=0){
  const map=BEAM_MAPS[mapId]??BEAM_MAPS[0];
- return x>=-10&&x<=32&&z>=-10&&z<=10&&(!map.elevated||x<=9||x>=25||z<=map.edge);
+ return x>=-10+margin&&x<=32-margin&&z>=-10+margin&&z<=10-margin&&(!map.elevated||x<=9-margin||x>=25+margin||z<=map.edge-margin);
 }
 type Shape={x:number;z:number;angle:number;halfX:number;halfZ:number};
 // Minimum separating translation for two convex boxes. The same axes as beamCollides.
@@ -35,7 +36,7 @@ export function separation(a:Shape,b:Obstacle){
  return {x:dx*(depth+.0001),z:dz*(depth+.0001)};
 }
 export type ChaosWorker={x:number;z:number;grip:number;end:number;inputX:number;inputZ:number;vx:number;vz:number;connected:boolean};
-export type ChaosBeam=BeamMotion & {penalty:number;protection:number;resets:number;recoveries:number};
+export type ChaosBeam=BeamMotion & {stage:number;penalty:number;protection:number;resets:number;recoveries:number};
 function shapes(b:BeamMotion,carriers:Carrier[]):Shape[]{return [
  {...b,halfX:BEAM_CONFIG.length/2,halfZ:BEAM_CONFIG.width/2+BEAM_CONFIG.collisionMargin},
  ...carriers.map(p=>({...gripPosition(b,p.grip),angle:0,halfX:.45,halfZ:.45})),
@@ -65,7 +66,7 @@ export function pushWorker(p:ChaosWorker,obstacles:Obstacle[]){
 }
 export function recoverTeam(b:ChaosBeam,members:ChaosWorker[]){
  const resets=b.resets+1,penalty=b.penalty+5,recoveries=b.recoveries+1;
- resetBeam(b,true);Object.assign(b,{resets,penalty,recoveries,protection:1.2});
+ const stage=b.stage;resetBeam(b,true);if(stage>=2)Object.assign(b,{x:5,z:-7.5,angle:0});Object.assign(b,{resets,penalty,recoveries,protection:1.2});
  for(const p of members){Object.assign(p,gripPosition(b,p.end),{grip:-1,inputX:0,inputZ:0,vx:0,vz:0});}
 }
 export function stepChaosTeam(b:ChaosBeam,members:ChaosWorker[],dt:number,seconds:number,mapId:number){
@@ -79,6 +80,8 @@ export function stepChaosTeam(b:ChaosBeam,members:ChaosWorker[],dt:number,second
   if(!pushAssembly(b,carriers,obstacles)){recoverTeam(b,members);return;}
   if(b.x!==before.x||b.z!==before.z)b.vx=b.vz=b.angularVelocity=0;
   stepBeam(b,carriers,slice,t,world);
+  if(b.checkpoint)b.stage=Math.max(b.stage,1);
+  if(b.checkpoint&&b.x>3&&b.x<9&&b.z<-6.5&&Math.abs(b.angle)<.15)b.stage=2;
   for(const p of members){
    if(p.grip===p.end)Object.assign(p,gripPosition(b,p.end));
    else {
@@ -86,6 +89,6 @@ export function stepChaosTeam(b:ChaosBeam,members:ChaosWorker[],dt:number,second
     if(!pushWorker(p,obstacles)){recoverTeam(b,members);return;}
    }
   }
-  if(beamCorners(b).some(p=>!onBeamPlatform(p.x,p.z,mapId))||members.some(p=>!onBeamPlatform(p.x,p.z,mapId))){recoverTeam(b,members);return;}
+  if(beamCorners(b).some(p=>!onBeamPlatform(p.x,p.z,mapId,.1))||members.some(p=>!onBeamPlatform(p.x,p.z,mapId,.45))){recoverTeam(b,members);return;}
  }
 }

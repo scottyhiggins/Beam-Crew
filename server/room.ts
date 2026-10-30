@@ -55,7 +55,7 @@ export class CrewRoom extends Room<CrewState> {
       this.state.routeSeed=randomInt(0x100000000);const ids=selectCourseIds(this.state.championshipLength,this.state.routeSeed);this.state.routeIds.push(...ids);this.routePlan=assembleRoute(ids);this.routeMaterialWorld=routeWorld(this.routePlan);
     }
     if(this.state.mode==='competitive'){
-      this.state.teams.clear();this.state.raceResets++;this.state.elapsed=0;this.state.racePhase='countdown';this.state.countdown=3;
+      this.state.raceResets=Math.max(this.state.raceResets,...this.state.teams.map(b=>b.resets))+1;this.state.teams.clear();this.state.elapsed=0;this.state.racePhase='countdown';this.state.countdown=3;
       const players=[...this.state.players.entries()].filter(([,p])=>p.connected);
       for(const p of this.state.players.values()){p.team=p.end=p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;}
       for(let i=0;i+1<players.length;i+=2){const b=new BeamTeam();b.resets=this.state.raceResets;b.name='Team '+(i/2+1);b.members=players[i][1].name+' + '+players[i+1][1].name;this.state.teams.push(b);
@@ -155,12 +155,12 @@ export class CrewRoom extends Room<CrewState> {
         if(b.delivered||b.dnf)return;
         const members=[...this.state.players.values()].filter(p=>p.team===index);
         if(members.length<2){b.dnf=true;return;}
-        if(members.some(p=>!p.connected)){b.waiting+=dt;if(this.state.elapsed>=240)b.dnf=true;return;}
+        if(members.some(p=>!p.connected)){b.leftSupported=members.some(p=>p.connected&&p.grip===0);b.rightSupported=members.some(p=>p.connected&&p.grip===7);b.waiting+=dt;if(this.state.elapsed>=240)b.dnf=true;return;}
         const inputs=members.map(p=>[p.inputX,p.inputZ]);
         members.forEach(p=>{if(now-p.lastInput>=300)p.inputX=p.inputZ=0;});
         stepChaosTeam(b,members,dt,this.state.elapsed,this.state.beamMap);
         members.forEach((p,i)=>{p.inputX=inputs[i][0];p.inputZ=inputs[i][1];if(p.grip>=0)this.positionCarrier(p);});
-        if(b.delivered)b.finishTime=this.state.elapsed-b.waiting+b.penalty;
+        if(b.delivered)b.finishTime=this.state.elapsed+b.penalty;
         if(!b.delivered&&this.state.elapsed>=240)b.dnf=true;
 
       });

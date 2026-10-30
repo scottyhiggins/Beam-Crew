@@ -1,3 +1,4 @@
+import {BEAM_MAPS,EXCAVATOR,excavatorAngle,beamWorld} from '../shared/beam-chaos';
 import {createModularWorld} from './modular-world';
 import {assembleRoute,routeHeight,type CourseInstance} from '../shared/course-modules';
 let routeKey='',displayRoute:CourseInstance[]=[];
@@ -27,7 +28,7 @@ import {MATERIAL_CATEGORIES,MATERIALS,MATERIAL_COLORS} from '../shared/materials
 import {FINISH_STAGING} from '../shared/wheelbarrow';
 const colors=[0xffad32,0x35b9ff,0xff5985,0x59d595,0xa38aff,0xf2ee57,0xffffff,0x965c42];
 const app=document.querySelector<HTMLDivElement>('#app')!;
-app.innerHTML=`<main id="panel"><h1>BREAK TIME</h1><p id="buildLabel">${BUILD_LABEL}</p><p class="eyebrow">CLOCK OUT. PLAY HARD.</p><p id="menuIntro">Big loads. Good mates. Glorious mistakes.</p><section id="modeTiles" aria-label="Choose your game"><button type="button" class="mode-tile selected" id="chooseWheel" aria-pressed="true">${MODE_ART.wheel}<span class="tile-copy"><small class="tile-status">PLAYABLE · 2–8 WORKERS</small><strong>WHEELBARROW</strong><span>Race the site. Protect the load.</span></span></button><button type="button" class="mode-tile" id="chooseBeam" aria-pressed="false">${MODE_ART.beam}<span class="tile-copy"><small class="tile-status">PLAYABLE · TWO-PERSON TEAMS</small><strong>BEAM CARRY</strong><span>Lift together. Finish together.</span></span></button><button type="button" class="mode-tile coming" disabled>${MODE_ART.crane}<span class="tile-copy"><small class="tile-status">COMING SOON</small><strong>CRANE CHALLENGE</strong><span>A bigger job is on the way.</span></span></button><button type="button" class="mode-tile coming" disabled>${MODE_ART.store}<span class="tile-copy"><small class="tile-status">COMING SOON</small><strong>WORKER STORE</strong><span>Fresh gear for the crew.</span></span></button></section><section id="entryActions"><label>Your name <input id="name" maxlength="18" value="Worker" autocomplete="nickname"></label><button id="create">Create room</button><div class="join"><input id="code" maxlength="5" placeholder="ROOM CODE" aria-label="Room code"><button id="join">Join room</button></div></section><p id="status" role="status"></p><button id="retryConnection" hidden>Retry connection</button><button id="cancelReconnect" hidden>Cancel reconnect / Return to landing</button><section id="room" hidden><h2 id="roomCode"></h2><button id="share">Copy join link</button><ul id="players"></ul><label id="modeLabel">Game mode <select id="mode"><option value="championship">Wheelbarrow Championship</option><option value="wheel">Wheelbarrow · single race</option><option value="competitive">Beam Carry · two-person teams</option></select></label><label id="championshipLengthLabel" hidden>Championship length <select id="championshipLength"><option value="3">3 races · quick Championship</option><option value="5">5 races · random unique courses</option><option value="10">10 races · full jobsite tour</option><option value="2">2 courses · classic route</option></select></label><section id="materials" hidden><h3>Choose your load</h3><p>Equal handling. Different spill hazards. Pick your load; it locks at the countdown.</p><div id="materialGrid"></div><p id="chosenLoad" role="status"></p></section><button id="start">Let’s get to work</button><button id="back">Return to lobby</button><button id="reset" hidden>Reset to checkpoint</button><button id="restart" hidden>Restart course</button><button id="leave">Leave room</button></section><p id="help">WASD to move · Space to grab/release<br>On phones: joystick + ACTION</p></main><div id="hud" hidden><span id="hudText"></span><div id="beamStatus" role="status"></div><button id="grab">GRAB · Space</button><div id="signals"><button data-signal="LIFT">LIFT</button><button data-signal="WAIT">WAIT</button><button data-signal="LEFT">LEFT</button><button data-signal="RIGHT">RIGHT</button></div><details id="standings" hidden><summary>Standings</summary><ol id="standingsList"></ol></details><button id="showResults" hidden>Results</button><button id="menu">Lobby controls</button></div><div id="touch" hidden><div id="joystick" aria-label="Movement joystick"><div id="stick"></div></div><button id="action">ACTION</button></div><section id="raceResults" hidden role="region" aria-live="polite" aria-labelledby="resultsTitle"><h2 id="resultsTitle">Final results</h2><p id="resultsRule"></p><ol id="resultsList"></ol><button id="closeResults">Keep driving in staging</button></section><div id="raceCountdown" hidden role="status" aria-live="polite"></div>`;
+app.innerHTML=`<main id="panel"><h1>BREAK TIME</h1><p id="buildLabel">${BUILD_LABEL}</p><p class="eyebrow">CLOCK OUT. PLAY HARD.</p><p id="menuIntro">Big loads. Good mates. Glorious mistakes.</p><section id="modeTiles" aria-label="Choose your game"><button type="button" class="mode-tile selected" id="chooseWheel" aria-pressed="true">${MODE_ART.wheel}<span class="tile-copy"><small class="tile-status">PLAYABLE · 2–8 WORKERS</small><strong>WHEELBARROW</strong><span>Race the site. Protect the load.</span></span></button><button type="button" class="mode-tile" id="chooseBeam" aria-pressed="false">${MODE_ART.beam}<span class="tile-copy"><small class="tile-status">PLAYABLE · TWO-PERSON TEAMS</small><strong>BEAM CARRY</strong><span>Lift together. Finish together.</span></span></button><button type="button" class="mode-tile coming" disabled>${MODE_ART.crane}<span class="tile-copy"><small class="tile-status">COMING SOON</small><strong>CRANE CHALLENGE</strong><span>A bigger job is on the way.</span></span></button><button type="button" class="mode-tile coming" disabled>${MODE_ART.store}<span class="tile-copy"><small class="tile-status">COMING SOON</small><strong>WORKER STORE</strong><span>Fresh gear for the crew.</span></span></button></section><section id="entryActions"><label>Your name <input id="name" maxlength="18" value="Worker" autocomplete="nickname"></label><button id="create">Create room</button><div class="join"><input id="code" maxlength="5" placeholder="ROOM CODE" aria-label="Room code"><button id="join">Join room</button></div></section><p id="status" role="status"></p><button id="retryConnection" hidden>Retry connection</button><button id="cancelReconnect" hidden>Cancel reconnect / Return to landing</button><section id="room" hidden><h2 id="roomCode"></h2><button id="share">Copy join link</button><ul id="players"></ul><label id="modeLabel">Game mode <select id="mode"><option value="championship">Wheelbarrow Championship</option><option value="wheel">Wheelbarrow · single race</option><option value="competitive">Beam Carry · two-person teams</option></select></label><label id="championshipLengthLabel" hidden>Championship length <select id="championshipLength"><option value="3">3 races · quick Championship</option><option value="5">5 races · random unique courses</option><option value="10">10 races · full jobsite tour</option><option value="2">2 courses · classic route</option></select></label><label id="beamMapLabel" hidden>Beam course <select id="beamMap">${BEAM_MAPS.map((m,i)=>`<option value="${i}">${m.name}</option>`).join('')}</select></label><p id="beamMapDescription" hidden></p><section id="materials" hidden><h3>Choose your load</h3><p>Equal handling. Different spill hazards. Pick your load; it locks at the countdown.</p><div id="materialGrid"></div><p id="chosenLoad" role="status"></p></section><button id="start">Let’s get to work</button><button id="back">Return to lobby</button><button id="reset" hidden>Reset to checkpoint</button><button id="restart" hidden>Restart course</button><button id="leave">Leave room</button></section><p id="help">WASD to move · Space to grab/release<br>On phones: joystick + ACTION</p></main><div id="hud" hidden><span id="hudText"></span><div id="beamStatus" role="status"></div><button id="grab">GRAB · Space</button><div id="signals"><button data-signal="LIFT">LIFT</button><button data-signal="WAIT">WAIT</button><button data-signal="LEFT">LEFT</button><button data-signal="RIGHT">RIGHT</button></div><details id="standings" hidden><summary>Standings</summary><ol id="standingsList"></ol></details><button id="showResults" hidden>Results</button><button id="beamOverview" hidden>Course view</button><button id="beamRescue" hidden>Recover team · +5s</button><button id="menu">Lobby controls</button></div><div id="touch" hidden><div id="joystick" aria-label="Movement joystick"><div id="stick"></div></div><button id="action">ACTION</button></div><section id="raceResults" hidden role="region" aria-live="polite" aria-labelledby="resultsTitle"><h2 id="resultsTitle">Final results</h2><p id="resultsRule"></p><ol id="resultsList"></ol><button id="closeResults">Keep driving in staging</button></section><div id="raceCountdown" hidden role="status" aria-live="polite"></div>`;
 const el=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 for(const category of MATERIAL_CATEGORIES){const column=document.createElement('div');const heading=document.createElement('strong');heading.textContent=category.name;column.append(heading);for(const name of category.items){const m=MATERIALS.find(m=>m.name===name)!;const button=document.createElement('button');button.type='button';button.dataset.material=String(m.id);button.innerHTML=materialArt(m.id)+'<span class="material-name">'+m.name+'</span><span class="material-hazard">'+m.effect+'</span>';button.setAttribute('aria-label',m.name+' · '+m.effect);button.onclick=()=>room?.send('material',m.id);column.append(button);}el('materialGrid').append(column);}
 const signalReadout=document.createElement('div');signalReadout.id='crewSignals';el('hud').append(signalReadout);
@@ -73,6 +74,9 @@ function chooseMode(mode:string){preferredMode=mode;for(const [id,value]of [['ch
 el('chooseWheel').onclick=()=>chooseMode('championship');el('chooseBeam').onclick=()=>chooseMode('competitive');
 el('create').onclick=()=>void connect(true);el('join').onclick=()=>void connect(false);
 el<HTMLSelectElement>('mode').onchange=()=>room?.send('mode',el<HTMLSelectElement>('mode').value);
+el<HTMLSelectElement>('beamMap').onchange=()=>room?.send('beamMap',Number(el<HTMLSelectElement>('beamMap').value));
+let beamOverview=false;el('beamOverview').onclick=()=>{beamOverview=!beamOverview;el('beamOverview').textContent=beamOverview?'Follow worker':'Course view';};
+el('beamRescue').onclick=()=>room?.send('rescue');
 el<HTMLSelectElement>('championshipLength').onchange=()=>room?.send('championshipLength',Number(el<HTMLSelectElement>('championshipLength').value));
 el('start').onclick=()=>room?.send('start');
 el('reset').onclick=()=>{stopInput();room?.send('reset');menuOpen=false;render();};
@@ -123,6 +127,10 @@ function render(){el('retryConnection').hidden=serverCompatible||verifying;el('c
   el('championshipLengthLabel').hidden=playing||state.mode!=='championship';el<HTMLSelectElement>('championshipLength').disabled=!host;el<HTMLSelectElement>('championshipLength').value=String(legCount(state));
   el('modeLabel').hidden=playing;el<HTMLSelectElement>('mode').disabled=!host;el<HTMLSelectElement>('mode').value=state.mode;
   const me=state.players.get(room?.sessionId);
+  el('beamMapLabel').hidden=el('beamMapDescription').hidden=playing||state.mode!=='competitive';el<HTMLSelectElement>('beamMap').disabled=!host;el<HTMLSelectElement>('beamMap').value=String(state.beamMap);el('beamMapDescription').textContent=BEAM_MAPS[state.beamMap]?.description??'';
+  el('beamOverview').hidden=!playing||state.mode!=='competitive';
+  el('beamRescue').hidden=!playing||state.mode!=='competitive'||state.racePhase!=='racing'||!me||me.team<0||!!state.teams[me.team]?.delivered;
+  el<HTMLButtonElement>('beamRescue').disabled=(state.teams[me?.team]?.protection??0)>0;
   el('materials').hidden=playing||!isWheel(state);el('panel').classList.toggle('selecting',!playing&&isWheel(state));
   document.querySelectorAll<HTMLButtonElement>('[data-material]').forEach(b=>{const selected=Number(b.dataset.material)===me?.materialId;b.setAttribute('aria-pressed',String(selected));b.classList.toggle('selected',selected);b.disabled=playing;});
   el('chosenLoad').textContent='Selected: '+(MATERIALS[me?.materialId]?.name??'Bricks');
@@ -130,8 +138,8 @@ function render(){el('retryConnection').hidden=serverCompatible||verifying;el('c
   if(state.mode==='competitive'){
     el('reset').hidden=true;
     el('hudText').textContent=state.racePhase==='countdown'?Math.ceil(state.countdown)+' · GET READY':state.racePhase==='results'?'TEAM RESULTS':state.elapsed.toFixed(1)+'s';
-    if(me?.team<0)el('beamStatus').textContent='Spectating - odd worker sits out this round.';else el('hudText').textContent+=' | Team '+(me.team+1)+' | End '+(me.end===0?'1':'2');
-    signalReadout.textContent=Array.from(state.teams as Iterable<any>).map((b,i)=>'Team '+(i+1)+' · '+b.members+' · '+(b.dnf?'DNF':b.delivered?'#'+b.place+' · '+b.finishTime.toFixed(2)+'s':'racing')).join(' | ');
+    if(me?.team<0)el('beamStatus').textContent='Spectating - odd worker sits out this round.';else el('hudText').textContent+=' | '+BEAM_MAPS[state.beamMap].name+' | Team '+(me.team+1)+' | End '+(me.end===0?'1':'2');
+    signalReadout.textContent=Array.from(state.teams as Iterable<any>).map((b,i)=>'Team '+(i+1)+' · '+b.members+' · '+(b.dnf?'DNF':b.delivered?'#'+b.place+' · '+b.finishTime.toFixed(2)+'s':('racing · +'+b.penalty+'s'))).join(' | ');
   }
   if(isWheel(state)){renderWheelHud(state,me);el('reset').hidden=true;}
   el('grab').hidden=el('action').hidden=el('signals').hidden=isWheel(state);
@@ -186,7 +194,7 @@ function updateCountdown(state:any){
 function frame(now:number){requestAnimationFrame(frame);const frameMs=now-previous;const dt=Math.min(frameMs/1000,.1);previous=now;if(resolution.sample(frameMs,!document.hidden)||displayDpr!==devicePixelRatio)resizeRenderer();const state=room?.state;updateCountdown(state);lobbyCrew.visible=!room;
   for(const [id,g]of workers){if(!state?.players?.has(id)){disposeVisual(g);workers.delete(id);}}
   state?.players?.forEach((p:any,id:string)=>{let g=workers.get(id);if(!g){g=worker(colors[p.color]);g.position.set(p.x,0,p.z);workers.set(id,g);}const wheel=state.phase==='test'&&isWheel(state),wx=p.x-(wheel?Math.sin(p.rotation)*.7:0),wz=p.z-(wheel?Math.cos(p.rotation)*.7:0);animateWorker(g,wheel?Math.abs(p.speed):Math.hypot(p.x-g.position.x,p.z-g.position.z)*8,wheel||p.grip>=0,wheel&&p.reload>0?(2.4-p.reload)*1000:wheel&&state.racePhase!=='results'?state.elapsed*1000:now,wheel?Math.max(p.instability*.35,p.reload/2.4):0,wheel);const blend=1-Math.exp(-18*dt);g.position.x+=(wx-g.position.x)*blend;g.position.z+=(wz-g.position.z)*blend;const difference=Math.atan2(Math.sin(p.rotation-g.rotation.y),Math.cos(p.rotation-g.rotation.y));g.rotation.y+=difference*blend;g.position.y=(isWheel(state)?state.mode==='championship'?championshipRise(state,p.x,p.z):rampHeight(p.x,p.z):0)+Math.sin(now*.008+p.color)*.025;g.visible=p.connected;});
-  const me=room&&workers.get(room.sessionId);const target=me?.position??new THREE.Vector3();camera.position.lerp(new THREE.Vector3(target.x,currentPresentation.cameraY,target.z+currentPresentation.cameraZ),1-Math.exp(-4*dt));camera.lookAt(target.x,0,target.z-currentPresentation.lookAhead);
+  const me=room&&workers.get(room.sessionId);const overview=state?.mode==='competitive'&&state.phase==='test'&&beamOverview;const target=overview?new THREE.Vector3(11,0,-1):me?.position??new THREE.Vector3();const overviewY=Math.max(40,52/camera.aspect);camera.position.lerp(new THREE.Vector3(target.x,overview?overviewY:currentPresentation.cameraY,target.z+(overview?overviewY*.5:currentPresentation.cameraZ)),1-Math.exp(-4*dt));camera.lookAt(target.x,0,target.z-(overview?0:currentPresentation.lookAhead));
   for(const sprite of worldLabels){sprite.scale.set(sprite.userData.width*currentPresentation.labelScale,sprite.userData.height*currentPresentation.labelScale,1);}updateBeamVisual(state,dt,now);updateWheelVisual(state,dt,now);if(state?.mode==='championship'&&state.routeIds.length&&['countdown','intermission'].includes(state.racePhase))championshipWorld.warmNext(renderer,scene,camera,state.leg);renderer.render(scene,camera);
 }
 requestAnimationFrame(frame);window.addEventListener('resize',resizeRenderer);
@@ -201,22 +209,40 @@ function label(text:string,color='#172d3c',width=3,square=false){
   sprite.userData.width=width;sprite.userData.height=width*96/canvas.width;worldLabels.push(sprite);sprite.scale.set(width,width*96/canvas.width,1);scene.add(sprite);return sprite;
 }
 const courseVisual=new THREE.Group();scene.add(courseVisual);
-box(44,.3,20,0x9d8b70,12,-.22,0,courseVisual);
-for(const z of [-9.8,9.8])box(44,.6,.2,0xe3ad47,12,.3,z,courseVisual);
-for(const x of [-9.8,31.8])box(.2,.6,20,0xe3ad47,x,.3,0,courseVisual);
-for(let x=-8;x<32;x+=4)for(const z of [-9.8,9.8])box(.35,1.5,.35,0x263b46,x,.75,z,courseVisual);
+const fullDeck=new THREE.Group();courseVisual.add(fullDeck);
+box(44,.3,20,0x9d8b70,12,-.22,0,fullDeck);
+for(const z of [-9.8,9.8])box(44,.6,.2,0xe3ad47,12,.3,z,fullDeck);
+for(const x of [-9.8,31.8])box(.2,.6,20,0xe3ad47,x,.3,0,fullDeck);
+for(let x=-8;x<32;x+=4)for(const z of [-9.8,9.8])box(.35,1.5,.35,0x263b46,x,.75,z,fullDeck);
 for(let x=8;x<26;x+=3){box(1.3,.04,.16,0xffcf43,x,.04,-7.5,courseVisual);}
+const skyDecks=BEAM_MAPS.map(map=>{
+ const g=new THREE.Group();courseVisual.add(g);if(!map.elevated)return g;
+ box(19,1,20,0x9d8b70,-.5,-.55,0,g);box(7,1,20,0x9d8b70,28.5,-.55,0,g);
+ box(16,1,map.edge+10,0x87929a,17,-.55,(-10+map.edge)/2,g);
+ box(44,.25,20,0x3d525c,12,-4.5,0,g);
+ for(const z of [-9.9,map.edge-.12]){box(16,.06,.16,0xffce43,17,.02,z,g);for(let x=10;x<25;x+=2)box(.3,.1,.3,0x273e4b,x,.04,z,g);}
+ for(const x of [10,17,24])box(.55,4,.55,0x526373,x,-2,-7.5,g);
+ return g;
+});
+const excavatorVisual=new THREE.Group();courseVisual.add(excavatorVisual);excavatorVisual.position.set(EXCAVATOR.x,0,EXCAVATOR.z);
+for(const z of [-.65,.65])box(2.3,.5,.35,0x263b46,0,.25,z,excavatorVisual);
+const excavatorUpper=new THREE.Group();excavatorVisual.add(excavatorUpper);
+box(1.8,.65,1.3,0xf2b632,0,.7,0,excavatorUpper);box(.8,1,.9,0x263b46,-.25,1.45,0,excavatorUpper);box(.65,.5,.92,0x90ced8,-.2,1.55,0,excavatorUpper);
+box(EXCAVATOR.length,.45,.65,0xf2b632,EXCAVATOR.length/2,1.05,0,excavatorUpper);
+box(.7,.9,.7,0x394851,EXCAVATOR.length, .65,0,excavatorUpper);
+box(.2,.15,.8,0xffde5c,EXCAVATOR.length+.3,.25,0,excavatorUpper);
+const sweepRing=new THREE.Mesh(new THREE.RingGeometry(EXCAVATOR.length-.25,EXCAVATOR.length+.4,48),new THREE.MeshBasicMaterial({color:0xf08b3b,transparent:true,opacity:.3,side:THREE.DoubleSide}));sweepRing.rotation.x=-Math.PI/2;sweepRing.position.y=.04;excavatorVisual.add(sweepRing);
+const sweepPreview=new THREE.Group();excavatorVisual.add(sweepPreview);const preview=box(EXCAVATOR.length,.025,.14,0xffdd55,EXCAVATOR.length/2,.06,0,sweepPreview);(preview.material as THREE.MeshLambertMaterial).transparent=true;(preview.material as THREE.MeshLambertMaterial).opacity=.5;
+const sweepLabel=label('SWEEP • WAIT FOR GAP','#923f23',3.7);sweepLabel.position.set(20,2.8,-2.6);
 const movingLoadVisuals=movingLoads(0).map(o=>{
  const g=new THREE.Group();courseVisual.add(g);
  box(o.halfX*2,1.5,o.halfZ*2,0xd85e32,0,.85,0,g);
  box(o.halfX*2+.12,.16,o.halfZ*2+.12,0x263b46,0,1.65,0,g);
  box(.06,3,.06,0x263b46,0,3.15,0,g);return g;
 });
-for(const o of COURSE.obstacles){
-  const height=o.x>=8?.6:2.3;
-  box(o.halfX*2,height,o.halfZ*2,0xe3ad47,o.x,height/2,o.z,courseVisual);
-  box(o.halfX*2+.05,.14,o.halfZ*2+.05,0x273e4b,o.x,height+.07,o.z,courseVisual);
-}
+const beamObstacleGroups=BEAM_MAPS.map((_,id)=>{const g=new THREE.Group();courseVisual.add(g);for(const o of beamWorld(id).obstacles){
+ const height=o.x>=8?.6:2.3;box(o.halfX*2,height,o.halfZ*2,0xe3ad47,o.x,height/2,o.z,g);box(o.halfX*2+.05,.14,o.halfZ*2+.05,0x273e4b,o.x,height+.07,o.z,g);
+}return g;});
 const goalMaterial=new THREE.MeshLambertMaterial({color:0x45bfa4,transparent:true,opacity:.7});
 const goalMesh=new THREE.Mesh(new THREE.BoxGeometry(COURSE.goal.halfX*2,.03,COURSE.goal.halfZ*2),goalMaterial);
 goalMesh.position.set(COURSE.goal.x,.035,COURSE.goal.z);courseVisual.add(goalMesh);
@@ -256,7 +282,8 @@ function renderBeamHud(state:any,me:any){
   el('action').textContent=attached?'RELEASE':'ACTION';
   const support=b.leftSupported&&b.rightSupported?'Both ends carried':b.leftSupported||b.rightSupported?'One end DRAGGING':'Both ends grounded';
   const instruction=b.delivered?'DELIVERED | #'+b.place+' | '+b.finishTime.toFixed(2)+'s':attached?'Move together to carry. Different directions turn the beam.':nearest>=0?`Grip ${nearest+1} nearby — Space / ACTION to grab`:'Approach a white grip ring. Space / ACTION toggles grab.';
-  el('beamStatus').textContent=`${instruction}\n${support} · ${b.blocked?'Blocked — coordinate a turn':b.checkpoint?'Haul corridor | watch moving loads':'Doorway → turn right → moving loads → green delivery'}${me?.feedback?'\n'+me.feedback:''}`;
+  el('beamStatus').textContent=`${instruction}\n${support} · ${b.blocked?'Blocked — coordinate a turn':b.checkpoint?'Checkpoint saved | time the moving loads':'Doorway → turn right → moving loads → green delivery'}${me?.feedback?'\n'+me.feedback:''}`;
+  if(state.mode==='competitive'){const partner=[...state.players.values()].find((p:any)=>p.team===me?.team&&p.end!==me?.end);el('beamStatus').textContent+=(b.protection>0?'\nTEAM RECOVERED · +5s · ready in '+b.protection.toFixed(1)+'s':partner&&!partner.connected?'\nPartner reconnecting — team paused':'\n'+b.recoveries+' recoveries · +'+b.penalty+'s · 4 minute round limit');}
   el('reset').textContent=b.checkpoint?'Reset to doorway checkpoint':'Reset to start';
   el('grab').classList.toggle('attached',attached);el('action').classList.toggle('attached',attached);
 }
@@ -268,7 +295,9 @@ function updateBeamVisual(state:any,dt:number,now:number){
   for(const sprite of [startLabel,doorLabel,turnLabel,destinationLabel])sprite.visible=playing;
   for(const visual of gripVisuals){visual.ring.visible=visual.text.visible=visual.rope.visible=playing;}
   for(const skid of dragMarkers)skid.visible=playing;
+  const map=BEAM_MAPS[state?.beamMap??0];beamObstacleGroups.forEach((g,i)=>g.visible=i===(state?.beamMap??0));fullDeck.visible=!map.elevated;skyDecks.forEach((g,i)=>g.visible=map.elevated&&i===state?.beamMap);excavatorVisual.visible=map.excavator;sweepLabel.visible=playing&&map.excavator;
   if(!playing||!b)return;
+  excavatorUpper.rotation.y=-excavatorAngle(state.elapsed);sweepPreview.rotation.y=-excavatorAngle(state.elapsed+1.5);
   movingLoads(state.elapsed).forEach((o,i)=>movingLoadVisuals[i].position.set(o.x,0,o.z));
   if(displayedResets!==b.resets){stopInput();Object.assign(displayedBeam,b);displayedResets=b.resets;}
   const blend=1-Math.exp(-18*dt);displayedBeam.x+=(b.x-displayedBeam.x)*blend;displayedBeam.z+=(b.z-displayedBeam.z)*blend;

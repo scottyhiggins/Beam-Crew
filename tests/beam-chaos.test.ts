@@ -76,3 +76,42 @@ test('penalty-adjusted team ranking is fair and completed times stay immutable',
  Object.assign(r.state.teams[0],{delivered:true,finishTime:30,penalty:5});Object.assign(r.state.teams[1],{delivered:true,finishTime:28});
  r.tick(1/30);assert.equal(r.state.teams[1].place,1);assert.equal(r.state.teams[0].place,2);assert.equal(r.state.teams[0].finishTime,30);
 });
+test('latest checkpoint retains the completed turn on recovery',()=>{
+ const b=new BeamTeam();Object.assign(b,{x:5,z:-7,angle:0,checkpoint:true});const p=pair(b);
+ stepChaosTeam(b,p,1/30,1,2);assert.equal(b.stage,2);recoverTeam(b,p);assert.equal(b.angle,0);assert.equal(b.x,5);assert.ok(b.checkpoint);
+});
+test('hazard knockback beyond a worker boundary recovers rather than blocking all future input',()=>{
+ const b=new BeamTeam();Object.assign(b,{x:26,z:-9,angle:0,checkpoint:true});const p=pair(b);
+ stepChaosTeam(b,p,1/30,1,0);assert.equal(b.recoveries,1);assert.equal(b.z,COURSE.checkpoint.z);
+});
+test('replay reset numbers remain monotonic after several automatic recoveries',()=>{
+ const r=new CrewRoom();r.setState(new CrewState());r.state.mode='competitive';for(let i=0;i<4;i++)r.state.players.set(String(i),new Player());
+ r.restart(false);const members=[...r.state.players.values()].filter(p=>p.team===0);
+ for(let i=0;i<4;i++)recoverTeam(r.state.teams[0],members);const previous=r.state.teams[0].resets;
+ r.restart(false);for(const b of r.state.teams)assert.equal(b.resets,previous+1);
+});
+test('excavator contact moves or recovers a stationary beam assembly authoritatively',()=>{
+ const b=new BeamTeam();Object.assign(b,{x:22,z:-7,angle:0,checkpoint:true});const p=pair(b),before={x:b.x,z:b.z};
+ stepChaosTeam(b,p,1/30,Math.PI*1.5/.38,2);
+ assert.ok(b.x!==before.x||b.z!==before.z||b.recoveries>0);
+ if(!b.protection)assert.equal(beamCollides(b,Math.PI*1.5/.38,beamWorld(2)),false);
+});
+for(const map of [0,1,2])test(`full course ${map}: timed load crossings, recovery, checkpoints and supported delivery`,()=>{
+ const b=new BeamTeam(),members=pair(b);let stage=0,lastReset=0;
+ for(let i=1;i<240*30&&!b.delivered;i++){
+  const t=i/30;if(b.resets!==lastReset){lastReset=b.resets;stage=b.stage>=2?2:0;}
+  if(!b.protection)members.forEach(p=>p.grip=p.end);
+  let x=0,z=0,turn=0;
+  if(stage===0){z=-Math.min(1,Math.max(.08,(b.z+6.1)*1.5));if(b.z<=-6.05)stage=1;}
+  else if(stage===1){turn=Math.min(1,b.angle*2);if(b.angle<.03)stage=2;}
+  else {
+   z=Math.max(-1,Math.min(1,((map===1?-7.5:b.x<21?-6.65:-7.5)-b.z)*2));turn=b.angle*2;x=Math.max(-1,Math.min(1,(26-b.x)*2));
+   const loads=movingLoads(t);if(b.x<8.6&&b.x>7.5&&loads[0].z<-3.4)x=0;if(b.x>18&&b.x<18.8&&loads[1].z<-3.4)x=0;
+  }
+  members[0].inputX=x-Math.sin(b.angle)*turn;members[0].inputZ=z+Math.cos(b.angle)*turn;
+  members[1].inputX=x+Math.sin(b.angle)*turn;members[1].inputZ=z-Math.cos(b.angle)*turn;
+  stepChaosTeam(b,members,1/30,t,map);
+ }
+ assert.ok(b.delivered,`stuck at ${b.x},${b.z}`);assert.equal(b.stage,2);assert.ok(b.leftSupported&&b.rightSupported);
+ assert.equal(b.penalty,b.recoveries*5);
+});
