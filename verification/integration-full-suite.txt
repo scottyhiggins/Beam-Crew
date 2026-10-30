@@ -132,8 +132,8 @@ dist/assets/index-C_FIun7K.js   738.16 kB │ gzip: 206.58 kB
 ✔ compact framing activates only for short touch landscape and keeps the player and route in view (1.7608ms)
 ✔ landscape styling retains safe areas, touch targets, a collapsible board and dismissible results (0.6932ms)
 colyseus.js - onError => (409) Already assigned to a public match
-Room connection was closed unexpectedly (4002): 
-colyseus.js - onError => (4002) 
+Room connection was closed unexpectedly (4002):
+colyseus.js - onError => (4002)
 ✔ real sockets: public/private separation, concurrent capacity, cancellation, countdown, reconnect and replay (15917.6235ms)
 ✔ public room creation is bounded and abandoned waiting rooms release capacity (803.6429ms)
 ✔ public countdown requires two connected workers, cancels below two, accepts eight and rejects duplicates (3.5967ms)
