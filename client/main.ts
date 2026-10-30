@@ -20,7 +20,7 @@ import * as THREE from 'three';
 import { Client, Room } from 'colyseus.js';
 import './style.css';
 import {MODE_ART,materialArt} from './menu-art';
-import { BEAM_CONFIG, COURSE, GRIPS, gripPosition } from '../shared/beam';
+import { BEAM_CONFIG, COURSE, movingLoads, GRIPS, gripPosition } from '../shared/beam';
 import { rampHeight, FINISH_RAMP, WHEEL_CONFIG, WHEEL_COURSE, WHEEL_OBSTACLES, WHEEL_ROUGH, WHEEL_FENCES, WHEEL_GATES } from '../shared/wheelbarrow';
 import { BUILD_LABEL, PROTOCOL_VERSION } from '../shared/version';
 import {MATERIAL_CATEGORIES,MATERIALS,MATERIAL_COLORS} from '../shared/materials';
@@ -106,9 +106,10 @@ document.querySelectorAll<HTMLButtonElement>('[data-signal]').forEach(button=>bu
 window.addEventListener('keydown',e=>{if((e.target as HTMLElement).matches('input,textarea,select')||room?.state.phase!=='test')return;if(['KeyW','KeyA','KeyS','KeyD','Space'].includes(e.code)){e.preventDefault();keys.add(e.code);if(e.code==='Space'&&!e.repeat)action();}});
 window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',stopInput);document.addEventListener('visibilitychange',()=>{if(document.hidden)stopInput();});
 const joystick=el('joystick');
-function moveJoystick(e:PointerEvent){if(e.pointerId!==joyPointer)return;const rect=joystick.getBoundingClientRect();let x=e.clientX-rect.left-rect.width/2,z=e.clientY-rect.top-rect.height/2;const radius=rect.width*.32,length=Math.hypot(x,z);if(length>radius){x*=radius/length;z*=radius/length;}joyX=x/radius;joyZ=z/radius;el('stick').style.transform=`translate(${x}px,${z}px)`;}
+function moveJoystick(e:PointerEvent){if(e.pointerId!==joyPointer)return;const rect=joystick.getBoundingClientRect();let x=e.clientX-rect.left-rect.width/2,z=e.clientY-rect.top-rect.height/2;const radius=rect.width*.32,length=Math.hypot(x,z);if(length>radius){x*=radius/length;z*=radius/length;}joyX=x/radius;joyZ=z/radius;el('stick').style.transform=`translate(${x}px,${z}px)`;if(room?.state.mode==='competitive')room.send('input',{x:joyX,z:joyZ});}
 joystick.onpointerdown=e=>{joyPointer=e.pointerId;joystick.setPointerCapture(e.pointerId);moveJoystick(e);};joystick.onpointermove=moveJoystick;
-joystick.onpointerup=joystick.onpointercancel=()=>{joyPointer=null;joyX=joyZ=0;el('stick').style.transform='translate(0px,0px)';};
+joystick.onpointerup=joystick.onpointercancel=()=>{joyPointer=null;joyX=joyZ=0;el('stick').style.transform='translate(0px,0px)';if(room?.state.mode==='competitive')room.send('input',{x:0,z:0});};
+joystick.addEventListener('lostpointercapture',()=>{if(room?.state.mode==='competitive'){joyPointer=null;joyX=joyZ=0;el('stick').style.transform='translate(0px,0px)';room.send('input',{x:0,z:0});}});
 setInterval(()=>{if(room?.state.phase==='test'&&!document.hidden){room.send('input',{x:(Number(keys.has('KeyD'))-Number(keys.has('KeyA')))+joyX,z:(Number(keys.has('KeyS'))-Number(keys.has('KeyW')))+joyZ});}},1000/30);
 function render(){el('retryConnection').hidden=serverCompatible||verifying;el('cancelReconnect').hidden=!recovery;el('menu').textContent=currentPresentation.compact?'Menu':'Lobby controls';el('panel').classList.toggle('connected',!!room);el('hud').classList.toggle('menu-open',menuOpen);const state=room?.state,playing=state?.phase==='test';el('room').hidden=!room;el('panel').classList.toggle('playing',!!playing&&!menuOpen);el('hud').hidden=!playing;el('touch').hidden=!playing||menuOpen;renderResults(state);
   el<HTMLButtonElement>('create').disabled=busy||!!room||!serverCompatible;el<HTMLButtonElement>('join').disabled=busy||!!room||!serverCompatible;
@@ -129,7 +130,7 @@ function render(){el('retryConnection').hidden=serverCompatible||verifying;el('c
   if(state.mode==='competitive'){
     el('reset').hidden=true;
     el('hudText').textContent=state.racePhase==='countdown'?Math.ceil(state.countdown)+' · GET READY':state.racePhase==='results'?'TEAM RESULTS':state.elapsed.toFixed(1)+'s';
-    el('beamStatus').textContent=me?.team<0?'Spectating · odd worker sits out this round. Wheelbarrow supports everyone.':'Team '+(me.team+1)+' · Assigned end '+(me.end===0?'1':'2')+' · Space / ACTION to grab';
+    if(me?.team<0)el('beamStatus').textContent='Spectating - odd worker sits out this round.';else el('hudText').textContent+=' | Team '+(me.team+1)+' | End '+(me.end===0?'1':'2');
     signalReadout.textContent=Array.from(state.teams as Iterable<any>).map((b,i)=>'Team '+(i+1)+' · '+b.members+' · '+(b.dnf?'DNF':b.delivered?'#'+b.place+' · '+b.finishTime.toFixed(2)+'s':'racing')).join(' | ');
   }
   if(isWheel(state)){renderWheelHud(state,me);el('reset').hidden=true;}
@@ -200,9 +201,21 @@ function label(text:string,color='#172d3c',width=3,square=false){
   sprite.userData.width=width;sprite.userData.height=width*96/canvas.width;worldLabels.push(sprite);sprite.scale.set(width,width*96/canvas.width,1);scene.add(sprite);return sprite;
 }
 const courseVisual=new THREE.Group();scene.add(courseVisual);
+box(44,.3,20,0x9d8b70,12,-.22,0,courseVisual);
+for(const z of [-9.8,9.8])box(44,.6,.2,0xe3ad47,12,.3,z,courseVisual);
+for(const x of [-9.8,31.8])box(.2,.6,20,0xe3ad47,x,.3,0,courseVisual);
+for(let x=-8;x<32;x+=4)for(const z of [-9.8,9.8])box(.35,1.5,.35,0x263b46,x,.75,z,courseVisual);
+for(let x=8;x<26;x+=3){box(1.3,.04,.16,0xffcf43,x,.04,-7.5,courseVisual);}
+const movingLoadVisuals=movingLoads(0).map(o=>{
+ const g=new THREE.Group();courseVisual.add(g);
+ box(o.halfX*2,1.5,o.halfZ*2,0xd85e32,0,.85,0,g);
+ box(o.halfX*2+.12,.16,o.halfZ*2+.12,0x263b46,0,1.65,0,g);
+ box(.06,3,.06,0x263b46,0,3.15,0,g);return g;
+});
 for(const o of COURSE.obstacles){
-  box(o.halfX*2,2.3,o.halfZ*2,0xe3ad47,o.x,1.15,o.z,courseVisual);
-  box(o.halfX*2+.05,.14,o.halfZ*2+.05,0x273e4b,o.x,2.37,o.z,courseVisual);
+  const height=o.x>=8?.6:2.3;
+  box(o.halfX*2,height,o.halfZ*2,0xe3ad47,o.x,height/2,o.z,courseVisual);
+  box(o.halfX*2+.05,.14,o.halfZ*2+.05,0x273e4b,o.x,height+.07,o.z,courseVisual);
 }
 const goalMaterial=new THREE.MeshLambertMaterial({color:0x45bfa4,transparent:true,opacity:.7});
 const goalMesh=new THREE.Mesh(new THREE.BoxGeometry(COURSE.goal.halfX*2,.03,COURSE.goal.halfZ*2),goalMaterial);
@@ -210,7 +223,7 @@ goalMesh.position.set(COURSE.goal.x,.035,COURSE.goal.z);courseVisual.add(goalMes
 const startLabel=label('START • GRAB BOTH ENDS');startLabel.position.set(-5,.4,8.9);
 const doorLabel=label('1 • DOORWAY');doorLabel.position.set(-5,2.9,1.5);
 const turnLabel=label('2 • TURN RIGHT');turnLabel.position.set(-1,2.9,-3.9);
-const destinationLabel=label('3 • DELIVER BEAM');destinationLabel.position.set(4.3,.5,-7.5);
+const destinationLabel=label('3 • DELIVER BEAM');destinationLabel.position.set(COURSE.goal.x,.5,COURSE.goal.z);
 const beamVisual=new THREE.Group(),beamTilt=new THREE.Group();beamVisual.add(beamTilt);scene.add(beamVisual);
 box(BEAM_CONFIG.length,.08,BEAM_CONFIG.width+.12,0x46718a,0,.17,0,beamTilt);
 box(BEAM_CONFIG.length,.08,BEAM_CONFIG.width+.12,0x46718a,0,-.17,0,beamTilt);
@@ -235,15 +248,15 @@ let displayedResets=-1;
 function renderBeamHud(state:any,me:any){
   if(isWheel(state))return;
   const b=state.mode==='competitive'?state.teams[me?.team]:state.beam;if(!b)return;
-  const occupied=new Set<number>();state.players.forEach((p:any)=>{if(p.grip>=0)occupied.add(p.grip);});
+  const occupied=new Set<number>();state.players.forEach((p:any)=>{if(p.grip>=0&&p.team===me?.team)occupied.add(p.grip);});
   let nearest=-1,distance=BEAM_CONFIG.grabRadius;
-  if(me)GRIPS.forEach((_,i)=>{const point=gripPosition(b,i),d=Math.hypot(point.x-me.x,point.z-me.z);if(!occupied.has(i)&&d<distance){nearest=i;distance=d;}});
+  if(me)GRIPS.forEach((_,i)=>{if(state.mode==='competitive'&&i!==me.end)return;const point=gripPosition(b,i),d=Math.hypot(point.x-me.x,point.z-me.z);if(!occupied.has(i)&&d<distance){nearest=i;distance=d;}});
   const attached=me?.grip>=0;
   el('grab').textContent=attached?'RELEASE · Space':nearest>=0?`GRAB ${nearest+1} · Space`:'GRAB · Space';
   el('action').textContent=attached?'RELEASE':'ACTION';
   const support=b.leftSupported&&b.rightSupported?'Both ends carried':b.leftSupported||b.rightSupported?'One end DRAGGING':'Both ends grounded';
-  const instruction=b.delivered?'DELIVERED! Host can restart the course.':attached?'Move together to carry. Different directions turn the beam.':nearest>=0?`Grip ${nearest+1} nearby — Space / ACTION to grab`:'Approach a white grip ring. Space / ACTION toggles grab.';
-  el('beamStatus').textContent=`${instruction}\n${support} · ${b.blocked?'Blocked — coordinate a turn':b.checkpoint?'Doorway checkpoint saved':'Doorway → right turn → green destination'}${me?.feedback?'\n'+me.feedback:''}`;
+  const instruction=b.delivered?'DELIVERED | #'+b.place+' | '+b.finishTime.toFixed(2)+'s':attached?'Move together to carry. Different directions turn the beam.':nearest>=0?`Grip ${nearest+1} nearby — Space / ACTION to grab`:'Approach a white grip ring. Space / ACTION toggles grab.';
+  el('beamStatus').textContent=`${instruction}\n${support} · ${b.blocked?'Blocked — coordinate a turn':b.checkpoint?'Haul corridor | watch moving loads':'Doorway → turn right → moving loads → green delivery'}${me?.feedback?'\n'+me.feedback:''}`;
   el('reset').textContent=b.checkpoint?'Reset to doorway checkpoint':'Reset to start';
   el('grab').classList.toggle('attached',attached);el('action').classList.toggle('attached',attached);
 }
@@ -256,6 +269,7 @@ function updateBeamVisual(state:any,dt:number,now:number){
   for(const visual of gripVisuals){visual.ring.visible=visual.text.visible=visual.rope.visible=playing;}
   for(const skid of dragMarkers)skid.visible=playing;
   if(!playing||!b)return;
+  movingLoads(state.elapsed).forEach((o,i)=>movingLoadVisuals[i].position.set(o.x,0,o.z));
   if(displayedResets!==b.resets){stopInput();Object.assign(displayedBeam,b);displayedResets=b.resets;}
   const blend=1-Math.exp(-18*dt);displayedBeam.x+=(b.x-displayedBeam.x)*blend;displayedBeam.z+=(b.z-displayedBeam.z)*blend;
   displayedBeam.angle+=Math.atan2(Math.sin(b.angle-displayedBeam.angle),Math.cos(b.angle-displayedBeam.angle))*blend;
@@ -267,7 +281,7 @@ function updateBeamVisual(state:any,dt:number,now:number){
   gripVisuals.forEach((visual,i)=>{
     if(state.mode==='competitive'&&i!==0&&i!==7){visual.ring.visible=visual.text.visible=visual.rope.visible=false;return;}
     const point=gripPosition(displayedBeam,i),p=occupants.get(i);
-    const near=me?.grip<0&&!p&&Math.hypot(me.x-point.x,me.z-point.z)<BEAM_CONFIG.grabRadius;
+    const near=me?.grip<0&&(state.mode!=='competitive'||i===me.end)&&!p&&Math.hypot(me.x-point.x,me.z-point.z)<BEAM_CONFIG.grabRadius;
     (visual.ring.material as THREE.MeshBasicMaterial).color.setHex(p?colors[p.color]:near?0x7dfa91:0xffffff);
     visual.ring.position.set(point.x,.055,point.z);visual.ring.scale.setScalar(near?1+.08*Math.sin(now*.007):1);
     visual.text.position.set(point.x,.7,point.z);visual.text.visible=!p;
@@ -352,8 +366,8 @@ function renderWheelHud(state:any,me:any){
   signalReadout.textContent='FEWEST SPILLS WINS • Time breaks ties'+(results.length?'\n'+(state.racePhase==='results'?'Final ranking: ':'Provisional ranking — others still racing: ')+results.map(p=>'#'+p.place+' '+p.name+' • '+p.spills+' spills • '+p.time.toFixed(2)+'s').join(' | '):'');
 }
 function updateWheelVisual(state:any,dt:number,now:number){
-  const active=state?.phase==='test'&&isWheel(state);wheelCourseVisual.visible=active;for(const o of baseVisuals)o.visible=!active;
-  const championship=active&&state.mode==='championship';originalRopes.visible=!championship;originalScenery.visible=!championship;
+  const active=state?.phase==='test'&&isWheel(state);wheelCourseVisual.visible=active;for(const o of baseVisuals)o.visible=!active&&!(state?.phase==='test'&&state.mode==='competitive');
+  const championship=active&&state.mode==='championship';originalRopes.visible=!championship;originalScenery.visible=!championship&&!(state?.phase==='test'&&state.mode==='competitive');
   championshipWorld.update(state?.players?.get(room?.sessionId)?.z??0,state?.leg??0,championship,state?.routeIds??[]);wheelCourseVisual.visible=active&&!(championship&&state.routeIds.length);
   if(!active)el('beamStatus').style.borderLeft='';
   if(active&&wheelReset!==state.raceResets){wheelReset=state.raceResets;stopInput();for(const c of carts.values())disposeVisual(c.root);carts.clear();}

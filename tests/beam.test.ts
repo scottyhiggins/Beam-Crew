@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {BEAM_CONFIG,COURSE,createBeam,stepBeam,resetBeam,gripPosition,nearestGrip,beamCollides, type Carrier} from '../shared/beam.js';
+import {movingLoads,BEAM_CONFIG,COURSE,createBeam,stepBeam,resetBeam,gripPosition,nearestGrip,beamCollides, type Carrier} from '../shared/beam.js';
 const dt=1/30;
 function simulate(b= createBeam(),carriers:Carrier[],seconds=1){for(let i=0;i<Math.round(seconds/dt);i++)stepBeam(b,carriers,dt);return b;}
 const pair=(x:number,z:number):Carrier[]=>[{grip:0,inputX:x,inputZ:z},{grip:7,inputX:x,inputZ:z}];
@@ -42,7 +42,7 @@ test('doorway, intentional ninety-degree turn and destination are reachable',()=
   ticks=0;
   while(b.angle>.05&&ticks++<180)stepBeam(b,[{grip:0,inputX:-1,inputZ:0},{grip:7,inputX:1,inputZ:0}],dt);
   assert.ok(b.angle<.05);simulate(b,pair(0,0),.8);
-  ticks=0;while(b.x<4.3&&ticks++<300)stepBeam(b,pair(1,0),dt);
+  ticks=0;while(b.x<COURSE.goal.x&&ticks++<700)stepBeam(b,pair(1,0),dt);
   simulate(b,pair(0,0),1);assert.equal(b.delivered,true,JSON.stringify(b));assert.equal(beamCollides(b),false);
 });
 test('checkpoint reset clears grips-independent motion and delivery; full restart clears checkpoint',()=>{
@@ -53,4 +53,15 @@ test('checkpoint reset clears grips-independent motion and delivery; full restar
 test('beam simulation is deterministic and settles after neutral input',()=>{
   const a=createBeam(),b=createBeam();for(let i=0;i<150;i++){const input=pair(Math.sin(i*.13),-.4);stepBeam(a,input,dt);stepBeam(b,input,dt);}assert.deepEqual(a,b);
   simulate(a,[],3);assert.ok(Math.hypot(a.vx,a.vz)<1e-7);assert.ok(Math.abs(a.angularVelocity)<1e-7);
+});
+
+test('moving loads use deterministic server time and block beam and worker collisions',()=>{
+  assert.deepEqual(movingLoads(12),movingLoads(12));
+  assert.notDeepEqual(movingLoads(0),movingLoads(3));
+  for(const t of [0,1,4,9]){const o=movingLoads(t)[0];assert.equal(beamCollides({x:o.x,z:o.z,angle:0},t),true);}
+});
+test('delivery requires both assigned ends, not a dropped beam in the goal',()=>{
+  const b=createBeam();Object.assign(b,{...COURSE.goal,angle:0,checkpoint:true});
+  simulate(b,[],2);assert.equal(b.delivered,false);
+  simulate(b,pair(0,0),1);assert.equal(b.delivered,true);
 });

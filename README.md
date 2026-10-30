@@ -1,3 +1,43 @@
+# BREAK TIME - Milestone 7: Beam Carry
+
+[Play BREAK TIME](https://break-time-9n1k.onrender.com/) · [Submission checklist](SUBMISSION.md) · [Physical playtest](PLAYTEST-M7.md)
+
+A browser construction party game for 2-8 workers. Create a room, share its five-letter code, and join from another laptop or phone. No installation or account is required for players.
+
+## Beam Carry
+
+Choose **Beam Carry** before creating a room, or select it from the host lobby. Use 2, 4, 6, or 8 workers for 1-4 independent two-person teams. An odd worker spectates that round; Wheelbarrow supports odd counts. Each worker owns one beam end. Teams share the course, but their beams do not collide with other teams.
+
+After the countdown, press **Space / GRAB** or touch **ACTION** at your assigned ring. Move with **WASD** or the touch joystick. Match your partner's direction to translate; opposite sideways inputs turn the beam. Releasing an end slows the beam. Use LIFT / WAIT / LEFT / RIGHT to coordinate.
+
+Carry through the doorway, continue north, rotate right around the column, then follow the yellow corridor past **two moving suspended loads** and a narrower passage to the green delivery zone. Stop with the whole beam inside while **both ends are held** for 0.7 seconds. The server awards one delivery, finish time and place per team. Fastest delivery wins. Delivered teams wait for the rest; permanently departed pairs receive DNF. Reserved disconnects retain the existing reconnect window; reconnect, approach your assigned end and grab again. Host **Restart course** restarts all teams fairly.
+
+Beam Carry's haul distance is extended from the original goal at x=4.3 to x=26. Moving loads use the synchronized server race clock for collision and rendering; clients send directions and actions, never accepted positions. Touch joystick changes and release send immediate Beam inputs in addition to the existing 30 Hz updates. Beam mode alone uses the wider yard. Wheelbarrow Championship rules, materials, countdown, reconnect and score ledger are retained.
+
+Crane Challenge and Worker Store remain disabled Coming Soon tiles.
+
+## Run and verify
+
+Use the repository's pinned Node and pnpm versions:
+
+```text
+pnpm install --frozen-lockfile
+pnpm build
+node scripts/test-live.mjs
+```
+
+The test runner starts an isolated production server and enables all real WebSocket checks. `pnpm test` without TEST_URL skips network checks and is not release verification. Start manually with `NODE_ENV=production`, then `pnpm start`; PORT defaults to 2567. On Windows, use Start-BeamCrew.cmd. See shared/version.ts and /health for the build protocol.
+
+## Recovery and release evidence
+
+User-accepted protocol 15 source: **0e768f1b141f135a81467177205260041cbc66a4**. Recovery branch **codex/protocol15-recovery** and external **Beam-Crew-protocol15-recovery.bundle** preserve complete history. Milestone 7 is developed on **codex/milestone7-beam**. The active Documents repository was not used as an editing scratchpad. Current verification and deployment state are recorded in **MILESTONE7-VERIFICATION.md**; a build label alone does not prove deployment.
+
+Screenshots in docs are labeled as local preview or public release evidence. Physical iPhone measurements require the user's device playtest; automated browser and network checks cannot establish touch feel, heat or sustained FPS.
+
+---
+
+## Earlier milestone records
+
 # Milestone 6C — Championship polish and construction UI
 
 The user physically accepted the protocol 13 ten-course Championship on laptop and iPhone through Course 10/10, with correct results; laptop had an occasional brief stutter. Recovery branch **codex/pre-milestone6c-protocol13-20261029** retains **2081c0c**, with a complete-history **Beam-Crew-pre-milestone6c-protocol13.bundle** outside the repository. All earlier recovery branches remain intact.

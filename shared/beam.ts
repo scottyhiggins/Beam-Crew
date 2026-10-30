@@ -4,7 +4,7 @@ export const BEAM_CONFIG = {
   carriedEffectiveness: .9, draggingEffectiveness: .2,
   driveSpeed: 2.8, turnGain: 1.6, acceleration: 7, maxTurnSpeed: 1.25,
   carriedHeight: 1.05, groundedHeight: .22, heightResponse: 7,
-  halfSize: 10, collisionMargin: .04, deliveryHoldSeconds: .7,
+  halfSize: 10, halfSizeX: 32, collisionMargin: .04, deliveryHoldSeconds: .7,
 };
 export const GRIPS = [-2.7, -.9, .9, 2.7].flatMap(u => [-1, 1].map(side => ({u, side})));
 export type Obstacle = {x:number; z:number; halfX:number; halfZ:number};
@@ -16,9 +16,19 @@ export const COURSE = {
     {x:-8.35,z:1.5,halfX:1.65,halfZ:.25},
     {x:3.35,z:1.5,halfX:6.65,halfZ:.25},
     {x:-1,z:-3.8,halfX:.8,halfZ:.9},
+    {x:18,z:-4,halfX:10,halfZ:.2},
+    {x:17,z:-9.2,halfX:.3,halfZ:.6},
+    {x:17,z:-4.2,halfX:.3,halfZ:.3},
   ] satisfies Obstacle[],
-  goal: {x:4.3,z:-7.5,halfX:4.6,halfZ:1.8},
+  goal: {x:26,z:-7.5,halfX:4.6,halfZ:1.8},
 };
+// Moving loads cross the haul corridor. Server elapsed time is the only clock.
+export function movingLoads(seconds:number):Obstacle[] {
+  return [
+    {x:13,z:-3.8+4.2*Math.sin(seconds*.65),halfX:.65,halfZ:.8},
+    {x:23,z:-3.8+4.2*Math.sin(seconds*.5+Math.PI),halfX:.8,halfZ:.7},
+  ];
+}
 export type BeamMotion = {
   x:number; z:number; angle:number; vx:number; vz:number; angularVelocity:number;
   leftHeight:number; rightHeight:number; leftSupported:boolean; rightSupported:boolean;
@@ -52,21 +62,21 @@ export function beamCorners(b:Pick<BeamMotion,'x'|'z'|'angle'>) {
     z:b.z+s*end*BEAM_CONFIG.length/2+c*side*BEAM_CONFIG.width/2,
   })));
 }
-export function beamCollides(b:Pick<BeamMotion,'x'|'z'|'angle'>) {
+export function beamCollides(b:Pick<BeamMotion,'x'|'z'|'angle'>,seconds=0) {
   const c=Math.cos(b.angle),s=Math.sin(b.angle),half=BEAM_CONFIG.length/2;
   const width=BEAM_CONFIG.width/2+BEAM_CONFIG.collisionMargin;
-  if(beamCorners(b).some(p=>Math.abs(p.x)>BEAM_CONFIG.halfSize-.1||Math.abs(p.z)>BEAM_CONFIG.halfSize-.1))return true;
-  return COURSE.obstacles.some(o=>[[1,0],[0,1],[c,s],[-s,c]].every(([ax,az])=>{
+  if(beamCorners(b).some(p=>(p.x < -BEAM_CONFIG.halfSize+.1 || p.x > BEAM_CONFIG.halfSizeX-.1)||Math.abs(p.z)>BEAM_CONFIG.halfSize-.1))return true;
+  return [...COURSE.obstacles,...movingLoads(seconds)].some(o=>[[1,0],[0,1],[c,s],[-s,c]].every(([ax,az])=>{
     const distance=Math.abs((b.x-o.x)*ax+(b.z-o.z)*az);
     const beamRadius=half*Math.abs(c*ax+s*az)+width*Math.abs(-s*ax+c*az);
     const boxRadius=o.halfX*Math.abs(ax)+o.halfZ*Math.abs(az);
     return distance<beamRadius+boxRadius;
   }));
 }
-export function workerCollides(x:number,z:number,radius=.45) {
-  return COURSE.obstacles.some(o=>Math.hypot(Math.max(Math.abs(x-o.x)-o.halfX,0),Math.max(Math.abs(z-o.z)-o.halfZ,0))<radius);
+export function workerCollides(x:number,z:number,radius=.45,seconds=0) {
+  return [...COURSE.obstacles,...movingLoads(seconds)].some(o=>Math.hypot(Math.max(Math.abs(x-o.x)-o.halfX,0),Math.max(Math.abs(z-o.z)-o.halfZ,0))<radius);
 }
-export function stepBeam(b:BeamMotion,carriers:Carrier[],dt:number) {
+export function stepBeam(b:BeamMotion,carriers:Carrier[],dt:number,seconds=0) {
   const wasBeforeDoor=beamCorners(b).some(p=>p.z>=COURSE.doorwayZ-.5);
   const cfg=BEAM_CONFIG, c=Math.cos(b.angle),s=Math.sin(b.angle);
   b.leftSupported=carriers.some(p=>GRIPS[p.grip]?.u<0);
@@ -91,7 +101,7 @@ export function stepBeam(b:BeamMotion,carriers:Carrier[],dt:number) {
   b.vx+=((lx+rx)/2-b.vx)*response;b.vz+=((lz+rz)/2-b.vz)*response;
   const targetTurn=(-s*(rx-lx)+c*(rz-lz))/(2*half);
   b.angularVelocity+=(targetTurn-b.angularVelocity)*response;
-  const collides=()=>beamCollides(b)||carriers.some(p=>{const point=gripPosition(b,p.grip);return workerCollides(point.x,point.z)||Math.abs(point.x)>cfg.halfSize-.45||Math.abs(point.z)>cfg.halfSize-.45;});
+  const collides=()=>beamCollides(b,seconds)||carriers.some(p=>{const point=gripPosition(b,p.grip);return workerCollides(point.x,point.z,.45,seconds)||(point.x < -cfg.halfSize+.45 || point.x > cfg.halfSizeX-.45)||Math.abs(point.z)>cfg.halfSize-.45;});
   b.blocked=false;
   if(b.delivered){b.vx=b.vz=b.angularVelocity=0;return;}
   // Tiny deterministic substeps prevent tunneling; split axes permit wall sliding.
@@ -105,6 +115,6 @@ export function stepBeam(b:BeamMotion,carriers:Carrier[],dt:number) {
   if(!b.checkpoint&&wasBeforeDoor&&beamCorners(b).every(p=>p.z<COURSE.doorwayZ-.5))b.checkpoint=true;
   const goal=COURSE.goal;
   const inside=beamCorners(b).every(p=>Math.abs(p.x-goal.x)<=goal.halfX&&Math.abs(p.z-goal.z)<=goal.halfZ);
-  b.deliveryTime=inside&&b.checkpoint?b.deliveryTime+dt:0;
+  b.deliveryTime=inside&&b.checkpoint&&b.leftSupported&&b.rightSupported?b.deliveryTime+dt:0;
   if(b.deliveryTime>=cfg.deliveryHoldSeconds){b.delivered=true;b.vx=b.vz=b.angularVelocity=0;}
 }

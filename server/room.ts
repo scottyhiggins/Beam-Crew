@@ -4,7 +4,7 @@ import { Room, Client, ServerError } from '@colyseus/core';
 import { randomInt } from 'node:crypto';
 import { CrewState, Player, RaceResult, ChampionshipResult, SpilledMaterial, BeamTeam } from './state.js';
 import { CONFIG, movement } from '../shared/movement.js';
-import { GRIPS, gripPosition, nearestGrip, resetBeam, stepBeam, workerCollides } from '../shared/beam.js';
+import { BEAM_CONFIG, GRIPS, gripPosition, nearestGrip, resetBeam, stepBeam, workerCollides } from '../shared/beam.js';
 import { collideStagingCarts, WHEEL_CONFIG, resetCart, stepCart, finishCarts, spillMaterial, stepMaterial, compareResults, shouldEndRace } from '../shared/wheelbarrow.js';
 import {validMaterial} from '../shared/materials.js';
 export const roomsByCode=new Map<string,CrewRoom>();
@@ -152,9 +152,9 @@ export class CrewRoom extends Room<CrewState> {
         if(b.delivered||b.dnf)return;
         const members=[...this.state.players.values()].filter(p=>p.team===index);
         if(members.length<2){b.dnf=true;return;}
-        for(const p of members)if(p.connected&&p.grip<0){const ox=p.x,oz=p.z;movement(p,now-p.lastInput<300?p.inputX:0,now-p.lastInput<300?p.inputZ:0,dt);if(workerCollides(p.x,p.z)){p.x=ox;p.z=oz;}}
+        for(const p of members)if(p.connected&&p.grip<0){const ox=p.x,oz=p.z;movement(p,now-p.lastInput<300?p.inputX:0,now-p.lastInput<300?p.inputZ:0,dt,BEAM_CONFIG.halfSizeX);p.x=Math.max(-BEAM_CONFIG.halfSize+.45,p.x);if(workerCollides(p.x,p.z,.45,this.state.elapsed)){p.x=ox;p.z=oz;}}
         const carriers=members.filter(p=>p.connected&&p.grip===p.end);
-        stepBeam(b,carriers.map(p=>({grip:p.end,inputX:now-p.lastInput<300?p.inputX:0,inputZ:now-p.lastInput<300?p.inputZ:0})),dt);
+        stepBeam(b,carriers.map(p=>({grip:p.end,inputX:now-p.lastInput<300?p.inputX:0,inputZ:now-p.lastInput<300?p.inputZ:0})),dt,this.state.elapsed);
         carriers.forEach(p=>this.positionCarrier(p));
         if(b.delivered){b.finishTime=this.state.elapsed;b.place=this.state.teams.filter(t=>t.delivered).length;}
       });
