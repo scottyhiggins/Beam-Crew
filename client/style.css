@@ -103,3 +103,5 @@ input,select{border:2px solid #abbeb4;border-radius:7px;background:#fffdf2;color
  #hud.beam-hud #signals{grid-column:1 / -1;grid-row:5;max-width:none;margin:0}
  #hud.beam-hud #crewSignals{grid-column:1 / -1;grid-row:6;max-width:none;margin:0;overflow-wrap:anywhere}
 }
+
+.store-account{margin-left:auto;max-width:210px;text-align:right;font-size:11px;font-weight:800;color:#52716f}.store-account small{display:block;margin-top:6px;font-size:10px;line-height:1.5;font-weight:400}.store-seasonal{border-top:1px solid #d9b887!important;padding-top:12px!important}.store-seasonal legend{color:#96501e}.store-seasonal p,.store-seasonal small{font-size:11px;color:#735c42}.store-seasonal .store-choices{margin-bottom:8px}.store-seasonal .store-choices button{background:#f9e4bd}.store-seasonal i{border-radius:40%;position:relative}.store-seasonal i::before{content:'';position:absolute;width:5px;height:5px;background:#478645;top:-4px;left:6px}@media(max-width:650px){#workerStore header{flex-wrap:wrap}.store-account{order:3;max-width:none;width:100%;text-align:left;margin:0 0 12px}.store-account small{margin-top:3px}}

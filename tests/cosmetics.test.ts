@@ -1,20 +1,20 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {Client,type Room} from 'colyseus.js';
-import {HAT_COLORS,VEST_COLORS,DEFAULT_WORKER_LOOK,validateWorkerLook,type WorkerLook} from '../shared/cosmetics.js';
+import {PUMPKIN_HARD_HAT,HAT_COLORS,VEST_COLORS,DEFAULT_WORKER_LOOK,validateWorkerLook,type WorkerLook} from '../shared/cosmetics.js';
 import {CrewRoom} from '../server/room.js';
 import {CrewState} from '../server/state.js';
 import type {Client as ServerClient} from '@colyseus/core';
 import * as THREE from 'three';
 import {makeWorker,animateWorker} from '../client/worker.js';
 
-const first:WorkerLook={hat:HAT_COLORS.Blue,vest:VEST_COLORS.Green,expression:'goofy'};
+const first:WorkerLook={hat:PUMPKIN_HARD_HAT,vest:VEST_COLORS.Green,expression:'goofy'};
 const second:WorkerLook={hat:HAT_COLORS.White,vest:VEST_COLORS.Blue,expression:'serious'};
 const invalid:unknown[]=[undefined,null,[],false,'blue',0,{}, {...first,hat:'Blue'},{...first,hat:-1},{...first,hat:NaN},{...first,vest:0xffffff},{...first,vest:Infinity},{...first,expression:'angry'},{hat:first.hat,vest:first.vest}];
 const look=(p:WorkerLook)=>({hat:p.hat,vest:p.vest,expression:p.expression});
 
-test('all 72 free looks validate and malformed selections fall back atomically',()=>{
- for(const hat of Object.values(HAT_COLORS))for(const vest of Object.values(VEST_COLORS))for(const expression of ['happy','serious','goofy'] as const){const value={hat,vest,expression};assert.deepEqual(validateWorkerLook(value),value);}
+test('all 84 free looks validate and malformed selections fall back atomically',()=>{
+ for(const hat of [...Object.values(HAT_COLORS),PUMPKIN_HARD_HAT])for(const vest of Object.values(VEST_COLORS))for(const expression of ['happy','serious','goofy'] as const){const value={hat,vest,expression};assert.deepEqual(validateWorkerLook(value),value);}
  for(const value of invalid)assert.deepEqual(validateWorkerLook(value),DEFAULT_WORKER_LOOK);
  assert.deepEqual(validateWorkerLook({...first,x:999,sessionId:'victim'}),first);
 });
