@@ -28,7 +28,9 @@ Only spilled-material records enter this queue. Course gates, fixed obstacles, s
 
 ## Validation
 
-Final results recorded below after the complete run.
+`pnpm test:all` passed on October 30, 2026: production build succeeded; 115 tests passed, zero failed, zero skipped (434.9 seconds). This includes all existing tests and the new real-socket public-room and FIFO tests. Vite retains its existing large-chunk warning (about 734 kB uncompressed main JS); it is not a build failure.
+
+Final clone: `C:/Users/higgi/.codex/visualizations/2026/10/30/01a18e1b-b4f7-74c2-b3bd-09fe2e1c186f/Beam-Crew-quick-match`. This is an independent clone, outside the shared Beam-Crew tree. The initial clone was made from the local Protocol 16 recovery bundle, whose exact base hash matches the requested checkpoint. The original shared tracked files and Work A checkout were not edited.
 
 Automated coverage includes real-socket public/private separation, two-player startup, seven simultaneous arrivals to fill eight places, direct ninth-seat rejection and ninth-worker allocation to a new room, duplicate assignment rejection, cancellation, waiting disconnect/re-entry, authoritative countdown, racing reconnect, late-race join exclusion, replay re-entry, empty-room cleanup, the 64-room ceiling, FIFO order, collision-array removal, two-client patches, reconnect snapshots, and immutable score snapshots.
 
