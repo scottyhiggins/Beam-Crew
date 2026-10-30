@@ -36,11 +36,11 @@ test('module gates reject skipped and reverse finishes and accept ordered crossi
   finishCarts([p],2,0,t);assert.equal(p.finishOrder,1,m.id);
  }
 });
-test('five-leg room freezes each ledger, runs one three-second transition, preserves physical state, hazards and chosen loads',()=>{
+test('five-leg room freezes each ledger, runs one five-second transition, preserves physical state, hazards and chosen loads',()=>{
  const room=new CrewRoom();room.setState(new CrewState());room.state.mode='championship';room.state.championshipLength=5;
  for(let i=0;i<8;i++){const p=new Player();p.name='P'+i;p.color=i;p.materialId=i;room.state.players.set(String(i),p);}room.restart(false);room.state.phase='test';room.state.racePhase='racing';assert.equal(room.state.routeIds.length,5);const route=[...room.state.routeIds];
  for(let leg=0;leg<5;leg++){const t=room.currentTrack();for(const p of room.state.players.values())Object.assign(p,{x:(t.staging.minX+t.staging.maxX)/2+(p.color%4-1.5)*1.5,z:t.finishZ-5-Math.floor(p.color/4)*2,checkpoint:t.gates.length+1,finishCrossed:true,legSpills:p.color});room.tick(1/30);assert.equal(room.state.legResults.length,(leg+1)*8);const scores=JSON.stringify(room.state.legResults),poses=[...room.state.players.values()].map(p=>[p.x,p.z,p.materialId]);
-  if(leg<4){assert.equal(room.state.racePhase,'intermission');assert.equal(room.state.countdown,3);for(let n=0;n<89;n++)room.tick(1/30);assert.equal(room.state.leg,leg);const before=[...room.state.players.values()].map(p=>[p.x,p.z,p.rotation,p.speed,p.reload,p.instability,p.materialId]);room.tick(1/30);assert.equal(room.state.leg,leg+1);assert.deepEqual([...room.state.players.values()].map(p=>[p.x,p.z,p.rotation,p.speed,p.reload,p.instability,p.materialId]),before);assert.equal(JSON.stringify(room.state.legResults),scores);}
+  if(leg<4){assert.equal(room.state.racePhase,'intermission');assert.equal(room.state.countdown,5);for(let n=0;n<149;n++)room.tick(1/30);assert.equal(room.state.leg,leg);const before=[...room.state.players.values()].map(p=>[p.x,p.z,p.rotation,p.speed,p.reload,p.instability,p.materialId]);room.tick(1/30);assert.equal(room.state.leg,leg+1);assert.deepEqual([...room.state.players.values()].map(p=>[p.x,p.z,p.rotation,p.speed,p.reload,p.instability,p.materialId]),before);assert.equal(JSON.stringify(room.state.legResults),scores);}
   else{assert.equal(room.state.racePhase,'results');for(let n=0;n<30;n++)room.tick(1/30);assert.equal(JSON.stringify(room.state.legResults),scores);}
   assert.deepEqual([...room.state.routeIds],route);assert.ok(poses.every((a,i)=>a[2]===i));
  }

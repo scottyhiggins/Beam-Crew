@@ -1,7 +1,7 @@
 import {createModularWorld} from './modular-world';
 import {assembleRoute,routeHeight,type CourseInstance} from '../shared/course-modules';
 let routeKey='',displayRoute:CourseInstance[]=[];
-function clientRoute(state:any){const ids=Array.from(state?.routeIds??[]) as string[],key=ids.join(',');if(key!==routeKey){displayRoute=ids.length?assembleRoute(ids):[];routeKey=key;}return displayRoute;}
+function clientRoute(state:any){const ids=state?.routeIds??[],key=ids.join(',');if(key!==routeKey){displayRoute=ids.length?assembleRoute(ids):[];routeKey=key;}return displayRoute;}
 function currentCourse(state:any){return clientRoute(state)[state.leg];}
 function currentTrack(state:any){return currentCourse(state)?.track??championshipTrack(state.leg);}
 function championshipRise(state:any,x:number,z:number){const route=clientRoute(state);return route.length?routeHeight(route,x,z):championshipHeight(x,z);}
@@ -26,7 +26,7 @@ import {MATERIAL_CATEGORIES,MATERIALS,MATERIAL_COLORS} from '../shared/materials
 import {FINISH_STAGING} from '../shared/wheelbarrow';
 const colors=[0xffad32,0x35b9ff,0xff5985,0x59d595,0xa38aff,0xf2ee57,0xffffff,0x965c42];
 const app=document.querySelector<HTMLDivElement>('#app')!;
-app.innerHTML=`<main id="panel"><h1>BREAK TIME</h1><p id="buildLabel">${BUILD_LABEL}</p><p class="eyebrow">CLOCK OUT. PLAY HARD.</p><p>A little teamwork. A lot of spilled cement.</p><label>Your name <input id="name" maxlength="18" value="Worker" autocomplete="nickname"></label><button id="create">Create room</button><div class="join"><input id="code" maxlength="5" placeholder="ROOM CODE" aria-label="Room code"><button id="join">Join</button></div><p id="status" role="status"></p><button id="retryConnection" hidden>Retry connection</button><button id="cancelReconnect" hidden>Cancel reconnect / Return to landing</button><section id="room" hidden><h2 id="roomCode"></h2><button id="share">Copy join link</button><ul id="players"></ul><label id="modeLabel">Game mode <select id="mode"><option value="competitive">Beam Carry · two-player teams</option><option value="wheel">Wheelbarrow Race</option><option value="championship">Wheelbarrow Championship</option></select></label><label id="championshipLengthLabel" hidden>Championship length <select id="championshipLength"><option value="2">2 courses · accepted 6A route</option><option value="3">3 races · random unique courses</option><option value="5">5 races · random unique courses</option><option value="10">10 races · full unique course pool</option></select></label><section id="materials" hidden><h3>Choose your load</h3><p>Same cart handling. Your spill creates this hazard. Duplicates allowed; locked at countdown.</p><div id="materialGrid"></div><p id="chosenLoad" role="status"></p></section><button id="start">Let’s get to work</button><button id="back">Return to lobby</button><button id="reset" hidden>Reset to checkpoint</button><button id="restart" hidden>Restart course</button><button id="leave">Leave room</button></section><p id="help">WASD to move · Space to grab/release<br>On phones: joystick + ACTION</p></main><div id="hud" hidden><span id="hudText"></span><div id="beamStatus" role="status"></div><button id="grab">GRAB · Space</button><div id="signals"><button data-signal="LIFT">LIFT</button><button data-signal="WAIT">WAIT</button><button data-signal="LEFT">LEFT</button><button data-signal="RIGHT">RIGHT</button></div><details id="standings" hidden><summary>Standings</summary><ol id="standingsList"></ol></details><button id="showResults" hidden>Results</button><button id="menu">Lobby controls</button></div><div id="touch" hidden><div id="joystick" aria-label="Movement joystick"><div id="stick"></div></div><button id="action">ACTION</button></div><section id="raceResults" hidden role="region" aria-live="polite" aria-labelledby="resultsTitle"><h2 id="resultsTitle">Final results</h2><p id="resultsRule"></p><ol id="resultsList"></ol><button id="closeResults">Keep driving in staging</button></section>`;
+app.innerHTML=`<main id="panel"><h1>BREAK TIME</h1><p id="buildLabel">${BUILD_LABEL}</p><p class="eyebrow">CLOCK OUT. PLAY HARD.</p><p>A little teamwork. A lot of spilled cement.</p><label>Your name <input id="name" maxlength="18" value="Worker" autocomplete="nickname"></label><button id="create">Create room</button><div class="join"><input id="code" maxlength="5" placeholder="ROOM CODE" aria-label="Room code"><button id="join">Join</button></div><p id="status" role="status"></p><button id="retryConnection" hidden>Retry connection</button><button id="cancelReconnect" hidden>Cancel reconnect / Return to landing</button><section id="room" hidden><h2 id="roomCode"></h2><button id="share">Copy join link</button><ul id="players"></ul><label id="modeLabel">Game mode <select id="mode"><option value="competitive">Beam Carry · two-player teams</option><option value="wheel">Wheelbarrow Race</option><option value="championship">Wheelbarrow Championship</option></select></label><label id="championshipLengthLabel" hidden>Championship length <select id="championshipLength"><option value="2">2 courses · accepted 6A route</option><option value="3">3 races · random unique courses</option><option value="5">5 races · random unique courses</option><option value="10">10 races · full unique course pool</option></select></label><section id="materials" hidden><h3>Choose your load</h3><p>Same cart handling. Your spill creates this hazard. Duplicates allowed; locked at countdown.</p><div id="materialGrid"></div><p id="chosenLoad" role="status"></p></section><button id="start">Let’s get to work</button><button id="back">Return to lobby</button><button id="reset" hidden>Reset to checkpoint</button><button id="restart" hidden>Restart course</button><button id="leave">Leave room</button></section><p id="help">WASD to move · Space to grab/release<br>On phones: joystick + ACTION</p></main><div id="hud" hidden><span id="hudText"></span><div id="beamStatus" role="status"></div><button id="grab">GRAB · Space</button><div id="signals"><button data-signal="LIFT">LIFT</button><button data-signal="WAIT">WAIT</button><button data-signal="LEFT">LEFT</button><button data-signal="RIGHT">RIGHT</button></div><details id="standings" hidden><summary>Standings</summary><ol id="standingsList"></ol></details><button id="showResults" hidden>Results</button><button id="menu">Lobby controls</button></div><div id="touch" hidden><div id="joystick" aria-label="Movement joystick"><div id="stick"></div></div><button id="action">ACTION</button></div><section id="raceResults" hidden role="region" aria-live="polite" aria-labelledby="resultsTitle"><h2 id="resultsTitle">Final results</h2><p id="resultsRule"></p><ol id="resultsList"></ol><button id="closeResults">Keep driving in staging</button></section><div id="raceCountdown" hidden role="status" aria-live="polite"></div>`;
 const el=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 for(const category of MATERIAL_CATEGORIES){const column=document.createElement('div');const heading=document.createElement('strong');heading.textContent=category.name;column.append(heading);for(const name of category.items){const m=MATERIALS.find(m=>m.name===name)!;const button=document.createElement('button');button.type='button';button.dataset.material=String(m.id);button.textContent=m.name+' · '+m.effect;button.onclick=()=>room?.send('material',m.id);column.append(button);}el('materialGrid').append(column);}
 const signalReadout=document.createElement('div');signalReadout.id='crewSignals';el('hud').append(signalReadout);
@@ -169,7 +169,16 @@ for(let i=0;i<2;i++){const mascot=makeWorker(colors[i]);mascot.position.set(2+i*
 const workers=new Map<string,THREE.Group>();
 function worker(color:number){const g=makeWorker(color);scene.add(g);return g;}
 let previous=performance.now();
-function frame(now:number){requestAnimationFrame(frame);const frameMs=now-previous;const dt=Math.min(frameMs/1000,.1);previous=now;if(resolution.sample(frameMs,!document.hidden)||displayDpr!==devicePixelRatio)resizeRenderer();const state=room?.state;lobbyCrew.visible=!room;
+function updateCountdown(state:any){
+ const overlay=el('raceCountdown');
+ const counting=state?.phase==='test'&&state?.mode==='championship'&&['countdown','intermission'].includes(state.racePhase);
+ const value=counting?Math.ceil(state.countdown):0;
+ const go=state?.phase==='test'&&state?.mode==='championship'&&state.racePhase==='racing'&&state.elapsed<.75;
+ const text=go?'GO!':value>0&&value<=3?String(value):'';
+ overlay.hidden=!text;if(overlay.textContent!==text)overlay.textContent=text;
+}
+
+function frame(now:number){requestAnimationFrame(frame);const frameMs=now-previous;const dt=Math.min(frameMs/1000,.1);previous=now;if(resolution.sample(frameMs,!document.hidden)||displayDpr!==devicePixelRatio)resizeRenderer();const state=room?.state;updateCountdown(state);lobbyCrew.visible=!room;
   for(const [id,g]of workers){if(!state?.players?.has(id)){disposeVisual(g);workers.delete(id);}}
   state?.players?.forEach((p:any,id:string)=>{let g=workers.get(id);if(!g){g=worker(colors[p.color]);g.position.set(p.x,0,p.z);workers.set(id,g);}const wheel=state.phase==='test'&&isWheel(state),wx=p.x-(wheel?Math.sin(p.rotation)*.7:0),wz=p.z-(wheel?Math.cos(p.rotation)*.7:0);animateWorker(g,wheel?Math.abs(p.speed):Math.hypot(p.x-g.position.x,p.z-g.position.z)*8,wheel||p.grip>=0,wheel&&p.reload>0?(2.4-p.reload)*1000:wheel&&state.racePhase!=='results'?state.elapsed*1000:now,wheel?Math.max(p.instability*.35,p.reload/2.4):0,wheel);const blend=1-Math.exp(-18*dt);g.position.x+=(wx-g.position.x)*blend;g.position.z+=(wz-g.position.z)*blend;const difference=Math.atan2(Math.sin(p.rotation-g.rotation.y),Math.cos(p.rotation-g.rotation.y));g.rotation.y+=difference*blend;g.position.y=(isWheel(state)?state.mode==='championship'?championshipRise(state,p.x,p.z):rampHeight(p.x,p.z):0)+Math.sin(now*.008+p.color)*.025;g.visible=p.connected;});
   const me=room&&workers.get(room.sessionId);const target=me?.position??new THREE.Vector3();camera.position.lerp(new THREE.Vector3(target.x,currentPresentation.cameraY,target.z+currentPresentation.cameraZ),1-Math.exp(-4*dt));camera.lookAt(target.x,0,target.z-currentPresentation.lookAhead);
@@ -307,6 +316,14 @@ box(16,.04,16,0xbfa780,-3,.015,-28,wheelCourseVisual);
 // Staging uses the same construction ground; no extra colored pad.
 const carts=new Map<string,{root:THREE.Group;tray:THREE.Group;load:THREE.Group;tag:THREE.Sprite}>();
 const materialMeshes:THREE.Group[]=[];
+let plannedMaterials:ReturnType<typeof planSpills>=[],plannedIds:number[]=[],plannedAmounts:number[]=[];
+function cachedSpillPlans(records:any){
+ let changed=records.length!==plannedIds.length;
+ records.forEach((b:any,i:number)=>{if(plannedIds[i]!==b.materialId||plannedAmounts[i]!==b.amount)changed=true;});
+ if(changed){plannedMaterials=planSpills(records);plannedIds=Array.from(records,(b:any)=>b.materialId);plannedAmounts=Array.from(records,(b:any)=>b.amount);}
+ return plannedMaterials;
+}
+
 let wheelReset=-1;
 function renderWheelHud(state:any,me:any){
   if(!me)return;
@@ -333,13 +350,13 @@ function renderWheelHud(state:any,me:any){
 function updateWheelVisual(state:any,dt:number,now:number){
   const active=state?.phase==='test'&&isWheel(state);wheelCourseVisual.visible=active;for(const o of baseVisuals)o.visible=!active;
   const championship=active&&state.mode==='championship';originalRopes.visible=!championship;originalScenery.visible=!championship;
-  championshipWorld.update(state?.players?.get(room?.sessionId)?.z??0,state?.leg??0,championship,Array.from(state?.routeIds??[]));wheelCourseVisual.visible=active&&!(championship&&state.routeIds.length);
+  championshipWorld.update(state?.players?.get(room?.sessionId)?.z??0,state?.leg??0,championship,state?.routeIds??[]);wheelCourseVisual.visible=active&&!(championship&&state.routeIds.length);
   if(!active)el('beamStatus').style.borderLeft='';
   if(active&&wheelReset!==state.raceResets){wheelReset=state.raceResets;stopInput();for(const c of carts.values())disposeVisual(c.root);carts.clear();}
   for(const [id,c]of carts){c.root.visible=active&&!!state?.players.get(id)?.connected;if(!state?.players.has(id)){disposeVisual(c.root);carts.delete(id);}}
   while(materialMeshes.length>(active?state.material.length:0)){scene.remove(materialMeshes.pop()!);}
   if(!active)return;
-  const spillPlans=planSpills(state.material);
+  const spillPlans=cachedSpillPlans(state.material);
   state.material.forEach((b:any,i:number)=>{const plan=spillPlans[i];let visual=materialMeshes[i];
     if(!visual||visual.userData.signature!==spillSignature(plan)){
       const born=visual?.userData.born??now;if(visual)scene.remove(visual);
@@ -394,8 +411,10 @@ async function verifyServer(){
 }
 void verifyServer();
 
+let standingsKey="";
 function updateStandings(state:any){
- const active=state?.phase==='test'&&(currentPresentation.compact||state.mode==='championship');el('standings').hidden=!active;el('standings').classList.toggle('championship',state?.mode==='championship');if(!active)return;
+ const active=state?.phase==='test'&&(currentPresentation.compact||state.mode==='championship');el('standings').hidden=!active;el('standings').classList.toggle('championship',state?.mode==='championship');if(!active){standingsKey='';return;}
+ const key=JSON.stringify([state.mode,state.leg,state.routeSeed,state.standings,state.legResults,state.results,state.teams]);if(key===standingsKey)return;standingsKey=key;
   if(state.mode==='championship'){
    const lines:HTMLLIElement[]=[];const line=(text:string)=>{const li=document.createElement('li');li.textContent=text;lines.push(li);};
    const order=clientRoute(state);if(order.length)line('Route: '+order.map((c,i)=>(i+1)+'. '+c.module.name).join(' → '));

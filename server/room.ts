@@ -102,7 +102,7 @@ export class CrewRoom extends Room<CrewState> {
     const leg=this.state.legResults.filter(r=>r.leg===this.state.leg&&!r.dnf);[...leg].sort(compareResults).forEach((r,i)=>r.place=i+1);
     this.rankChampionship();
     if([...this.state.players.values()].every(p=>p.finishOrder>0)){
-      if(this.state.leg<(this.routePlan.length||2)-1&&this.state.players.size){this.state.racePhase='intermission';this.state.countdown=3;}
+      if(this.state.leg<(this.routePlan.length||2)-1&&this.state.players.size){this.state.racePhase='intermission';this.state.countdown=5;}
       else this.state.racePhase='results';
     }
   }

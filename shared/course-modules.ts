@@ -83,3 +83,35 @@ export function routeHeight(route:CourseInstance[],x:number,z:number){
 export function routeWorld(route:CourseInstance[]):WheelTrack{
  if(!route.length)throw Error('Empty route');return {...route[0].track,fences:route.flatMap(c=>c.track.fences),obstacles:route.flatMap(c=>c.track.obstacles),startArea:(x,z)=>route.some(c=>onDriveableArea(x,z,c.track))};
 }
+
+export function clipSurface(points:Point[],minZ:number,maxZ:number):Point[]{
+ let result=points;
+ for(const [z,sign]of [[minZ,1],[maxZ,-1]]){
+  const input=result;result=[];
+  for(let i=0;i<input.length;i++){
+   const a=input[i],b=input[(i+1)%input.length],inside=(a.z-z)*sign>=-1e-8,next=(b.z-z)*sign>=-1e-8;
+   if(inside)result.push(a);
+   if(inside!==next)result.push({x:a.x+(b.x-a.x)*(z-a.z)/(b.z-a.z),z});
+  }
+ }
+ return result;
+}
+export function courseSurfacePolygons(c:CourseInstance){
+ const t=c.track,r=2.8,polygons:Point[][]=[];
+ for(let i=1;i<t.path.length;i++){
+  const a=t.path[i-1],b=t.path[i],dx=b.x-a.x,dz=b.z-a.z,len=Math.hypot(dx,dz),ox=dz/len*r,oz=-dx/len*r;
+  polygons.push([{x:a.x+ox,z:a.z+oz},{x:b.x+ox,z:b.z+oz},{x:b.x-ox,z:b.z-oz},{x:a.x-ox,z:a.z-oz}]);
+ }
+ for(const p of t.path)polygons.push(Array.from({length:24},(_,i)=>({x:p.x+Math.cos(i*Math.PI/12)*r,z:p.z+Math.sin(i*Math.PI/12)*r})));
+ const surfaces=polygons.map(p=>clipSurface(p,t.finishZ,c.entry.z)).filter(p=>p.length>=3),x=c.exit.x;
+ // The neck and widened yard meet the finish and next entry exactly, without coplanar neighbor overlap.
+ surfaces.push([{x:x-r,z:t.finishZ},{x:x+r,z:t.finishZ},{x:x+r,z:t.finishZ-2},{x:x+8,z:t.finishZ-2},{x:x+8,z:c.exit.z},{x:x-8,z:c.exit.z},{x:x-8,z:t.finishZ-2},{x:x-r,z:t.finishZ-2}]);
+ return surfaces;
+}
+export function courseVisibleFences(c:CourseInstance,index:number,total:number):Fence[]{
+ const x=c.exit.x;
+ return c.module.track.fences.map(f=>({a:translate(f.a,c.origin),b:translate(f.b,c.origin)}))
+  .map(f=>clipFence(f,c.exit.z,c.entry.z)).filter((f):f is Fence=>!!f).flatMap(f=>
+   index<total-1&&Math.abs(f.a.z-c.exit.z)<1e-7&&Math.abs(f.b.z-c.exit.z)<1e-7?
+    [edge(x-8,c.exit.z,x-r,c.exit.z),edge(x+r,c.exit.z,x+8,c.exit.z)]:[f]);
+}

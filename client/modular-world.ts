@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {createChampionshipWorld as legacyWorld} from './championship-world.js';
-import {assembleRoute,type CourseInstance} from '../shared/course-modules.js';
+import {assembleRoute,courseSurfacePolygons,courseVisibleFences,type CourseInstance} from '../shared/course-modules.js';
 type Batch={geometry:THREE.BufferGeometry;material:THREE.Material;matrices:THREE.Matrix4[]};
 export function createModularWorld(){
  const root=new THREE.Group(),geometries=new Map<string,THREE.BufferGeometry>(),materials=new Map<number,THREE.MeshLambertMaterial>();
@@ -13,19 +13,23 @@ export function createModularWorld(){
   const box=(w:number,h:number,d:number,c:number,x:number,y:number,z:number,ry=0,rx=0)=>add('box',c,x,y,z,w,h,d,rx,ry);
   const {track:t,module:m,origin:o}=course,cx=(t.staging.minX+t.staging.maxX)/2;
   const xs=t.path.map(p=>p.x),minX=Math.min(...xs),maxX=Math.max(...xs);
-  box(maxX-minX+80,.22,course.entry.z-course.exit.z+80,0xa4a38b,(minX+maxX)/2,-.48,(course.entry.z+course.exit.z)/2);
-  for(let i=1;i<t.path.length;i++){const a=t.path[i-1],b=t.path[i],dx=b.x-a.x,dz=b.z-a.z,len=Math.hypot(dx,dz),angle=Math.atan2(dx,dz);box(5.6,.05,len,m.surface,(a.x+b.x)/2,.01,(a.z+b.z)/2,angle);}
-  for(const p of t.path)add('road-disc',m.surface,p.x,.01,p.z);
-  box(16,.04,16,m.surface,cx,.015,t.finishZ-10);
+  box(maxX-minX+80,.22,course.entry.z-course.exit.z+(index===0?40:0)+(index===total-1?40:0),0xa4a38b,(minX+maxX)/2,-.48,(course.entry.z+course.exit.z+(index===0?40:0)-(index===total-1?40:0))/2);
+  const vertices:number[]=[];
+  for(const polygon of courseSurfacePolygons(course)){
+   const points=polygon.map(p=>new THREE.Vector2(p.x,p.z));
+   for(const triangle of THREE.ShapeUtils.triangulateShape(points,[]))for(const i of triangle){const p=polygon[i];vertices.push(p.x,.035,p.z);}
+  }
+  const ground=new THREE.BufferGeometry().setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));
+  ground.computeVertexNormals();const groundMaterial=material(m.surface);groundMaterial.side=THREE.DoubleSide;
+  const surface=new THREE.Mesh(ground,groundMaterial);surface.userData.ownedGeometry=true;surface.name='course-surface';group.add(surface);
   // Painted detour arrows lead around the gravel instead of through its collision footprint.
   for(let i=1;i<course.drivePath.length;i++){const a=course.drivePath[i-1],b=course.drivePath[i],dx=b.x-a.x,dz=b.z-a.z,len=Math.hypot(dx,dz),angle=Math.atan2(dx,dz);for(let d=1;d<len;d+=3){const x=a.x+dx*d/len,z=a.z+dz*d/len;box(.12,.025,.8,0xfff0b3,x,.075,z,angle);for(const side of [-1,1])box(.12,.025,.45,0xfff0b3,x+Math.sin(angle)*.25+Math.cos(angle)*side*.14,.075,z+Math.cos(angle)*.25-Math.sin(angle)*side*.14,angle-side*.7);}}
   const positions:number[]=[],colors:number[]=[],postPositions:{x:number;z:number}[]=[];
   const line=(ax:number,az:number,bx:number,bz:number,color:number,height:number)=>{positions.push(ax,height,az,bx,height,bz);const c=new THREE.Color(color);for(let n=0;n<2;n++)colors.push(c.r,c.g,c.b);};
   // Template fences belong to this module; entrance-yard geometry belongs to the prior module.
-  const fences=m.track.fences.map(f=>({a:{x:f.a.x+o.x,z:f.a.z+o.z},b:{x:f.b.x+o.x,z:f.b.z+o.z}}));
+  const fences=courseVisibleFences(course,index,total);
   for(const f of fences){
-   const cap=Math.abs(f.a.z-course.exit.z)<1e-6&&Math.abs(f.b.z-course.exit.z)<1e-6;
-   const pieces=cap&&index<total-1?[{a:{x:cx-8,z:course.exit.z},b:{x:cx-2.8,z:course.exit.z}},{a:{x:cx+2.8,z:course.exit.z},b:{x:cx+8,z:course.exit.z}}]:[f];
+   const pieces=[f];
    for(const piece of pieces){const dx=piece.b.x-piece.a.x,dz=piece.b.z-piece.a.z,len=Math.hypot(dx,dz),steps=Math.max(1,Math.ceil(len/.45));
     for(let n=0;n<steps;n++){const a=n/steps,b=(n+1)/steps;line(piece.a.x+dx*a,piece.a.z+dz*a,piece.a.x+dx*b,piece.a.z+dz*b,m.barrier==='tape'?(n%2?0xf5eee1:0xda3937):m.barrier==='chain'?0xf3e4d0:0xf0d397,m.barrier==='tape'?1:.5);}
     if(m.barrier==='chain')for(let d=.14;d<len;d+=.28)add('link',0xf3e4d0,piece.a.x+dx*d/len,.5,piece.a.z+dz*d/len,1,1,1,0,Math.atan2(dx,dz)+Math.PI/2);
@@ -72,7 +76,7 @@ export function createModularWorld(){
   root.visible=active;if(!active)return;
   if(!ids.length){if(!legacy){legacy=legacyWorld();root.add(legacy.root);}legacy.update(z,leg,true);for(const g of groups)g.root.visible=false;return;}
   if(legacy)legacy.root.visible=false;
-  const nextKey=ids.join(',');if(nextKey!==key){for(const g of groups){root.remove(g.root);g.root.traverse(object=>{if(object instanceof THREE.InstancedMesh)object.dispose();if(object instanceof THREE.LineSegments){object.geometry.dispose();(object.material as THREE.Material).dispose();}});}groups=assembleRoute(ids).map((c,i)=>build(c,i,ids.length));key=nextKey;}
+  const nextKey=ids.join(',');if(nextKey!==key){for(const g of groups){root.remove(g.root);g.root.traverse(object=>{if(object instanceof THREE.InstancedMesh)object.dispose();if(object instanceof THREE.Mesh&&object.userData.ownedGeometry)object.geometry.dispose();if(object instanceof THREE.LineSegments){object.geometry.dispose();(object.material as THREE.Material).dispose();}});}groups=assembleRoute(ids).map((c,i)=>build(c,i,ids.length));key=nextKey;}
   for(let i=0;i<groups.length;i++){const g=groups[i],distance=Math.max(0,g.course.exit.z-z,z-g.course.entry.z);g.root.visible=Math.abs(i-leg)<=1&&distance<60;g.gate.visible=leg<=i;}
  }};
 }

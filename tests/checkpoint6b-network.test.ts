@@ -24,9 +24,9 @@ for(const count of [3,5,10])test(count+' randomized legs synchronize on two clie
    await until(()=>a!.state.legResults.length>=(leg+1)*2,85000);assert.equal(a.state.leg,leg);const thisLeg:any[]=Array.from(a.state.legResults as Iterable<any>).filter(r=>r.leg===leg);assert.equal(thisLeg.length,2);assert.ok(thisLeg.every(r=>r.time>0&&!r.dnf));
    if(prior)assert.equal(JSON.stringify(Array.from(a.state.legResults as Iterable<any>).filter(r=>r.leg<leg).map(r=>[r.playerId,r.leg,r.spills,r.time,r.finishOrder])),prior);
    prior=JSON.stringify(Array.from(a.state.legResults as Iterable<any>).map(r=>[r.playerId,r.leg,r.spills,r.time,r.finishOrder]));
-   if(leg<count-1){await until(()=>a!.state.racePhase==='intermission');const time=Date.now();assert.ok(a.state.countdown>2.6);
+   if(leg<count-1){await until(()=>a!.state.racePhase==='intermission');const time=Date.now();assert.ok(a.state.countdown>4.6);
     if(leg===0){const token:string=b.reconnectionToken,id:string=b.sessionId;b.connection.close();await until(()=>!a!.state.players.get(id).connected);b=await client.reconnect(token);await until(()=>b!.state.players?.get(id)?.connected&&b!.state.routeIds?.length===count);assert.deepEqual([...b.state.routeIds],ids);}
-    await until(()=>a!.state.leg===leg+1);assert.ok(Date.now()-time>=2600);assert.deepEqual([...a.state.routeIds],ids);assert.ok(a.state.players.get(a.sessionId).z>route[leg].exit.z-2);assert.ok(a.state.players.get(a.sessionId).z<route[leg].track.finishZ+2);
+    await until(()=>a!.state.leg===leg+1);assert.ok(Date.now()-time>=4600);assert.deepEqual([...a.state.routeIds],ids);assert.ok(a.state.players.get(a.sessionId).z>route[leg].exit.z-2);assert.ok(a.state.players.get(a.sessionId).z<route[leg].track.finishZ+2);
    }
   }
   await until(()=>a!.state.racePhase==='results'&&b!.state.racePhase==='results'&&b!.state.legResults.length===count*2);
