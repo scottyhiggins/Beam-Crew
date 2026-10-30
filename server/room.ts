@@ -23,6 +23,7 @@ export class CrewRoom extends Room<CrewState> {
   routePlan:CourseInstance[]=[];
   private routeMaterialWorld:ReturnType<typeof routeWorld>|undefined;
   currentTrack(){return this.routePlan[this.state.leg]?.track??championshipTrack(this.state.leg); }
+  acceptModeMessage(_client:Client,_data:unknown){return true;}
   onCreate(){
     if(!Number.isInteger(this.hazardCap)||this.hazardCap<1||this.hazardCap>=WHEEL_CONFIG.maxMaterial)throw new Error('Invalid spilled hazard cap');
     this.setState(new CrewState());
@@ -30,8 +31,8 @@ export class CrewRoom extends Room<CrewState> {
     roomsByCode.set(this.state.code,this);this.setMetadata({code:this.state.code});this.setPatchRate(50);
     this.setSimulationInterval(dt=>{this.accumulator+=Math.min(dt/1000,.1);const step=1/CONFIG.tickRate;while(this.accumulator>=step){this.tick(step);this.accumulator-=step;}},1000/CONFIG.tickRate);
     this.onMessage('cosmetics',(c,value)=>{const p=this.state.players.get(c.sessionId);if(p)Object.assign(p,validateWorkerLook(value));});
-    this.onMessage('input',(c,data)=>{const p=this.state.players.get(c.sessionId);if(!p||!data||!Number.isFinite(data.x)||!Number.isFinite(data.z))return;p.inputX=Math.max(-1,Math.min(1,data.x));p.inputZ=Math.max(-1,Math.min(1,data.z));p.lastInput=Date.now();});
-    this.onMessage('action',c=>{
+    this.onMessage('input',(c,data)=>{if(!this.acceptModeMessage(c,data))return;const p=this.state.players.get(c.sessionId);if(!p||!data||!Number.isFinite(data.x)||!Number.isFinite(data.z))return;p.inputX=Math.max(-1,Math.min(1,data.x));p.inputZ=Math.max(-1,Math.min(1,data.z));p.lastInput=Date.now();});
+    this.onMessage('action',(c,data)=>{if(!this.acceptModeMessage(c,data))return;
       const p=this.state.players.get(c.sessionId);
       if(!p||!beamActionState(this.state,p).enabled||Date.now()-p.lastAction<=200)return;
       p.lastAction=Date.now();p.actions++;
@@ -47,7 +48,7 @@ export class CrewRoom extends Room<CrewState> {
     this.onMessage('signal',(c,value)=>{const p=this.state.players.get(c.sessionId);if(p&&['LIFT','WAIT','LEFT','RIGHT'].includes(value)&&Date.now()-p.lastSignal>500){p.signal=value;p.lastSignal=Date.now();p.signalUntil=Date.now()+2000;}});
     this.onMessage('mode',(c,value)=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='lobby'&&['beam','wheel','competitive','championship'].includes(value))this.state.mode=value==='beam'?'competitive':value;});
     this.onMessage('beamMap',(c,value)=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='lobby'&&validBeamMap(value))this.state.beamMap=value;});
-    this.onMessage('rescue',c=>{const p=this.state.players.get(c.sessionId),b=p&&this.state.teams[p.team];if(this.state.mode==='competitive'&&this.state.racePhase==='racing'&&b&&!b.delivered&&!b.dnf&&b.protection===0)recoverTeam(b,[...this.state.players.values()].filter(q=>q.team===p!.team));});
+    this.onMessage('rescue',(c,data)=>{if(!this.acceptModeMessage(c,data))return;const p=this.state.players.get(c.sessionId),b=p&&this.state.teams[p.team];if(this.state.mode==='competitive'&&this.state.racePhase==='racing'&&b&&!b.delivered&&!b.dnf&&b.protection===0)recoverTeam(b,[...this.state.players.values()].filter(q=>q.team===p!.team));});
     this.onMessage('championshipLength',(c,value)=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='lobby'&&validChampionshipLength(value))this.state.championshipLength=value;});
     this.onMessage('material',(c,id)=>{const p=this.state.players.get(c.sessionId);if(p&&this.state.phase==='lobby'&&validMaterial(id))p.materialId=id;});
     this.onMessage('start',c=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='lobby'&&(this.state.mode==='competitive'||this.clients.length>=2)&&this.restart(false)){this.state.phase='test';this.lock();}});

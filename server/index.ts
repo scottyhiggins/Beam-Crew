@@ -1,3 +1,4 @@
+import {PartyRoom,partyRooms} from './party-room.js';
 import {PublicWheelRoom} from './public-room.js';
 import {TriviaRoom,triviaRooms} from './trivia-room.js';
 import express from 'express';
@@ -13,6 +14,8 @@ const startedAt=new Date().toISOString();
 const app=express();const http=createServer(app);
 const server=new Server({transport:new WebSocketTransport({server:http})});
 server.define('crew',CrewRoom);
+server.define('party',PartyRoom);
+app.get('/api/party/:code',(req,res)=>{const room=partyRooms.get(req.params.code.toUpperCase());if(!room){res.status(404).json({error:'Party room not found'});return;}if(room.partyPhase!=='lobby'){res.status(409).json({error:'Party already started. Use your reconnect reservation.'});return;}res.json({roomId:room.roomId});});
 server.define('wheel_public',PublicWheelRoom);
 server.define('trivia',TriviaRoom);
 app.get('/api/trivia/:code',(req,res)=>{const room=triviaRooms.get(req.params.code.toUpperCase());if(!room){res.status(404).json({error:'Trivia room not found'});return;}if(room.game.phase!=='lobby'){res.status(409).json({error:'Round in progress. Reconnect or wait for the lobby.'});return;}res.json({roomId:room.roomId});});
