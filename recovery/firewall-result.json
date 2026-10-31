@@ -1,0 +1,28 @@
+{
+    "status":  "PASS",
+    "name":  "BreakTime-M24-P21-LAN-2724",
+    "profile":  "Private",
+    "direction":  "Inbound",
+    "action":  "Allow",
+    "enabled":  "True",
+    "protocol":  "TCP",
+    "port":  "2724",
+    "localAddress":  "192.168.1.166",
+    "remoteAddress":  "192.168.1.0/255.255.255.0",
+    "program":  "C:\\Users\\higgi\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+    "firewallProfiles":  [
+                             {
+                                 "Name":  "Domain",
+                                 "Enabled":  1
+                             },
+                             {
+                                 "Name":  "Private",
+                                 "Enabled":  1
+                             },
+                             {
+                                 "Name":  "Public",
+                                 "Enabled":  1
+                             }
+                         ],
+    "checkedAt":  "2026-10-30T20:59:44.1548347-06:00"
+}

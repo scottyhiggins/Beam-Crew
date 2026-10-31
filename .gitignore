@@ -16,3 +16,6 @@ build/
 /baseline-m22.zip
 /scripts/.m23-*.mjs
 /recovery/m23-checkpoint.txt
+
+/recovery/preview.pid
+/recovery/m24-checkpoint.txt

@@ -1,0 +1,38 @@
+PASS only three selectable lengths
+PASS mobile leaderboard always visible
+PASS all eight unfinished workers listed
+PASS unfinished totals not shown as zero
+PASS named header above course counter
+PASS white info panel removed
+PASS results button removed
+PASS local finisher sees staging message
+PASS active racer has no staging message
+PASS official result updates immediately
+PASS header transitions to second course
+PASS staging notice hides at next GO
+PASS existing 3D podium renders
+PASS scoreboard remains with podium
+PASS host replay accessible
+PASS award retained in scoreboard
+PASS 319 no horizontal overflow
+PASS 319 rows fit leaderboard
+PASS 319 board clear of joystick
+PASS 319 board clear of podium
+PASS 319 podium clear of joystick
+PASS 319 header clear of menu
+PASS 319 leaderboard stays visible with lobby controls
+PASS 319 lobby controls clear leaderboard
+PASS 319 leave control accessible
+PASS 844 no horizontal overflow
+PASS 844 rows fit leaderboard
+PASS 844 board clear of joystick
+PASS 844 board clear of podium
+PASS 844 podium clear of joystick
+PASS 844 header clear of menu
+PASS 844 leaderboard stays visible with lobby controls
+PASS 844 lobby controls clear leaderboard
+PASS 844 leave control accessible
+PASS reconnect restores official scoreboard and podium
+PASS replay clears podium
+PASS replay clears old totals
+PASS zero browser page errors

@@ -1,0 +1,77 @@
+{
+  "checks": [
+    "only three selectable lengths",
+    "mobile leaderboard always visible",
+    "all eight unfinished workers listed",
+    "unfinished totals not shown as zero",
+    "named header above course counter",
+    "white info panel removed",
+    "results button removed",
+    "local finisher sees staging message",
+    "active racer has no staging message",
+    "official result updates immediately",
+    "header transitions to second course",
+    "staging notice hides at next GO",
+    "existing 3D podium renders",
+    "scoreboard remains with podium",
+    "host replay accessible",
+    "award retained in scoreboard",
+    "319 no horizontal overflow",
+    "319 rows fit leaderboard",
+    "319 board clear of joystick",
+    "319 board clear of podium",
+    "319 podium clear of joystick",
+    "319 header clear of menu",
+    "319 leaderboard stays visible with lobby controls",
+    "319 lobby controls clear leaderboard",
+    "319 leave control accessible",
+    "844 no horizontal overflow",
+    "844 rows fit leaderboard",
+    "844 board clear of joystick",
+    "844 board clear of podium",
+    "844 podium clear of joystick",
+    "844 header clear of menu",
+    "844 leaderboard stays visible with lobby controls",
+    "844 lobby controls clear leaderboard",
+    "844 leave control accessible",
+    "reconnect restores official scoreboard and podium",
+    "replay clears podium",
+    "replay clears old totals",
+    "zero browser page errors"
+  ],
+  "errors": [],
+  "samples": [
+    {
+      "label": "before desktop racing",
+      "frames": 495,
+      "p50": 6.099999999999454,
+      "p95": 6.200000000000728,
+      "max": 6.399999999999636,
+      "over33": 0
+    },
+    {
+      "label": "before mobile-emulated racing",
+      "frames": 495,
+      "p50": 6.100000000000364,
+      "p95": 6.200000000000728,
+      "max": 12.199999999998909,
+      "over33": 0
+    },
+    {
+      "label": "after desktop racing",
+      "frames": 496,
+      "p50": 6.099999999999454,
+      "p95": 6.200000000000728,
+      "max": 6.399999999999636,
+      "over33": 0
+    },
+    {
+      "label": "after mobile-emulated racing",
+      "frames": 496,
+      "p50": 6.100000000000364,
+      "p95": 6.200000000000728,
+      "max": 6.400000000001455,
+      "over33": 0
+    }
+  ]
+}

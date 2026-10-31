@@ -1,0 +1,32 @@
+$ tsc --noEmit && tsc -p tsconfig.server.json && vite build
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 103 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/lan.html                                     0.67 kB │ gzip:   0.42 kB
+dist/crane.html                                   0.75 kB │ gzip:   0.36 kB
+dist/index.html                                   0.85 kB │ gzip:   0.37 kB
+dist/trivia.html                                  0.85 kB │ gzip:   0.40 kB
+dist/party.html                                   0.87 kB │ gzip:   0.39 kB
+dist/podium-preview.html                          1.26 kB │ gzip:   0.67 kB
+dist/assets/podium-BPzrfR_1.css                   1.40 kB │ gzip:   0.58 kB
+dist/assets/trivia-BKtEbPjJ.css                   3.50 kB │ gzip:   1.34 kB
+dist/assets/crane-CcGKB0_c.css                    8.38 kB │ gzip:   2.64 kB
+dist/assets/main-CobivlXM.css                    34.74 kB │ gzip:   7.86 kB
+dist/assets/modulepreload-polyfill-B5Qt9EMX.js    0.71 kB │ gzip:   0.40 kB
+dist/assets/invite-BtK40wPj.js                    0.82 kB │ gzip:   0.47 kB
+dist/assets/podiumPreview-CJU7K9dI.js             1.08 kB │ gzip:   0.67 kB
+dist/assets/lan-BQhkJn_4.js                       1.26 kB │ gzip:   0.76 kB
+dist/assets/version-DfCicpuP.js                   5.11 kB │ gzip:   2.45 kB
+dist/assets/trivia-CIs_Qm_l.js                    8.48 kB │ gzip:   3.78 kB
+dist/assets/crane-CixXwzWO.js                    22.80 kB │ gzip:   9.82 kB
+dist/assets/main-D5iTQsV_.js                     91.45 kB │ gzip:  34.84 kB
+dist/assets/index-CTKzep_N.js                   127.68 kB │ gzip:  40.72 kB
+dist/assets/podium-NCXsE1gx.js                  539.46 kB │ gzip: 139.32 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.89s

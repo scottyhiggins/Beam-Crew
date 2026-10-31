@@ -1,0 +1,11 @@
+{
+  "checks": 5,
+  "passed": [
+    "Beam invite stores reservation",
+    "Beam invited reload reconnects active room",
+    "Party invite stores reservation",
+    "Party invited reload reconnects same locked room",
+    "zero invite-reload browser errors"
+  ],
+  "errors": []
+}

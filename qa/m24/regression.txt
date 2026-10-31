@@ -1,0 +1,374 @@
+$ tsc -p tsconfig.server.json && node --test build/tests/*.test.js
+﹣ four real clients: host map authority, team-local rescue, reconnect and replay (1.2936ms) # SKIP
+✔ stationary beam is pushed by a moving load with no remaining overlap (48.5094ms)
+✔ stationary free worker is pushed out of a load (1.3411ms)
+✔ impossible opposing wall constraints report failure instead of pinning forever (1.0719ms)
+✔ touching boxes do not jitter; penetrating rotated boxes separate (0.326ms)
+✔ map 1: falling worker resets both workers and beam at checkpoint (1.1407ms)
+✔ map 2: falling worker resets both workers and beam at checkpoint (1.4488ms)
+✔ a falling beam recovers even when free workers are safe (1.1087ms)
+✔ respawn freezes team briefly, charges once and clears motion (0.5196ms)
+✔ maps have distinct fall boundaries and validation rejects malformed IDs (0.3211ms)
+✔ excavator sweep is deterministic, bounded and server collision geometry covers its tip (7.2775ms)
+✔ bounded substeps prevent moving load tunneling across a stationary assembly (116.7376ms)
+✔ 2 players: recovery is team-local and replay clears penalties (4.0619ms)
+✔ 4 players: recovery is team-local and replay clears penalties (1.5215ms)
+✔ 6 players: recovery is team-local and replay clears penalties (1.5306ms)
+✔ 8 players: recovery is team-local and replay clears penalties (2.2216ms)
+✔ disconnected teammate pauses assembly; round timeout resolves missing partners (2.7153ms)
+✔ hazards still push stationary teams while a partner reconnects (14.9365ms)
+✔ penalty-adjusted team ranking is fair and completed times stay immutable (0.9861ms)
+✔ latest checkpoint retains the completed turn on recovery (1.3594ms)
+✔ hazard knockback beyond a worker boundary recovers rather than blocking all future input (0.7297ms)
+✔ replay reset numbers remain monotonic after several automatic recoveries (1.1587ms)
+✔ excavator contact moves or recovers a stationary beam assembly authoritatively (3.1664ms)
+✔ full course 0: timed load crossings, recovery, checkpoints and supported delivery (325.7231ms)
+✔ full course 1: timed load crossings, recovery, checkpoints and supported delivery (184.9254ms)
+✔ full course 2: timed load crossings, recovery, checkpoints and supported delivery (543.8438ms)
+✔ 2 workers form 1 independent pairs and immutable team deliveries (85.6678ms)
+✔ 4 workers form 2 independent pairs and immutable team deliveries (110.1947ms)
+✔ 6 workers form 3 independent pairs and immutable team deliveries (72.1204ms)
+✔ 8 workers form 4 independent pairs and immutable team deliveries (66.7416ms)
+✔ moving loads block free workers at the server time, and later clear the same location (0.5594ms)
+﹣ real WebSockets synchronize 2 workers and every assigned grip (0.3933ms) # SKIP
+﹣ real WebSockets synchronize 4 workers and every assigned grip (0.2489ms) # SKIP
+﹣ real WebSockets synchronize 6 workers and every assigned grip (0.186ms) # SKIP
+﹣ real WebSockets synchronize 8 workers and every assigned grip (0.2693ms) # SKIP
+﹣ two clients carry, release, reject non-host reset, reconnect, complete and replay the course (1.3446ms) # SKIP
+✔ same input translates a fully supported beam without unintended rotation (9.194ms)
+✔ opposite crosswise inputs deliberately rotate; opposite axial inputs cancel (5.0393ms)
+✔ unsupported end lowers and materially reduces movement effectiveness (2.8563ms)
+✔ diagonal input is normalized; idle carriers cannot create motion (1.7638ms)
+✔ grips respect proximity and occupancy (0.3861ms)
+✔ beam cannot cross a doorway wall, column or platform boundary (13.7658ms)
+✔ doorway, intentional ninety-degree turn and destination are reachable (29.1248ms)
+✔ checkpoint reset clears grips-independent motion and delivery; full restart clears checkpoint (0.492ms)
+✔ beam simulation is deterministic and settles after neutral input (15.3486ms)
+✔ moving loads use deterministic server time and block beam and worker collisions (1.1644ms)
+✔ delivery requires both assigned ends, not a dropped beam in the goal (3.5403ms)
+﹣ two real clients race three randomized courses, reconnect during countdown and Course 2, retain materials and frozen ledgers, replay and switch modes (1.1631ms) # SKIP
+✔ ten-leg eight-worker lifecycle preserves late DNF history, countdown reloads, permanent debris and immutable official totals (495.8377ms)
+✔ Championship keeps Course 1 unchanged and the socket has continuous driveable ground and matching fences (17.5523ms)
+✔ last racer starts exactly one five-second countdown; GO preserves every pose, load and physical state (51.202ms)
+✔ staging and countdown spills stay physical while both official leg and cumulative snapshots stay frozen (49.3808ms)
+✔ reserved racers remain eligible; a permanently departed last racer becomes DNF and releases the transition (20.1689ms)
+✔ cumulative score uses spills then racing time, and replay clears the ledger and world (28.3438ms)
+✔ all twelve loads traverse Course 2 without a seam teleport, and the second spike lip blocks reverse (1079.8182ms)
+✔ completed Course 1 cannot be reentered after next GO, including an arrival still on the wedge (16.3689ms)
+✔ Course 2 rejects early finish and preserves each material load and hazard quantities (0.8149ms)
+﹣ 3 randomized legs synchronize on two clients through every countdown, reconnect, immutable ledger and replay (1.345ms) # SKIP
+﹣ 5 randomized legs synchronize on two clients through every countdown, reconnect, immutable ledger and replay (0.2948ms) # SKIP
+﹣ 10 randomized legs synchronize on two clients through every countdown, reconnect, immutable ledger and replay (0.1968ms) # SKIP
+✔ ten distinct modules have ten surfaces, three barrier families and deterministic unique 3/5/10 selection (8.5226ms)
+✔ every legal adjacent pair aligns level sockets with a driveable, uncapped 5.6m connection (164.3551ms)
+✔ all twelve materials naturally drive every module including the marked gravel detour with continuous positions (1425.9927ms)
+✔ gravel blocks the visible part of the haul road and leaves a fair left route; truck footprint is authoritative (0.8207ms)
+✔ module gates reject skipped and reverse finishes and accept ordered crossing across the lane (4.1838ms)
+✔ five-leg room freezes each ledger, runs one five-second transition, preserves physical state, hazards and chosen loads (129.6229ms)
+✔ loads have real material shapes, fit trays, and every selection creates bounded geometry (47.346ms)
+✔ continuous shared fence closes gaps between posts and blocks full-speed lateral shortcut attempts (9.7104ms)
+✔ all staging directions remain strictly beyond the finish and preserve immutable results (251.2443ms)
+✔ last finisher freezes timer and atomically publishes ranked results; staging still moves (8.8632ms)
+✔ a reserved disconnect waits for reconnect; permanent last-racer departure resolves results without another racing tick (1.7111ms)
+✔ finish records a continuous pose and velocity, then drives over the wedge into the connected yard (37.094ms)
+✔ post-finish spills use the normal reload and bounded persistent hazards without changing official scores or time (20.2565ms)
+✔ staging carts bump and yield to an unfinished arrival instead of forming an immovable finish wall (0.522ms)
+✔ connected yard opens the old end cap while preserving both finish-approach ropes (0.5553ms)
+✔ all 90 connections have owned non-overlapping surfaces, covered yards and clear visible socket barriers (198.9896ms)
+✔ all 84 free looks validate and malformed selections fall back atomically (3.5635ms)
+✔ server join validates cosmetics and ignores attempted gameplay field injection (6.789ms)
+✔ cosmetic models preserve animated limb poses for Wheelbarrow and Beam Carry (31.9939ms)
+﹣ cosmetics synchronize by player, survive reconnect and new rounds in wheel (0.4833ms) # SKIP
+﹣ cosmetics synchronize by player, survive reconnect and new rounds in competitive (0.2912ms) # SKIP
+✔ held/airborne loads never score; stable levels count in 10-foot increments (6.9368ms)
+✔ acceleration produces predictable lag; stopping and reversing oscillate (1.893ms)
+✔ release inherits swing position, lateral velocity, vertical velocity and rotation (0.4542ms)
+✔ off-centre landings slide and rotate; falling bodies remain visible before cleanup (2.9077ms)
+✔ unsupported elevated bodies cannot score and fall under gravity (0.7261ms)
+✔ removing a supporting body collapses its descendants and clears elevated scores (1.2701ms)
+✔ tower centre of mass beyond a lower footprint triggers tipping (0.4098ms)
+✔ pickup range, movement bounds, ties and replay arena reset (1.2707ms)
+✔ timeout occurs on exactly tick 1800 with deterministic ties for 2–8 players (111.8308ms)
+✔ 100-foot supported stack instantly wins, all snapshots agree and remain private (1.0171ms)
+✔ same-tick 100-foot arrivals use join order; 90 feet never ends early (0.8103ms)
+✔ target cannot be configured; host replay clears swing, score, timer and results (1.783ms)
+✔ digital left/right/action controls can build a stable 100-foot tower within 60 seconds (14.3799ms)
+✔ scheduler jitter catches up fixed physics steps without extending the 60-second round (14.2244ms)
+✔ all 12 material meshes fit their shared authoritative contact shapes, including rotation and aggregation (552.077ms)
+✔ empty slots have no server effect while visible debris retains all six material behaviors (6.9467ms)
+✔ a loose load is one heap and gravel is individually scattered at full size (0.7043ms)
+﹣ two real Derby players keep private destruction and receive identical 60-second results (1.8392ms) # SKIP
+﹣ eight real Derby players reconnect, transfer host, reject late joins, replay and switch modes (0.4678ms) # SKIP
+✔ layout has 31 reachable destructible targets and deterministic control sweep destroys every one (30.9143ms)
+✔ swing boost has a server cooldown and reuses predictable trolley/pendulum momentum (0.79ms)
+✔ idle ball does not score by merely overlapping a target (0.4309ms)
+✔ swept ball collision catches fast crossings and rejects distant passes (0.3892ms)
+✔ destroyed target awards points exactly once through repeat contacts (1.1623ms)
+✔ continuous contact cannot farm repeated damage; a new impact requires separation (0.5908ms)
+✔ debris is capped even on simultaneous destruction and expires without scoring contacts (3.2994ms)
+✔ full demolition simulation is deterministic and bounded (29.3281ms)
+✔ Derby never ends at 100 points; exact 60-second timer, ties, freeze and private snapshots for 2–8 players (184.4119ms)
+✔ host-only lobby selection, invalid messages, replay cleanup and return to unchanged Tower Rush rules (10.1348ms)
+﹣ final integration: Quick Match cosmetics survive waiting cancel, countdown, reconnect and fresh replay (1.691ms) # SKIP
+﹣ two real clients finish the missed-checkpoint route, receive scores, freeze time and reconnect in staging (1.1724ms) # SKIP
+✔ reported legal fence-line route finishes without touching the hidden old checkpoint circle (84.8851ms)
+✔ legal inner hairpin route cannot get stuck on an invisible apex requirement (18.5924ms)
+✔ every ordered gate accepts the full lane, including both edges (0.6772ms)
+✔ the leading edge crossing the painted stripe finishes immediately and only once (22.8444ms)
+✔ backward, outside-lane, stationary-beyond-line and missing-checkpoint attempts do not finish (0.6068ms)
+﹣ FIFO schema removal reaches two real clients and late reconnect snapshots without altering recorded results (1.4886ms) # SKIP
+﹣ integrated schema: simultaneous public matching and private Chaos rescue/reconnect clean up independently (8.518ms) # SKIP
+
+       ___      _
+      / __\___ | |_   _ ___  ___ _   _ ___
+     / /  / _ \| | | | / __|/ _ \ | | / __|
+    / /__| (_) | | |_| \__ \  __/ |_| \__ \
+    \____/\___/|_|\__, |___/\___|\__,_|___/
+                  |___/
+
+     · Multiplayer Framework for Node.js ·
+
+💖 Consider becoming a Sponsor on GitHub → https://github.com/sponsors/endel
+🌟 Give us a star on GitHub → https://github.com/colyseus/colyseus
+☁️  Deploy and scale your project on Colyseus Cloud → https://cloud.colyseus.io
+
+
+﹣ M22: eight Crane clients preserve pumpkin, protocol, private arenas, host transfer, reconnect, mode switch and replay (1.2997ms) # SKIP
+✔ M22: eight-player Party pumpkin survives all mode boundaries, final podium, host transfer and replay (837.4393ms)
+✔ M22 optional Tower adapter spike: eight private arenas, epoch guard, deterministic 60-second native result (24.8676ms)
+✔ M22 optional Tower adapter spike: reset isolates the next playlist epoch and clears all arena state (1.5509ms)
+✔ M23 3 races retain official totals in staging, transition and replay (114.5722ms)
+✔ M23 5 races retain official totals in staging, transition and replay (74.281ms)
+✔ M23 10 races retain official totals in staging, transition and replay (150.9663ms)
+✔ M23 two races rejected and stale replay normalizes to three unique courses (0.6094ms)
+﹣ server locks duplicate material choices at countdown and pairs eight clients authoritatively (1.3586ms) # SKIP
+✔ 12 materials in six vertical pairs and strict input validation (1.5466ms)
+✔ all twelve loaded carts have identical speed steering risk and spill thresholds (50.1837ms)
+✔ six spill behaviors: sticky, rolling, fixed, heavy, bumpy and rough (4.2006ms)
+✔ mixed repeated spills stay bounded and preserve material identity (31.9418ms)
+✔ finished racers retain normal cart handling, staging hazards and a single finish (2.0845ms)
+✔ competitive pairs assign opposite ends, independent beams, and odd spectator (18.8351ms)
+✔ competitive results record team time once and departure gives DNF (5.9671ms)
+✔ beam goal cannot bypass the doorway checkpoint (2.807ms)
+✔ diagonal input does not exceed movement speed (3.0867ms)
+✔ floor boundaries contain players even with sustained input (2.3019ms)
+✔ releasing input brings a worker to rest (0.501ms)
+✔ identical input streams produce identical movement (1.5504ms)
+﹣ eight clients synchronize, reject invalid joins, transfer host, reconnect and replay (1.2986ms) # SKIP
+
+       ___      _
+      / __\___ | |_   _ ___  ___ _   _ ___
+     / /  / _ \| | | | / __|/ _ \ | | / __|
+    / /__| (_) | | |_| \__ \  __/ |_| \__ \
+    \____/\___/|_|\__, |___/\___|\__,_|___/
+                  |___/
+
+     · Multiplayer Framework for Node.js ·
+
+💖 Consider becoming a Sponsor on GitHub → https://github.com/sponsors/endel
+🌟 Give us a star on GitHub → https://github.com/colyseus/colyseus
+☁️  Deploy and scale your project on Colyseus Cloud → https://cloud.colyseus.io
+
+
+
+       ___      _
+      / __\___ | |_   _ ___  ___ _   _ ___
+     / /  / _ \| | | | / __|/ _ \ | | / __|
+    / /__| (_) | | |_| \__ \  __/ |_| \__ \
+    \____/\___/|_|\__, |___/\___|\__,_|___/
+                  |___/
+
+     · Multiplayer Framework for Node.js ·
+
+💖 Consider becoming a Sponsor on GitHub → https://github.com/sponsors/endel
+🌟 Give us a star on GitHub → https://github.com/colyseus/colyseus
+☁️  Deploy and scale your project on Colyseus Cloud → https://cloud.colyseus.io
+
+
+✔ real clients: same-room transitions, host transfer, reconnect across modes, stale message guards and replay (4492.8202ms)
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+colyseus.js: onMessage() not registered for type 'partyView'.
+✔ real 2–8 client matrix: native three-race finishes, team results, odd skips and shared final ranking (769.6643ms)
+✔ only three finished adapters are playable; normalized points, shared ties and deterministic podium (2.892ms)
+✔ 2–8 players traverse the complete same-room playlist; incomplete pairs skip with bounded wait; replay resets ledger (35.0483ms)
+✔ unfinished races, abandoned teams, stale scoring and an unmatched final worker cannot stall the party (9.3394ms)
+✔ trivia retains native team scoring and a remaining worker covers both roles (2.9198ms)
+✔ workplace awards require recorded play; empty or zero statistics do not invent achievements (3.5715ms)
+✔ 2 workers preserve authoritative spills-first placement and cosmetics (3.3498ms)
+✔ 3 workers preserve authoritative spills-first placement and cosmetics (0.833ms)
+✔ 4 workers preserve authoritative spills-first placement and cosmetics (0.6935ms)
+✔ 5 workers preserve authoritative spills-first placement and cosmetics (0.4834ms)
+✔ 6 workers preserve authoritative spills-first placement and cosmetics (0.2687ms)
+✔ 7 workers preserve authoritative spills-first placement and cosmetics (0.2374ms)
+✔ 8 workers preserve authoritative spills-first placement and cosmetics (0.2763ms)
+✔ ties share their recorded place; DNF and unranked never receive medals (0.207ms)
+✔ disconnected recorded finish retained; unfinished player has no invented rank (0.3527ms)
+✔ absent finisher gets no substitute avatar even when names match (0.3839ms)
+✔ team ranking uses team place and membership, including duplicate names (0.4037ms)
+✔ championship DNF cannot receive a winner award (0.2473ms)
+✔ compact framing activates only for short touch landscape and keeps the player and route in view (3.7244ms)
+✔ landscape styling retains safe areas, touch targets, an always-visible leaderboard and mode-specific results (2.2341ms)
+✔ QA: actual desktop and mobile control adapter clears stale RELEASE and attached styling when inactive (1.5239ms)
+✔ QA: eligible workers regain both action buttons with neutral labels after replay/reconnect (0.4747ms)
+﹣ QA real clients: guest departure DNF rejects restart/reset and solo start, preserves results, then accepts teammate replay (1.2458ms) # SKIP
+﹣ QA real clients: host transfer and reserved disconnect count only connected workers for replay (0.2869ms) # SKIP
+✔ QA: reject solo Beam replay before mutating the completed round (5.4474ms)
+✔ QA: reserved disconnected worker is ineligible until reconnected (1.8766ms)
+✔ QA: valid 2-worker Beam replay keeps exactly two workers per beam (1.9792ms)
+✔ QA: valid 4-worker Beam replay keeps exactly two workers per beam (1.6539ms)
+✔ QA: valid 6-worker Beam replay keeps exactly two workers per beam (15.1173ms)
+✔ QA: valid 8-worker Beam replay keeps exactly two workers per beam (1.3832ms)
+✔ QA: no connected workers cannot create a spectator-only round; odd counts keep full teams (0.8607ms)
+✔ QA: action policy clears stale attached state for spectators, missing teams, countdown, DNF and results (0.9435ms)
+✔ QA: lost/reconnecting partner, protection and completed delivery hide action until eligible again (0.7645ms)
+✔ QA: team DNF and delivery release grips and stop stale controls (2.3081ms)
+﹣ real sockets: public/private separation, concurrent capacity, cancellation, countdown, reconnect and replay (1.3603ms) # SKIP
+﹣ public room creation is bounded and abandoned waiting rooms release capacity (0.3042ms) # SKIP
+✔ public countdown requires two connected workers, cancels below two, accepts eight and rejects duplicates (9.3583ms)
+✔ FIFO removes only spilled hazards and preserves score snapshots and permanent geometry (8.5951ms)
+✔ default cap survives connected courses and real spill generation without changing counters (137.8023ms)
+﹣ refresh/drop reconnect, host transfer, cancellation and new-room join work over real sockets (1.2731ms) # SKIP
+✔ saved reservation deadline survives reload and cannot be extended by retries (1.379ms)
+✔ a stalled Safari/offline request expires and releases a late connection (44.9179ms)
+✔ Cancel immediately unlocks recovery and a late success cannot attach (14.6825ms)
+✔ expired tokens stop immediately; valid reconnect retains its session (1.2489ms)
+✔ temporary network failure retries within the original reservation (1010.3117ms)
+✔ phone sharpness rises from 1.5x to 2x within a bounded pixel budget (1.3267ms)
+✔ adaptive sharpness ignores isolated/background gaps and avoids rapid resolution changes (2.6853ms)
+✔ ten-course scene batches repeated geometry, culls distant legs and reuses a bounded scene on replay (360.9665ms)
+✔ waiting-frame GPU warmup is nearby, once per section, reuses its target and restores visibility/culling even on failure (29.8545ms)
+✔ room schema encodes eight workers and subsequent changes (12.9171ms)
+﹣ all 12 materials spill once across two real clients with identical one-load presentation (2.5098ms) # SKIP
+✔ one real server spill has exactly one load of solid objects or loose volume, for all twelve materials (188.5478ms)
+✔ mixed repeated spills and cap aggregation conserve quantities with bounded visible geometry (4.8547ms)
+﹣ production server identifies its build and serves the mode selector assets (1.3064ms) # SKIP
+✔ launcher preflight accepts an available port (319.6609ms)
+✔ launcher preflight identifies occupied port instead of appearing to start (176.018ms)
+﹣ live Trivia: 8 players, private code, roles, forged team, reconnect, timeout, transfer and replay (1.3984ms) # SKIP
+﹣ live Trivia 2 players: complete five-question round, podium and replay (0.2789ms) # SKIP
+﹣ live Trivia 4 players: complete five-question round, podium and replay (0.2137ms) # SKIP
+﹣ live Trivia 6 players: complete five-question round, podium and replay (0.1607ms) # SKIP
+✔ 42 original questions cover six categories and have four distinct choices (3.5278ms)
+✔ 2 workers finish 15 questions in fixed pairs with alternating private roles and exact scoring (4.2497ms)
+✔ 4 workers finish 15 questions in fixed pairs with alternating private roles and exact scoring (1.2314ms)
+✔ 6 workers finish 15 questions in fixed pairs with alternating private roles and exact scoring (12.7167ms)
+✔ 8 workers finish 15 questions in fixed pairs with alternating private roles and exact scoring (3.6016ms)
+✔ invalid starts, host controls, answer replay, wrong answers and timeouts are rejected or scored safely (0.9517ms)
+✔ disconnect reserves pairs, transfers host, blocks disconnected submissions and restores reconnect role (0.5382ms)
+✔ standings count only correct answer time, with no hidden data for non-members (0.3346ms)
+✔ host returning to lobby preserves a disconnected teammate reservation (0.4547ms)
+✔ scores do not disclose correctness until all teams lock or timeout (0.7045ms)
+﹣ two racers synchronize countdown, independent carts, reconnect, finish and host replay (0.9477ms) # SKIP
+﹣ spilled material synchronizes to both racers and survives reload and reconnect until restart (0.2344ms) # SKIP
+✔ server keeps unfinished racer active and reranks a slower clean finish ahead of a spilled first finish (4.4432ms)
+✔ server generates one persistent spill, another racer moves it, and restart clears it (8.4752ms)
+✔ cart reset and independent starts (1.7134ms)
+✔ fast sharp steering is risky; slower driving avoids spill (4.6025ms)
+✔ neutral input recovers instability and brakes (2.7038ms)
+✔ threshold spills once, holds during reload, resets predictably (0.5486ms)
+✔ rough terrain is spatial and fast driving risks more than careful driving (0.4499ms)
+✔ solid posts brake and destabilize a severe impact more than a slow impact (0.4876ms)
+✔ spilled material persists, moves when another cart hits, and ignores finished racers (9.386ms)
+✔ eight-player repeated spills preserve all material within a bounded number of piles (120.6391ms)
+✔ ranking prioritizes spills, then time, with finish order only an exact tie breaker (1.0994ms)
+✔ one finisher never ends the race by default; grace timeout is an explicit option (0.4271ms)
+✔ ordered checkpoints prevent shortcut finish; results remain immutable (0.3237ms)
+✔ controlled driver traverses the complete marked course (11.5704ms)
+✔ wheel grip reaches handles behind the tray and stumble bends/steps then settles (11.6609ms)
+ℹ tests 229
+ℹ suites 0
+ℹ pass 195
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 34
+ℹ todo 0
+ℹ duration_ms 8054.4894

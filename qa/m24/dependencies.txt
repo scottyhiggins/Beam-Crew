@@ -1,0 +1,28 @@
+Recreating C:\Users\higgi\.codex\.chatgpt-projects\g-p-6ac291cf8ecc81919bbc636308fbf05d\Beam-Crew-m24-release-candidate\node_modules
+✓ Lockfile passes supply-chain policies (verified 26d ago)
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +141
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 141, reused 141, downloaded 0, added 127
+Progress: resolved 141, reused 141, downloaded 0, added 138
+Progress: resolved 141, reused 141, downloaded 0, added 140
+Progress: resolved 141, reused 141, downloaded 0, added 141, done
+
+dependencies:
++ @colyseus/core 0.16.26
++ @colyseus/schema 3.0.76
++ @colyseus/ws-transport 0.16.5
++ colyseus.js 0.16.22
++ express 4.22.3
++ three 0.180.0
+
+devDependencies:
++ @types/express 4.17.25
++ @types/node 24.19.1
++ @types/three 0.180.0
++ tsx 4.23.15
++ typescript 5.9.3
++ vite 7.3.6
+
+Done in 6.1s using pnpm v11.25.0

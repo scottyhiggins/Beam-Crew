@@ -1,0 +1,79 @@
+RUN m22-browser-production
+PASS home Crane tile opens two-mode chooser
+PASS Crane room code
+PASS mobile guest joins desktop Crane room
+PASS mobile reload reconnects same Crane room
+PASS Crane mobile landscape no overflow
+PASS desktop and mobile agree on natural 60-second Tower winner
+PASS Tower shared 3D podium rendered
+PASS Tower podium preserves both workers
+PASS Crane host transfers after original host exits
+PASS new host can switch to Derby
+PASS returning browser reconnects its reserved Crane place
+PASS Derby replay starts at fresh 60 seconds
+PASS home Party tile opens actual playlist
+PASS Party advertises exactly three playable modes
+PASS Party room presents complete three-mode playlist
+PASS zero browser page errors:
+PASS no duplicate Three.js or exhausted WebGL contexts
+RUN m22-browser-trivia-quick
+PASS round 1 reader cannot submit selector answer
+PASS round 1 authoritative correct-answer score
+PASS round 2 reader cannot submit selector answer
+PASS round 2 authoritative correct-answer score
+PASS Trivia mobile reload reconnects same room
+PASS round 3 reader cannot submit selector answer
+PASS round 3 authoritative correct-answer score
+PASS round 4 reader cannot submit selector answer
+PASS round 4 authoritative correct-answer score
+PASS round 5 reader cannot submit selector answer
+PASS round 5 authoritative correct-answer score
+PASS Trivia final scores agree on mobile
+PASS Trivia shared podium entries match
+PASS Trivia replay clears podium
+PASS Trivia replay preserves room code
+PASS Trivia host transfer reaches mobile browser
+PASS Quick Match waiting cancellation returns safely
+PASS desktop and mobile Quick Match enter a shared race
+PASS Quick Match mobile reload reconnects active race
+PASS Quick Match mobile joystick visible
+PASS zero Trivia and Quick Match browser errors
+RUN m22-browser-invites
+PASS Beam invite stores reservation
+PASS Beam invited reload reconnects active room
+PASS Party invite stores reservation
+PASS Party invited reload reconnects same locked room
+PASS zero invite-reload browser errors
+RUN m22-browser-party
+PASS eight-player Party lobby: two real browser clients plus six SDK clients
+PASS cycle 1 shows Wheelbarrow Championship
+PASS cycle 1 shows Beam Carry
+PASS cycle 1 shows TOOLBOX TRIVIA
+PASS cycle 1 final podium includes all eight workers
+PASS cycle 1 mobile Party podium visible
+PASS cycle 1 all eight Pumpkin Hats reach final podium
+PASS cycle 1 at most game renderer plus podium context
+PASS Party mobile landscape has no page overflow
+PASS cycle 1 replay removes podium canvas
+PASS cycle 1 replay preserves room code
+PASS cycle 2 shows Wheelbarrow Championship
+PASS cycle 2 shows Beam Carry
+PASS cycle 2 shows TOOLBOX TRIVIA
+PASS cycle 2 final podium includes all eight workers
+PASS cycle 2 mobile Party podium visible
+PASS cycle 2 all eight Pumpkin Hats reach final podium
+PASS cycle 2 at most game renderer plus podium context
+PASS cycle 2 replay removes podium canvas
+PASS cycle 2 replay preserves room code
+PASS cycle 3 shows Wheelbarrow Championship
+PASS cycle 3 shows Beam Carry
+PASS cycle 3 shows TOOLBOX TRIVIA
+PASS cycle 3 final podium includes all eight workers
+PASS cycle 3 mobile Party podium visible
+PASS cycle 3 all eight Pumpkin Hats reach final podium
+PASS cycle 3 at most game renderer plus podium context
+PASS cycle 3 replay removes podium canvas
+PASS cycle 3 replay preserves room code
+PASS Party host transfers to mobile browser after host exits
+PASS zero Party browser page errors
+PASS no duplicate Three.js or exhausted contexts over three complete playlists

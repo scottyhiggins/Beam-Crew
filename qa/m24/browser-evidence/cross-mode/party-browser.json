@@ -1,0 +1,60 @@
+{
+  "fixture": "Existing PartyRoom fixture; eight-second mode deadlines, no score injection; zero-score timed-out modes",
+  "checks": 32,
+  "passed": [
+    "eight-player Party lobby: two real browser clients plus six SDK clients",
+    "cycle 1 shows Wheelbarrow Championship",
+    "cycle 1 shows Beam Carry",
+    "cycle 1 shows TOOLBOX TRIVIA",
+    "cycle 1 final podium includes all eight workers",
+    "cycle 1 mobile Party podium visible",
+    "cycle 1 all eight Pumpkin Hats reach final podium",
+    "cycle 1 at most game renderer plus podium context",
+    "Party mobile landscape has no page overflow",
+    "cycle 1 replay removes podium canvas",
+    "cycle 1 replay preserves room code",
+    "cycle 2 shows Wheelbarrow Championship",
+    "cycle 2 shows Beam Carry",
+    "cycle 2 shows TOOLBOX TRIVIA",
+    "cycle 2 final podium includes all eight workers",
+    "cycle 2 mobile Party podium visible",
+    "cycle 2 all eight Pumpkin Hats reach final podium",
+    "cycle 2 at most game renderer plus podium context",
+    "cycle 2 replay removes podium canvas",
+    "cycle 2 replay preserves room code",
+    "cycle 3 shows Wheelbarrow Championship",
+    "cycle 3 shows Beam Carry",
+    "cycle 3 shows TOOLBOX TRIVIA",
+    "cycle 3 final podium includes all eight workers",
+    "cycle 3 mobile Party podium visible",
+    "cycle 3 all eight Pumpkin Hats reach final podium",
+    "cycle 3 at most game renderer plus podium context",
+    "cycle 3 replay removes podium canvas",
+    "cycle 3 replay preserves room code",
+    "Party host transfers to mobile browser after host exits",
+    "zero Party browser page errors",
+    "no duplicate Three.js or exhausted contexts over three complete playlists"
+  ],
+  "errors": [],
+  "warnings": [],
+  "memory": [
+    {
+      "contexts": 2,
+      "live": 2,
+      "connected": 2,
+      "heap": 21836788
+    },
+    {
+      "contexts": 3,
+      "live": 2,
+      "connected": 2,
+      "heap": 22680060
+    },
+    {
+      "contexts": 4,
+      "live": 2,
+      "connected": 2,
+      "heap": 24695781
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "checks": [
+    "1366 store opens",
+    "1366 3D worker preview",
+    "1366 seasonal look saved",
+    "1366 saved selection restored",
+    "1366 store page has no overflow",
+    "1366 store closes to menu",
+    "319 store opens",
+    "319 3D worker preview",
+    "319 seasonal look saved",
+    "319 saved selection restored",
+    "319 store page has no overflow",
+    "319 store closes to menu",
+    "zero store browser errors"
+  ],
+  "errors": []
+}
