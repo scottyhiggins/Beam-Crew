@@ -1,0 +1,7 @@
+import {Client} from 'colyseus.js';
+document.body.style.cssText='font:17px system-ui;background:#153c4b;color:#fff;padding:24px;line-height:1.7';document.querySelector('a')!.style.color='#ffce43';
+const checks=document.getElementById('checks')!;const result=document.getElementById('result')!;
+function add(text:string){const li=document.createElement('li');li.textContent=text;checks.append(li);}
+add(`Page host: ${location.host}`);
+const abort=new AbortController();const timeout=setTimeout(()=>abort.abort(),8000);
+try{const response=await fetch('/health',{signal:abort.signal});if(!response.ok)throw Error(`HTTP ${response.status}`);add('HTTP health: PASS');const host=`${location.protocol==='https:'?'wss':'ws'}://${location.host}`;add(`WebSocket endpoint: ${host}`);const client=new Client(host);const room=await client.create('crane',{name:'LAN probe'});try{await new Promise<void>((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('No synchronized snapshot after 8 seconds')),8000);room.onMessage('snapshot',()=>{clearTimeout(timer);resolve();});});add('WebSocket room creation + server snapshot: PASS');result.textContent='Connection checks passed on this device. You can open Tower Rush.';}finally{await room.leave();}}catch(error){result.textContent=`FAILED: ${String(error)}. If this page loads but multiplayer fails, report this message and the endpoint above.`;}finally{clearTimeout(timeout);}
