@@ -15,3 +15,6 @@
 .party-page #modeTiles,.party-page #menuExtras{display:none}.party-page .all-games{color:#ffe08b;display:inline-block;padding:12px 0}
 
 #partyShell .party-answers button:nth-child(1){background:#ffd16a}#partyShell .party-answers button:nth-child(2){background:#7bd8cb}#partyShell .party-answers button:nth-child(3){background:#ffab94}#partyShell .party-answers button:nth-child(4){background:#abc4fa}
+/* Active native games receive only a non-interactive round chip. */
+#partyShell.compact{inset:auto 8px calc(env(safe-area-inset-bottom,0px) + 8px) auto;width:auto;max-width:120px;max-height:30px;margin:0;padding:4px 9px;border:0;border-radius:20px;background:#123f43;color:#fff8e8;font-size:11px;line-height:1.4;overflow:hidden;pointer-events:none;box-shadow:none}
+#partyShell.compact p{margin:0}#partyShell:not(.compact){text-align:center;line-height:1.4}#partyShell:not(.compact)>p{margin:8px 0}#partyShell ul,#partyShell ol{text-align:left}#partyShell .party-code{display:block;font-size:clamp(32px,8vw,46px);letter-spacing:4px;background:#123f43;color:#fff8e8;border-radius:8px;padding:6px;margin:6px 0}#partyShell.trivia-playing{text-align:left}#partyShell .party-answers button{touch-action:manipulation}#partyShell .party-answers button.locked{box-shadow:inset 0 0 0 4px #123f43}

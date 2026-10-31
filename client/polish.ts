@@ -17,7 +17,9 @@ export function scenery(scene:THREE.Scene){
  // Parked compact excavator with tracks, cab and articulated-looking boom.
  for(const x of [12.3,14.7])block(g,.7,.55,3.4,0x344653,x,.35,5);
  block(g,2.8,.8,2.8,0xf2b833,13.5,.95,5);block(g,1.5,1.6,1.8,0x267b88,13.5,2.05,5.2);block(g,1.8,.15,2,0xffd257,13.5,2.9,5.2);
- const boom=block(g,.42,3.5,.45,0xf2b833,13.5,2.5,3);boom.rotation.x=-.55;const stick=block(g,.36,2.6,.4,0xffcf43,13.5,2.6,1.3);stick.rotation.x=.65;block(g,1.3,.55,.9,0x45535a,13.5,1.25,.55);
+ // Build links from shared endpoints so the boom, stick and bucket stay joined.
+ const link=(from:THREE.Vector3,to:THREE.Vector3,width:number,color:number)=>{const m=block(g,width,from.distanceTo(to),width,color,0,0,0);m.position.copy(from).add(to).multiplyScalar(.5);m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),to.clone().sub(from).normalize());};
+ const shoulder=new THREE.Vector3(13.5,1.3,4),elbow=new THREE.Vector3(13.5,3.8,2),wrist=new THREE.Vector3(13.5,1.25,.55);link(shoulder,elbow,.42,0xf2b833);link(elbow,wrist,.36,0xffcf43);block(g,1.3,.55,.9,0x45535a,wrist.x,wrist.y,wrist.z);
  // Distant skyline and trees establish depth without textures or post-processing.
  for(let i=0;i<9;i++){const x=-30+i*8;block(g,5,5+i%3*3,4,0x85aeb4,x,1,-48);}
  for(const x of [-23,23])for(const z of [10,-22,-37]){block(g,.35,2,.35,0x8a7051,x,1,z);const tree=new THREE.Mesh(new THREE.IcosahedronGeometry(1.6,0),new THREE.MeshLambertMaterial({color:0x579e79}));tree.position.set(x,3,z);g.add(tree);}

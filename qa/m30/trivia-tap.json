@@ -1,0 +1,7 @@
+{
+  "elapsedMs": 0.3999999910593033,
+  "locked": true,
+  "feedback": "Answer locked — checking…",
+  "sent": 1,
+  "scope": "Local feedback measured in one browser task before server acknowledgement; repeated pointer/click events produce one submission."
+}

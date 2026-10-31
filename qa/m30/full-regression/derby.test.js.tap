@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: layout has 31 reachable destructible targets and deterministic control sweep destroys every one
+ok 1 - layout has 31 reachable destructible targets and deterministic control sweep destroys every one
+  ---
+  duration_ms: 15.0653
+  type: 'test'
+  ...
+# Subtest: swing boost has a server cooldown and builds predictable pendulum momentum
+ok 2 - swing boost has a server cooldown and builds predictable pendulum momentum
+  ---
+  duration_ms: 0.6887
+  type: 'test'
+  ...
+# Subtest: idle ball does not score by merely overlapping a target
+ok 3 - idle ball does not score by merely overlapping a target
+  ---
+  duration_ms: 0.36
+  type: 'test'
+  ...
+# Subtest: swept ball collision catches fast crossings and rejects distant passes
+ok 4 - swept ball collision catches fast crossings and rejects distant passes
+  ---
+  duration_ms: 0.2531
+  type: 'test'
+  ...
+# Subtest: destroyed target awards points exactly once through repeat contacts
+ok 5 - destroyed target awards points exactly once through repeat contacts
+  ---
+  duration_ms: 0.9598
+  type: 'test'
+  ...
+# Subtest: continuous contact cannot farm repeated damage; a new impact requires separation
+ok 6 - continuous contact cannot farm repeated damage; a new impact requires separation
+  ---
+  duration_ms: 0.2006
+  type: 'test'
+  ...
+# Subtest: debris is capped even on simultaneous destruction and expires without scoring contacts
+ok 7 - debris is capped even on simultaneous destruction and expires without scoring contacts
+  ---
+  duration_ms: 5.0171
+  type: 'test'
+  ...
+# Subtest: full demolition simulation is deterministic and bounded
+ok 8 - full demolition simulation is deterministic and bounded
+  ---
+  duration_ms: 23.2177
+  type: 'test'
+  ...
+# Subtest: Derby never ends at 100 points; exact 60-second timer, ties, freeze and private snapshots for 2–8 players
+ok 9 - Derby never ends at 100 points; exact 60-second timer, ties, freeze and private snapshots for 2–8 players
+  ---
+  duration_ms: 112.0909
+  type: 'test'
+  ...
+# Subtest: host-only lobby selection, invalid messages, replay cleanup and return to unchanged Tower Rush rules
+ok 10 - host-only lobby selection, invalid messages, replay cleanup and return to unchanged Tower Rush rules
+  ---
+  duration_ms: 16.7144
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 371.7677

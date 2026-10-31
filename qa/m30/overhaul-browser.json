@@ -1,0 +1,54 @@
+{
+  "checks": 24,
+  "passed": [
+    "2x2 menu 319px",
+    "menu fits 319px",
+    "2x2 menu landscape",
+    "menu fits landscape",
+    "Tower pointer picks up suspended container",
+    "Tower retains three controls",
+    "host transfers to connected worker during reload",
+    "eight-player Derby lifecycle",
+    "keyboard rotation and height reach server",
+    "pointer lower reaches server",
+    "boost reaches server",
+    "eight-player board clear of controls desktop",
+    "last crew standing reachable desktop",
+    "five Derby controls desktop",
+    "Derby controls fit desktop",
+    "eight-player board clear of controls 319px",
+    "last crew standing reachable 319px",
+    "five Derby controls 319px",
+    "Derby controls fit 319px",
+    "eight-player board clear of controls landscape",
+    "last crew standing reachable landscape",
+    "five Derby controls landscape",
+    "Derby controls fit landscape",
+    "zero overhaul browser errors"
+  ],
+  "errors": [],
+  "samples": [
+    {
+      "label": "desktop",
+      "frames": 413,
+      "p50": 6.099999999998545,
+      "p95": 6.200000000004366,
+      "max": 6.30000000000291
+    },
+    {
+      "label": "319px",
+      "frames": 413,
+      "p50": 6.099999999998545,
+      "p95": 6.19999999999709,
+      "max": 6.5
+    },
+    {
+      "label": "landscape",
+      "frames": 413,
+      "p50": 6.099999999991269,
+      "p95": 6.19999999999709,
+      "max": 6.2000000000116415
+    }
+  ],
+  "scope": "Headless Edge host frame timings, eight connected players; not physical device FPS. Physical iPhone pending."
+}

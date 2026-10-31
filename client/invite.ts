@@ -16,3 +16,6 @@ export async function copyInvite(url:string, trigger:HTMLElement){
     input.focus();input.select();
   }
 }
+
+/** Clipboard failure keeps the code visible without depending on secure-context support. */
+export async function copyCode(code:string|undefined,trigger:HTMLElement){if(!code)return;try{await navigator.clipboard.writeText(code);trigger.textContent='Code copied ✓';}catch{trigger.textContent='Code: '+code;}}
