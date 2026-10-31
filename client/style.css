@@ -133,3 +133,10 @@ body.championship-results #playAgain{pointer-events:auto;font-size:12px;min-heig
 #hud.wheel-hud.menu-open #standings,#hud.wheel-hud.menu-open #hudText,#hud.wheel-hud.menu-open #stagingNotice{visibility:visible}
 #hud.wheel-hud.menu-open #standings{z-index:4}
 body.wheel-menu-open #panel{top:var(--wheel-menu-top,180px);max-height:calc(100dvh - var(--wheel-menu-top,180px) - 16px)}
+
+/* M25 approved construction menu. */
+#panel:not(.connected){background:#123f43;color:#fff8e8;border:3px solid #0a2d31}#panel:not(.connected)>h1{text-align:center;color:#fff8e8;text-shadow:3px 3px #071e24;font-size:clamp(34px,6vw,64px)}#panel:not(.connected)>.eyebrow{text-align:center;color:#ffd34e;margin:12px 0 18px}#panel:not(.connected)>#buildLabel{display:none}
+#modeTiles{gap:14px}.mode-tile{border:3px solid #092c32;border-radius:12px;color:#102f34;background:#ffd36a}.mode-tile:nth-child(2){background:#72d8c7}.mode-tile:nth-child(3){background:#f8a273}.mode-tile:nth-child(4){background:#9ab9f2}.mode-tile svg,.mode-tile:nth-child(2) svg{background:#ffffff24}.mode-tile.selected{border-color:#fff5b1;background:#ffd36a;box-shadow:0 0 0 2px #ffc73c}.mode-tile:nth-child(2).selected{background:#72d8c7}.mode-tile .tile-status{display:none}.mode-tile .tile-copy>span{font-weight:650}.menu-wide{min-height:80px;background:#ffd35a;border:3px solid #092c32;border-radius:10px;color:#102f34}.menu-wide .tile-status{display:none}.menu-wide strong{font-size:24px}.menu-wide .tile-copy>span{font-size:14px}.menu-wide:focus-visible{outline:3px solid white;outline-offset:3px}#entryActions{color:#123b3d;border-radius:10px}#panel:not(.connected)>#status{color:#fff8e8}
+@media(max-width:420px){#modeTiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.mode-tile svg{height:88px}.mode-tile strong{font-size:16px}.mode-tile .tile-copy{padding:10px 8px}.menu-wide{min-height:82px}.menu-wide strong{font-size:21px}}
+
+#panel:not(.connected) #entryActions{background:#fff8e8;padding:16px}.mode-tile{color:#102f34!important}

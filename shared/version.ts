@@ -1,2 +1,2 @@
-export const BUILD_LABEL = 'BREAK TIME - Final Release Integration M22 - Protocol 21';
-export const PROTOCOL_VERSION = 21;
+export const BUILD_LABEL = 'BREAK TIME - Menu + Free-for-all Trivia M25 - Protocol 22';
+export const PROTOCOL_VERSION = 22;

@@ -8,3 +8,10 @@
 
 .party-page #menuExtras,.party-page #modeTiles,.party-page .room-shortcut{display:none}
 .party-overlay #partyShell canvas{visibility:visible!important}
+
+.party-answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.party-answers button{min-width:0;overflow-wrap:anywhere;min-height:64px;background:#ffd16a}.party-answers button:nth-child(2){background:#7bd8cb}.party-answers button:nth-child(3){background:#ffab94}.party-answers button:nth-child(4){background:#abc4fa}
+#partyShell.trivia-playing{inset:8px;padding:12px;border-width:2px;font-size:14px;line-height:1.3}#partyShell.trivia-playing>h1,#partyShell.trivia-playing>details{display:none}#partyShell.trivia-playing>p{margin:6px 0}#partyShell.trivia-playing>h2:first-of-type{font-size:14px;margin:8px 0}#partyShell.trivia-playing>h2:nth-of-type(2){font-size:24px;line-height:1.2;margin:12px 0}#partyShell.trivia-playing .party-answers button{margin:0;padding:10px;opacity:1;font-size:16px}#partyShell.trivia-playing>button{margin:6px 0 0;padding:8px;font-size:13px}#partyShell.trivia-playing [data-timer]{position:absolute;right:12px;top:12px;background:#ffd34e;padding:4px 8px;border-radius:6px}
+@media(max-height:500px) and (orientation:landscape){#partyShell.trivia-playing{padding:8px 12px}#partyShell.trivia-playing>h2:first-of-type{margin:4px 0}#partyShell.trivia-playing>h2:nth-of-type(2){font-size:18px;margin:6px 0}#partyShell.trivia-playing .party-answers button{min-height:44px;padding:6px;font-size:14px}#partyShell.trivia-playing>p{font-size:12px;margin:4px 0}}
+.party-page #modeTiles,.party-page #menuExtras{display:none}.party-page .all-games{color:#ffe08b;display:inline-block;padding:12px 0}
+
+#partyShell .party-answers button:nth-child(1){background:#ffd16a}#partyShell .party-answers button:nth-child(2){background:#7bd8cb}#partyShell .party-answers button:nth-child(3){background:#ffab94}#partyShell .party-answers button:nth-child(4){background:#abc4fa}

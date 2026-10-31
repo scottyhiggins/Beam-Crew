@@ -1,0 +1,31 @@
+{
+  "milestone": 25,
+  "base": "380c834f5dad12dca8553f525ab6e8353e89f1be",
+  "branch": "feature/menu-trivia-polish",
+  "protocol": 22,
+  "fullRegression": {
+    "passed": 245,
+    "skipped": 0,
+    "failed": 0
+  },
+  "focusedParty": {
+    "overlapWithRegression": 7,
+    "passed": 8
+  },
+  "uniqueAutomatedTests": 246,
+  "browserChecks": 31,
+  "partyBrowserChecks": 16,
+  "browserErrors": [],
+  "productionBuild": "passed",
+  "ports": {
+    "development": 2525,
+    "productionPreview": 2526,
+    "partyFixture": 2528,
+    "hmr": 2527
+  },
+  "limitations": [
+    "iPhone-sized Microsoft Edge emulation; physical iOS Safari not tested",
+    "Existing large podium chunk build warning"
+  ],
+  "remainingPartyIntegrationWork": []
+}
