@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 // Decorative meshes only. Nothing here participates in the simulation.
 function block(g:THREE.Object3D,w:number,h:number,d:number,c:number,x:number,y:number,z:number){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshLambertMaterial({color:c}));m.position.set(x,y,z);g.add(m);return m;}
-import type {WorkerLook} from '../shared/cosmetics.js';
+import {PUMPKIN_HARD_HAT,type WorkerLook} from '../shared/cosmetics.js';
 export type {WorkerLook} from '../shared/cosmetics.js';
 export function makeWorker(color:number,look?:WorkerLook){
  color=look?.vest??color;
@@ -14,7 +14,18 @@ export function makeWorker(color:number,look?:WorkerLook){
  const head=new THREE.Mesh(new THREE.SphereGeometry(.32,10,8),new THREE.MeshLambertMaterial({color:0xe8b48b}));head.scale.set(1,1.12,.9);head.position.y=1.57;g.add(head);
  const hat=new THREE.Mesh(new THREE.SphereGeometry(.39,12,6,0,Math.PI*2,0,Math.PI/2),new THREE.MeshLambertMaterial({color:look?.hat??0xffce36}));hat.position.y=1.78;g.add(hat);
  const brim=new THREE.Mesh(new THREE.CylinderGeometry(.46,.46,.065,12),new THREE.MeshLambertMaterial({color:look?.hat??0xffbb24}));brim.position.y=1.8;g.add(brim);
- block(g,.07,.12,.59,look?.hat??0xffe074,0,1.98,0);
+ if(look?.hat===PUMPKIN_HARD_HAT){
+  // Low-profile pumpkin ribs decorate the helmet without covering the worker's face.
+  for(let i=0;i<8;i++){
+
+   const points=[];for(let j=0;j<=8;j++){const a=j*Math.PI/16;points.push(new THREE.Vector3(Math.sin(a)*.393*Math.cos(i*Math.PI/4),1.78+Math.cos(a)*.393,Math.sin(a)*.393*Math.sin(i*Math.PI/4)));}
+   const rib=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points),8,.012,4,false),new THREE.MeshLambertMaterial({color:0xc95b20,flatShading:true}));g.add(rib);
+  }
+  const stem=block(g,.085,.14,.085,0x478645,.015,2.2,0);stem.rotation.z=-.2;
+  const leaf=block(g,.13,.025,.07,0x65a449,.09,2.17,.015);leaf.rotation.z=.3;
+  for(const x of [-.075,.075])block(g,.045,.045,.018,0x563a24,x,1.94,.356);
+  block(g,.09,.022,.018,0x563a24,0,1.885,.387);
+ }else block(g,.07,.12,.59,look?.hat??0xffe074,0,1.98,0);
  for(const x of [-.12,.12])block(g,.065,.075,.035,0x203543,x,1.6,.28);
  if(!look||look.expression==='serious')block(g,.15,.035,.03,0x9d573f,0,1.46,.29);
  else {
