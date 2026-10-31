@@ -1,0 +1,131 @@
+TAP version 13
+#        ___      _
+#       / __\\___ | |_   _ ___  ___ _   _ ___
+#      / /  / _ \\| | | | / __|/ _ \\ | | / __|
+#     / /__| (_) | | |_| \\__ \\  __/ |_| \\__ \\
+#     \\____/\\___/|_|\\__, |___/\\___|\\__,_|___/
+#                   |___/
+#      · Multiplayer Framework for Node.js ·
+# 💖 Consider becoming a Sponsor on GitHub → https://github.com/sponsors/endel
+# 🌟 Give us a star on GitHub → https://github.com/colyseus/colyseus
+# ☁️  Deploy and scale your project on Colyseus Cloud → https://cloud.colyseus.io
+#        ___      _
+#       / __\\___ | |_   _ ___  ___ _   _ ___
+#      / /  / _ \\| | | | / __|/ _ \\ | | / __|
+#     / /__| (_) | | |_| \\__ \\  __/ |_| \\__ \\
+#     \\____/\\___/|_|\\__, |___/\\___|\\__,_|___/
+#                   |___/
+#      · Multiplayer Framework for Node.js ·
+# 💖 Consider becoming a Sponsor on GitHub → https://github.com/sponsors/endel
+# 🌟 Give us a star on GitHub → https://github.com/colyseus/colyseus
+# ☁️  Deploy and scale your project on Colyseus Cloud → https://cloud.colyseus.io
+# Subtest: real clients: same-room transitions, host transfer, reconnect across modes, stale message guards and replay
+ok 1 - real clients: same-room transitions, host transfer, reconnect across modes, stale message guards and replay
+  ---
+  duration_ms: 4220.1494
+  type: 'test'
+  ...
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# colyseus.js: onMessage() not registered for type 'partyView'.
+# Subtest: real 2–8 client matrix: native three-race finishes, team results, odd skips and shared final ranking
+ok 2 - real 2–8 client matrix: native three-race finishes, team results, odd skips and shared final ranking
+  ---
+  duration_ms: 949.6544
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6498.4076

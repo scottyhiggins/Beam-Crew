@@ -1,0 +1,15 @@
+{
+  "checks": 6,
+  "passed": [
+    "2x2 menu 319px",
+    "menu fits 319px",
+    "2x2 menu landscape",
+    "menu fits landscape",
+    "Tower pointer picks up suspended container",
+    "Tower retains three controls"
+  ],
+  "errors": [],
+  "samples": [],
+  "scope": "Edge emulation, eight connected players; frame timings include concurrent regression load. Physical iPhone pending.",
+  "testFailure": "The test clicked host-only OPEN LOBBY after reloading the host browser. The game had correctly transferred host to a connected worker. Fixed the test to use the new host; no gameplay change was required."
+}

@@ -1,0 +1,34 @@
+{
+  "sources": [
+    {
+      "milestone": "24",
+      "path": "../Beam-Crew-m24-release-candidate",
+      "commit": "56ec6ab7d1ab2f791ac71f8329bb3f4733852e82",
+      "verifiedObject": "commit",
+      "sourceHead": "56ec6ab7d1ab2f791ac71f8329bb3f4733852e82",
+      "sourceStatus": "",
+      "isAncestor": true
+    },
+    {
+      "milestone": "25",
+      "path": "../Beam-Crew-m25-menu-trivia",
+      "commit": "789228c9085eff5b213c8f19ee48df4b47162342",
+      "verifiedObject": "commit",
+      "sourceHead": "789228c9085eff5b213c8f19ee48df4b47162342",
+      "sourceStatus": "",
+      "isAncestor": true
+    },
+    {
+      "milestone": "26",
+      "path": "../Beam-Crew-m26-crane-gameplay",
+      "commit": "72f1595a6fd0e3f2e96741e1d7dd974bc55c6f9e",
+      "verifiedObject": "commit",
+      "sourceHead": "72f1595a6fd0e3f2e96741e1d7dd974bc55c6f9e",
+      "sourceStatus": "",
+      "isAncestor": true
+    }
+  ],
+  "rollback": "rollback/m24-verified",
+  "base": "56ec6ab7d1ab2f791ac71f8329bb3f4733852e82",
+  "objectAudit": "git fsck --full --no-reflogs: no corrupt or missing objects; existing unreachable objects reported"
+}

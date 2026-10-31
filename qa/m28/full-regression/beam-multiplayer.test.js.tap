@@ -1,0 +1,16 @@
+TAP version 13
+# Subtest: two clients carry, release, reject non-host reset, reconnect, complete and replay the course
+ok 1 - two clients carry, release, reject non-host reset, reconnect, complete and replay the course
+  ---
+  duration_ms: 56595.0165
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 56806.674

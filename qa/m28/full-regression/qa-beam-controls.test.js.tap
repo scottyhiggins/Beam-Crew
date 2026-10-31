@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: QA: actual desktop and mobile control adapter clears stale RELEASE and attached styling when inactive
+ok 1 - QA: actual desktop and mobile control adapter clears stale RELEASE and attached styling when inactive
+  ---
+  duration_ms: 1.0512
+  type: 'test'
+  ...
+# Subtest: QA: eligible workers regain both action buttons with neutral labels after replay/reconnect
+ok 2 - QA: eligible workers regain both action buttons with neutral labels after replay/reconnect
+  ---
+  duration_ms: 0.2229
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 106.051

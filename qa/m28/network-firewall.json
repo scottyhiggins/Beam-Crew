@@ -1,0 +1,66 @@
+{
+  "rule": {
+    "DisplayName": "BREAK TIME M28 Protocol 22 LAN TCP 2728 Private",
+    "Enabled": 1,
+    "Profile": 2,
+    "Direction": 1,
+    "Action": 2
+  },
+  "port": {
+    "Protocol": "TCP",
+    "LocalPort": "2728",
+    "RemotePort": "Any"
+  },
+  "address": {
+    "LocalAddress": "192.168.1.166",
+    "RemoteAddress": "LocalSubnet"
+  },
+  "application": {
+    "Program": "C:\\Users\\higgi\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe"
+  },
+  "interface": {
+    "InterfaceAlias": "Wi-Fi"
+  },
+  "profiles": [
+    {
+      "Name": "Domain",
+      "Enabled": 1
+    },
+    {
+      "Name": "Private",
+      "Enabled": 1
+    },
+    {
+      "Name": "Public",
+      "Enabled": 1
+    }
+  ],
+  "wifi": {
+    "IPAddress": "192.168.1.166"
+  },
+  "category": {
+    "NetworkCategory": 1
+  },
+  "listeners": [
+    {
+      "LocalAddress": "127.0.0.1",
+      "LocalPort": 2829,
+      "OwningProcess": 7960
+    },
+    {
+      "LocalAddress": "127.0.0.1",
+      "LocalPort": 2828,
+      "OwningProcess": 37544
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 2728,
+      "OwningProcess": 33468
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 2724,
+      "OwningProcess": 39828
+    }
+  ]
+}

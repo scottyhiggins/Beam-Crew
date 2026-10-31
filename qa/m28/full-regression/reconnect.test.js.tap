@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: saved reservation deadline survives reload and cannot be extended by retries
+ok 1 - saved reservation deadline survives reload and cannot be extended by retries
+  ---
+  duration_ms: 1.1216
+  type: 'test'
+  ...
+# Subtest: a stalled Safari/offline request expires and releases a late connection
+ok 2 - a stalled Safari/offline request expires and releases a late connection
+  ---
+  duration_ms: 46.0718
+  type: 'test'
+  ...
+# Subtest: Cancel immediately unlocks recovery and a late success cannot attach
+ok 3 - Cancel immediately unlocks recovery and a late success cannot attach
+  ---
+  duration_ms: 14.8494
+  type: 'test'
+  ...
+# Subtest: expired tokens stop immediately; valid reconnect retains its session
+ok 4 - expired tokens stop immediately; valid reconnect retains its session
+  ---
+  duration_ms: 0.6413
+  type: 'test'
+  ...
+# Subtest: temporary network failure retries within the original reservation
+ok 5 - temporary network failure retries within the original reservation
+  ---
+  duration_ms: 1003.8913
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1158.7153

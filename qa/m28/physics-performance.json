@@ -1,0 +1,8 @@
+{
+  "scope": "CPU simulation only; eight simultaneous private Derby arenas for 60 simulated seconds; not physical device FPS",
+  "arenas": 8,
+  "ticks": 1800,
+  "elapsedMs": 51.87719999999999,
+  "peakFragmentsPerArena": 50,
+  "fragmentCap": 72
+}

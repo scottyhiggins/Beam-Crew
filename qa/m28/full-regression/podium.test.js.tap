@@ -1,0 +1,82 @@
+TAP version 13
+# Subtest: 2 workers preserve authoritative spills-first placement and cosmetics
+ok 1 - 2 workers preserve authoritative spills-first placement and cosmetics
+  ---
+  duration_ms: 2.2176
+  type: 'test'
+  ...
+# Subtest: 3 workers preserve authoritative spills-first placement and cosmetics
+ok 2 - 3 workers preserve authoritative spills-first placement and cosmetics
+  ---
+  duration_ms: 0.2744
+  type: 'test'
+  ...
+# Subtest: 4 workers preserve authoritative spills-first placement and cosmetics
+ok 3 - 4 workers preserve authoritative spills-first placement and cosmetics
+  ---
+  duration_ms: 0.1632
+  type: 'test'
+  ...
+# Subtest: 5 workers preserve authoritative spills-first placement and cosmetics
+ok 4 - 5 workers preserve authoritative spills-first placement and cosmetics
+  ---
+  duration_ms: 0.184
+  type: 'test'
+  ...
+# Subtest: 6 workers preserve authoritative spills-first placement and cosmetics
+ok 5 - 6 workers preserve authoritative spills-first placement and cosmetics
+  ---
+  duration_ms: 0.1238
+  type: 'test'
+  ...
+# Subtest: 7 workers preserve authoritative spills-first placement and cosmetics
+ok 6 - 7 workers preserve authoritative spills-first placement and cosmetics
+  ---
+  duration_ms: 0.1243
+  type: 'test'
+  ...
+# Subtest: 8 workers preserve authoritative spills-first placement and cosmetics
+ok 7 - 8 workers preserve authoritative spills-first placement and cosmetics
+  ---
+  duration_ms: 0.1356
+  type: 'test'
+  ...
+# Subtest: ties share their recorded place; DNF and unranked never receive medals
+ok 8 - ties share their recorded place; DNF and unranked never receive medals
+  ---
+  duration_ms: 0.1274
+  type: 'test'
+  ...
+# Subtest: disconnected recorded finish retained; unfinished player has no invented rank
+ok 9 - disconnected recorded finish retained; unfinished player has no invented rank
+  ---
+  duration_ms: 0.2178
+  type: 'test'
+  ...
+# Subtest: absent finisher gets no substitute avatar even when names match
+ok 10 - absent finisher gets no substitute avatar even when names match
+  ---
+  duration_ms: 0.2166
+  type: 'test'
+  ...
+# Subtest: team ranking uses team place and membership, including duplicate names
+ok 11 - team ranking uses team place and membership, including duplicate names
+  ---
+  duration_ms: 0.2145
+  type: 'test'
+  ...
+# Subtest: championship DNF cannot receive a winner award
+ok 12 - championship DNF cannot receive a winner award
+  ---
+  duration_ms: 0.1323
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 110.3811

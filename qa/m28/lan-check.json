@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "origin": "http://192.168.1.166:2728",
+  "health": {
+    "ok": true,
+    "build": "BREAK TIME - Final Combined RC M28 - Protocol 22",
+    "protocol": 22,
+    "repository": "C:\\Users\\higgi\\.codex\\.chatgpt-projects\\g-p-6ac291cf8ecc81919bbc636308fbf05d\\Beam-Crew-m28-final-combined\\",
+    "startedAt": "2026-10-31T03:21:47.835Z"
+  },
+  "clients": 2,
+  "checkedAt": "2026-10-31T03:40:09.862Z"
+}

@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: phone sharpness rises from 1.5x to 2x within a bounded pixel budget
+ok 1 - phone sharpness rises from 1.5x to 2x within a bounded pixel budget
+  ---
+  duration_ms: 1.1705
+  type: 'test'
+  ...
+# Subtest: adaptive sharpness ignores isolated/background gaps and avoids rapid resolution changes
+ok 2 - adaptive sharpness ignores isolated/background gaps and avoids rapid resolution changes
+  ---
+  duration_ms: 1.5348
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 99.5938

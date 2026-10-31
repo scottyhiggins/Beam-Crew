@@ -1,0 +1,107 @@
+{
+  "milestone": 28,
+  "branch": "feature/final-combined-rc",
+  "protocol": 22,
+  "regression": {
+    "files": 54,
+    "tests": 255,
+    "passed": 255,
+    "failed": 0,
+    "skipped": 0,
+    "sharedServerRunAlsoPassed": 255
+  },
+  "browser": {
+    "checks": 156,
+    "reports": [
+      {
+        "report": "menu-trivia-browser-results",
+        "checks": 31,
+        "errors": []
+      },
+      {
+        "report": "wheel-browser-results",
+        "checks": 38,
+        "errors": []
+      },
+      {
+        "report": "party-browser-results",
+        "checks": 16,
+        "errors": []
+      },
+      {
+        "report": "production-browser",
+        "checks": 17,
+        "errors": []
+      },
+      {
+        "report": "invite-reconnect-browser",
+        "checks": 5,
+        "errors": []
+      },
+      {
+        "report": "store-browser",
+        "checks": 13,
+        "errors": []
+      },
+      {
+        "report": "mobile-performance",
+        "checks": 12,
+        "errors": []
+      },
+      {
+        "report": "overhaul-browser",
+        "checks": 24,
+        "errors": []
+      }
+    ]
+  },
+  "liveCraneMatrix": {
+    "roomSizes": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "passed": 7
+  },
+  "lan": "qa/m28/lan-check.json",
+  "rendering": [
+    {
+      "label": "desktop",
+      "frames": 413,
+      "p50": 6.099999999998545,
+      "p95": 6.19999999999709,
+      "max": 6.799999999995634
+    },
+    {
+      "label": "319px",
+      "frames": 413,
+      "p50": 6.099999999998545,
+      "p95": 6.19999999999709,
+      "max": 6.5
+    },
+    {
+      "label": "landscape",
+      "frames": 413,
+      "p50": 6.099999999991269,
+      "p95": 6.19999999999709,
+      "max": 6.30000000000291
+    }
+  ],
+  "physics": {
+    "scope": "CPU simulation only; eight simultaneous private Derby arenas for 60 simulated seconds; not physical device FPS",
+    "arenas": 8,
+    "ticks": 1800,
+    "elapsedMs": 51.87719999999999,
+    "peakFragmentsPerArena": 50,
+    "fragmentCap": 72
+  },
+  "bundleWarning": {
+    "minifiedKB": 539.46,
+    "gzipKB": 139.32
+  },
+  "physicalIPhone": "Pending user confirmation and physical QA"
+}

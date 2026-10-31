@@ -1,3 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 *.cmd text eol=crlf
+
+# Preserve verbatim generated QA output, including diagnostic trailing spaces.
+qa/m28/** -whitespace

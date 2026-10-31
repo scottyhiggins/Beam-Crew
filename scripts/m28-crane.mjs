@@ -1,0 +1,30 @@
+import {createRequire} from 'node:module';
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const require=createRequire(process.env.PLAYWRIGHT_PACKAGE??import.meta.url),{chromium}=require('playwright');
+const browser=await chromium.launch({headless:true,channel:'msedge',args:['--disable-background-timer-throttling','--disable-renderer-backgrounding']});
+const origin=process.env.QA_URL??'http://127.0.0.1:2728',errors=[],warnings=[],checks=[];
+const check=(v,m)=>{assert.ok(v,m);checks.push(m);console.log('PASS '+m);};
+const pumpkin={hat:0xf78b24,vest:0x76be45,expression:'goofy'};
+const context=async(options={})=>{const c=await browser.newContext(options);await c.addInitScript(look=>{localStorage.setItem('break-time-worker',JSON.stringify(look));},pumpkin);return c;};
+const track=p=>{p.on('pageerror',e=>{errors.push(e.message);console.log('PAGE ERROR '+e.stack);});p.on('console',m=>{if(m.type()==='warning'&&/THREE|WebGL|context/i.test(m.text()))warnings.push(m.text());});return p;};
+fs.mkdirSync('qa/m28',{recursive:true});
+try{
+ const dc=await context({viewport:{width:1440,height:900}}),mc=await context({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:2});
+ const h=track(await dc.newPage()),g=track(await mc.newPage());
+ await h.goto(origin);await h.locator('#chooseCrane').click();await h.locator('#selectTower').waitFor();check(true,'home Crane tile opens two-mode chooser');await h.screenshot({path:'qa/m28/crane-chooser-desktop.png'});
+ await h.locator('#selectTower').click();await h.locator('#name').fill('Pumpkin Foreman');await h.locator('#create').click();await h.locator('#lobby').waitFor({state:'visible'});const code=(await h.locator('#roomInfo').innerText()).replace('PRIVATE ROOM ','');check(/^[A-F0-9]{6}$/.test(code),'Crane room code');
+ await g.goto(origin+'/crane.html');await g.locator('#selectTower').click();await g.locator('#name').fill('Pumpkin Apprentice');await g.locator('#code').fill(code);await g.locator('#join').click();await h.waitForFunction(()=>document.querySelector('#lobbyText').textContent.includes('2/8'));check(await g.locator('#lobby').isVisible(),'mobile guest joins desktop Crane room');
+ await h.locator('#start').click();await h.waitForFunction(()=>document.body.dataset.phase==='playing');await g.waitForFunction(()=>document.body.dataset.phase==='playing');
+ await h.keyboard.press('Space');await h.keyboard.down('d');await h.waitForTimeout(1500);await h.keyboard.up('d');await h.waitForTimeout(1500);await h.keyboard.press('Space');
+ await h.screenshot({path:'qa/m28/tower-desktop.png'});await g.screenshot({path:'qa/m28/tower-iphone-portrait.png'});
+ await g.reload();await g.waitForFunction(()=>document.body.dataset.phase==='playing');check((await g.locator('#roomInfo').innerText()).includes(code),'mobile reload reconnects same Crane room');
+ await g.setViewportSize({width:844,height:390});await g.locator('#action').tap();await g.screenshot({path:'qa/m28/tower-iphone-landscape.png'});check(await g.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Crane mobile landscape no overflow');
+ await h.locator('#results').waitFor({state:'visible',timeout:70000});await g.locator('#results').waitFor({state:'visible'});check((await h.locator('#winner').innerText())===(await g.locator('#winner').innerText()),'desktop and mobile agree on natural 60-second Tower winner');check(await h.locator('#results .awards-stage canvas').count()===1,'Tower shared 3D podium rendered');check(await h.locator('#results .awards-roster li').count()===2,'Tower podium preserves both workers');
+ await h.screenshot({path:'qa/m28/tower-podium-desktop.png'});await g.setViewportSize({width:390,height:844});await g.screenshot({path:'qa/m28/tower-podium-iphone.png'});
+ await h.goto(origin);await g.locator('#replay').waitFor({state:'visible'});check(await g.locator('#replay').isVisible(),'Crane host transfers after original host exits');await g.locator('#openLobby').click();await g.locator('[data-mode="derby"]').click();await g.waitForFunction(()=>document.querySelector('#modeTitle').textContent.includes('DERBY'));check((await g.locator('#modeTitle').innerText()).includes('DERBY'),'new host can switch to Derby');
+ await h.goto(origin+'/crane.html');await h.locator('#lobby').waitFor({state:'visible'});check((await h.locator('#roomInfo').innerText()).includes(code),'returning browser reconnects its reserved Crane place');await g.waitForFunction(()=>document.querySelector('#lobbyText').textContent.includes('2/8'));await g.locator('#start').click();await g.waitForFunction(()=>document.body.dataset.phase==='playing');check((await g.locator('#clock').innerText()).startsWith('60'),'Derby replay starts at fresh 60 seconds');await g.locator('#action').tap();await g.locator('#right').tap();await g.waitForTimeout(1000);await g.screenshot({path:'qa/m28/derby-iphone.png'});
+ await h.goto(origin);await h.locator('#chooseParty').click();await h.locator('#create').waitFor();check(new URL(h.url()).pathname==='/party.html','home Party tile opens actual playlist');check((await h.locator('#modeInstructions').innerText()).includes('Three games'),'Party advertises exactly three playable modes');await h.locator('#create').click();await h.locator('#partyShell').waitFor();check((await h.locator('#partyShell').innerText()).includes('Toolbox Trivia'),'Party room presents complete three-mode playlist');await h.screenshot({path:'qa/m28/party-production-lobby.png'});
+ check(errors.length===0,'zero browser page errors: '+errors.join('; '));check(!warnings.some(w=>/Too many active WebGL|Multiple instances of Three/i.test(w)),'no duplicate Three.js or exhausted WebGL contexts');
+ fs.writeFileSync('qa/m28/production-browser.json',JSON.stringify({checks:checks.length,passed:checks,errors,warnings,origin},null,2));
+}finally{await browser.close();}
