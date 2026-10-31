@@ -16,9 +16,9 @@ test('compact framing activates only for short touch landscape and keeps the pla
   const p=presentationFor(w,h,touch);assert.equal(p.compact,false);assert.equal(p.cameraY,15);assert.equal(p.cameraZ,18);assert.equal(p.lookAhead,0);
  }
 });
-test('landscape styling retains safe areas, touch targets, a collapsible board and dismissible results',()=>{
+test('landscape styling retains safe areas, touch targets, an always-visible leaderboard and mode-specific results',()=>{
  const css=fs.readFileSync('client/style.css','utf8'),html=fs.readFileSync('index.html','utf8'),main=fs.readFileSync('client/main.ts','utf8');
  for(const token of ['safe-area-inset-left','safe-area-inset-right','safe-area-inset-top','safe-area-inset-bottom','100dvh','body.mobile-landscape #joystick','body.mobile-landscape #raceResults'])assert.ok(css.includes(token));
- assert.ok(html.includes('viewport-fit=cover'));assert.ok(main.includes('<details id="standings"'));assert.ok(main.includes('id="showResults"'));
+ assert.ok(html.includes('viewport-fit=cover'));assert.ok(main.includes('<section id="standings"'));assert.ok(main.includes('id="showResults"'));
  assert.ok(main.includes("dismissedResults='';renderResults"));assert.ok(css.includes('min-height:44px'));
 });

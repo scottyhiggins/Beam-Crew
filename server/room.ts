@@ -67,7 +67,8 @@ export class CrewRoom extends Room<CrewState> {
     }
     this.lastReset=Date.now();
     this.routePlan=[];this.routeMaterialWorld=undefined;this.state.routeIds.clear();
-    if(this.state.mode==='championship'&&this.state.championshipLength>2){
+    if(this.state.mode==='championship'){
+      if(!validChampionshipLength(this.state.championshipLength))this.state.championshipLength=3;
       this.state.routeSeed=randomInt(0x100000000);const ids=selectCourseIds(this.state.championshipLength,this.state.routeSeed);this.state.routeIds.push(...ids);this.routePlan=assembleRoute(ids);this.routeMaterialWorld=routeWorld(this.routePlan);
     }
     if(this.state.mode==='competitive'){

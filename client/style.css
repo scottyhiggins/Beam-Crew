@@ -110,3 +110,26 @@ input,select{border:2px solid #abbeb4;border-radius:7px;background:#fffdf2;color
 .room-shortcut{display:inline-flex;align-items:center;min-height:44px;color:#185f62;font-weight:800;font-size:15px}.room-shortcut:focus-visible{outline:3px solid #237e80;outline-offset:3px}#panel.connected .room-shortcut,#panel:not(.connected) #help{display:none}#entryActions{scroll-margin-top:14px}@media(max-width:420px){#entryActions .join{display:grid;grid-template-columns:1fr}#entryActions #code{width:100%;font-size:16px}}
 
 .store-account{margin-left:auto;max-width:210px;text-align:right;font-size:11px;font-weight:800;color:#52716f}.store-account small{display:block;margin-top:6px;font-size:10px;line-height:1.5;font-weight:400}.store-seasonal{border-top:1px solid #d9b887!important;padding-top:12px!important}.store-seasonal legend{color:#96501e}.store-seasonal p,.store-seasonal small{font-size:11px;color:#735c42}.store-seasonal .store-choices{margin-bottom:8px}.store-seasonal .store-choices button{background:#f9e4bd}.store-seasonal i{border-radius:40%;position:relative}.store-seasonal i::before{content:'';position:absolute;width:5px;height:5px;background:#478645;top:-4px;left:6px}@media(max-width:650px){#workerStore header{flex-wrap:wrap}.store-account{order:3;max-width:none;width:100%;text-align:left;margin:0 0 12px}.store-account small{margin-top:3px}}
+/* Championship HUD: official totals stay visible while the crew drives. */
+#hud.wheel-hud{display:block!important}
+#hud.wheel-hud #hudText{white-space:pre-line;max-width:44%;font-size:clamp(11px,2.4vw,16px);line-height:1.35}
+#hud.wheel-hud #beamStatus,#hud.wheel-hud #crewSignals,#hud.wheel-hud #showResults{display:none!important}
+#hud.wheel-hud #menu{position:absolute;top:0;right:0;max-width:51%}
+#hud.wheel-hud #standings{display:block;position:absolute;top:50px;right:0;width: min(360px,53%);margin:0;padding:5px;background:#193c47ed;color:#fff8e7;border-radius:7px;font-size:12px;pointer-events:none}
+#hud.wheel-hud #standingsList{margin:0;padding:0;list-style:none}
+#hud.wheel-hud #standingsList li{margin:0;padding:4px 2px;overflow-wrap:anywhere;border-bottom:1px solid #ffffff28;line-height:1.3}
+#stagingNotice{width:43%;font-size:12px;line-height:1.4;padding:6px;background:#193c47ed;color:#fff8e7;border-radius:5px;margin:6px 0}
+body.championship-results #raceResults{left:auto!important;right:12px!important;top:auto!important;bottom:12px;width:min(340px,51%)!important;max-height:40dvh!important;padding:6px!important;border:0;pointer-events:none;background:#193c47e8;color:#fff8e7;overflow:auto!important}
+body.championship-results #raceResults h2,body.championship-results #resultsRule,body.championship-results .awards-kicker,body.championship-results .awards>p,body.championship-results .awards-roster,body.championship-results #closeResults{display:none!important}
+body.championship-results .awards-stage{height:120px}
+body.championship-results #playAgain{pointer-events:auto;font-size:12px;min-height:44px;margin:4px 0 0}
+@media(max-width:420px){#hud.wheel-hud #standings{font-size:10px}#hud.wheel-hud #standingsList li{padding:3px 1px}#stagingNotice{font-size:10px}body.championship-results .awards-stage{height:95px}}
+@media(max-height:450px){#hud.wheel-hud #standings{font-size:10px;top:46px;width:40%}#hud.wheel-hud #standingsList li{padding:1px}body.championship-results #raceResults{width:28%!important;max-height:43dvh!important}body.championship-results .awards-stage{height:65px}}
+@media(max-height:450px) and (orientation:landscape){body.championship-results #raceResults{right:calc(41% + 12px)!important}}
+#hud.wheel-hud[hidden]{display:none!important}
+#hud.wheel-hud #standingsList{position:static;width:auto;max-height:none;overflow:visible;background:none;box-shadow:none;border:0;color:inherit}
+#hud.wheel-hud #standingsList li{font-size:inherit;white-space:normal}
+@media(max-width:420px){body.championship-results #raceResults{width:47%!important}}
+#hud.wheel-hud.menu-open #standings,#hud.wheel-hud.menu-open #hudText,#hud.wheel-hud.menu-open #stagingNotice{visibility:visible}
+#hud.wheel-hud.menu-open #standings{z-index:4}
+body.wheel-menu-open #panel{top:var(--wheel-menu-top,180px);max-height:calc(100dvh - var(--wheel-menu-top,180px) - 16px)}
