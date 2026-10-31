@@ -1,0 +1,48 @@
+{
+  "origin": "http://127.0.0.1:2732",
+  "checks": [
+    "released container remains authoritative",
+    "Tower fits portrait",
+    "Tower fits landscape",
+    "Tower fits narrow",
+    "reload reconnects active Tower round",
+    "reload transfers host",
+    "eight workers enter Derby replay",
+    "Derby fits portrait",
+    "five controls fit portrait",
+    "Derby fits landscape",
+    "five controls fit landscape",
+    "Derby fits narrow",
+    "five controls fit narrow",
+    "target denominator remains 31",
+    "zero browser page errors"
+  ],
+  "errors": [],
+  "samples": [
+    {
+      "label": "portrait",
+      "p50": 6.099999999999454,
+      "p95": 6.199999999999818,
+      "max": 24.200000000000728,
+      "frames": 294,
+      "heap": 14979676
+    },
+    {
+      "label": "landscape",
+      "p50": 6.099999999999454,
+      "p95": 6.199999999999818,
+      "max": 12.200000000000728,
+      "frames": 297,
+      "heap": 12798998
+    },
+    {
+      "label": "narrow",
+      "p50": 6.099999999999454,
+      "p95": 6.200000000000728,
+      "max": 6.800000000000182,
+      "frames": 298,
+      "heap": 15719313
+    }
+  ],
+  "scope": "Headless Edge laptop; touch and viewport emulation, not physical iPhone Safari."
+}

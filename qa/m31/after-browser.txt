@@ -1,0 +1,21 @@
+PASS released container remains authoritative
+PASS Tower fits portrait
+PASS Tower fits landscape
+PASS Tower fits narrow
+PASS reload reconnects active Tower round
+PASS reload transfers host
+PASS eight workers enter Derby replay
+PASS Derby fits portrait
+PASS standings clear controls portrait
+PASS eighth worker remains reachable portrait
+PASS five controls fit portrait
+PASS Derby fits landscape
+PASS standings clear controls landscape
+PASS eighth worker remains reachable landscape
+PASS five controls fit landscape
+PASS Derby fits narrow
+PASS standings clear controls narrow
+PASS eighth worker remains reachable narrow
+PASS five controls fit narrow
+PASS target denominator remains 31
+PASS zero browser page errors

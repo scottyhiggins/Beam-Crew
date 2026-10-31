@@ -8,3 +8,8 @@
 /* Keep all crew standings reachable above touch controls on short screens. */
 #board{max-height:calc(100dvh - 240px);overflow-y:auto;overscroll-behavior:contain}
 @media(max-height:500px) and (orientation:landscape){#board{max-height:calc(100dvh - 160px)}}
+
+/* Keep the moving load visible beneath the eight-worker standings. */
+body[data-phase=playing] #board{max-height:180px;overflow-y:auto;width:210px;overscroll-behavior:contain}
+@media(max-width:650px){body[data-phase=playing] #board{max-height:140px;width:164px}}
+@media(max-height:500px){body[data-phase=playing] #board{max-height:110px}}

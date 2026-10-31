@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: 12 materials in six vertical pairs and strict input validation
+ok 1 - 12 materials in six vertical pairs and strict input validation
+  ---
+  duration_ms: 1.1089
+  type: 'test'
+  ...
+# Subtest: all twelve loaded carts have identical speed steering risk and spill thresholds
+ok 2 - all twelve loaded carts have identical speed steering risk and spill thresholds
+  ---
+  duration_ms: 11.21
+  type: 'test'
+  ...
+# Subtest: six spill behaviors: sticky, rolling, fixed, heavy, bumpy and rough
+ok 3 - six spill behaviors: sticky, rolling, fixed, heavy, bumpy and rough
+  ---
+  duration_ms: 2.0651
+  type: 'test'
+  ...
+# Subtest: mixed repeated spills stay bounded and preserve material identity
+ok 4 - mixed repeated spills stay bounded and preserve material identity
+  ---
+  duration_ms: 16.2659
+  type: 'test'
+  ...
+# Subtest: finished racers retain normal cart handling, staging hazards and a single finish
+ok 5 - finished racers retain normal cart handling, staging hazards and a single finish
+  ---
+  duration_ms: 1.0593
+  type: 'test'
+  ...
+# Subtest: competitive pairs assign opposite ends, independent beams, and odd spectator
+ok 6 - competitive pairs assign opposite ends, independent beams, and odd spectator
+  ---
+  duration_ms: 6.3639
+  type: 'test'
+  ...
+# Subtest: competitive results record team time once and departure gives DNF
+ok 7 - competitive results record team time once and departure gives DNF
+  ---
+  duration_ms: 3.4185
+  type: 'test'
+  ...
+# Subtest: beam goal cannot bypass the doorway checkpoint
+ok 8 - beam goal cannot bypass the doorway checkpoint
+  ---
+  duration_ms: 1.4539
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 271.6202

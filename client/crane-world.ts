@@ -2,7 +2,7 @@ import {makeWorker} from './worker';
 import {validateWorkerLook,workerLookKey,type WorkerLook} from '../shared/cosmetics';
 import * as THREE from 'three';
 import {createDerbyVisual} from './derby-visual';
-import {derbyPose,type DerbyArena} from '../shared/derby';
+import {derbyPose,derbyPivot,type DerbyArena} from '../shared/derby';
 import {arena,loadPose,type Arena} from '../shared/crane';
 const palette=[0xe46842,0x239caa,0xeebc3b,0x6476c4,0x61a476];
 /** A full 3D jobsite. Gameplay stays on a single travel axis so three controls suffice. */
@@ -38,6 +38,7 @@ export function createCraneWorld(view:HTMLElement){
  const trolley=new THREE.Group();box(trolley,1.5,.5,1.6,0x263d4a);scene.add(trolley);
  const hoist=box(scene,.045,1,.045,0x31464f);const rope=box(scene,.06,1,.06,0x243c48);const hook=box(scene,.3,.5,.3,0xffc641);
  const spreader=box(scene,3.5,.16,.2,0xffcb43);
+ const bridles=[box(scene,.045,1,.045,0x344653),box(scene,.045,1,.045,0x344653)];
  const slings=[box(scene,.045,1,.045,0x344653),box(scene,.045,1,.045,0x344653)];
  const slew=new THREE.Group();slew.position.set(0,0,-5);scene.add(slew);
  for(const x of [-.65,.65])for(const z of [-.65,.65])box(slew,.18,14,.18,0xeeb632,x,5,z);
@@ -64,16 +65,26 @@ export function createCraneWorld(view:HTMLElement){
   trolley.position.set(a.x,32.7,-5);line(hoist,v(a.x,32.5,-5),v(a.x,a.pivotY,-5));
   // Suspension remains connected from the overhead trolley to the bridle apex.
   arm.visible=!isDerby;arm.position.set(a.x,32.7,-2.5);hook.position.set(a.held?pose.x:a.x,a.held?pose.y+1.25:a.pivotY-.25,0);hook.rotation.z=a.swing*.25;
+  // Recolor only the painted shell/ribs; the released ID keeps this assignment.
+  for(const group of [carried,waiting])group.traverse(o=>{if(o instanceof THREE.Mesh && (o.geometry===geo(4,2,2.5)||o instanceof THREE.InstancedMesh))o.material=mat(palette[a.next%palette.length]);});
   carried.visible=!isDerby&&a.held;carried.position.set(pose.x,pose.y,0);carried.rotation.z=a.swing*.25;waiting.visible=!isDerby&&!a.held;
   marker.visible=!isDerby&&a.held;marker.position.set(pose.x,Math.abs(pose.x)<5?.15:-1.85,0);rope.visible=false;
   slew.visible=derbyCable.visible=isDerby;
-  trolley.visible=!isDerby;hook.visible=!isDerby&&a.held;
-  spreader.visible=!isDerby&&a.held;slings.forEach(m=>m.visible=spreader.visible);
-  if(isDerby&&currentDerby){boom.rotation.y=currentDerby.yaw-Math.PI/2;slew.scale.z=.3;line(derbyCable,v(Math.sin(currentDerby.yaw)*10,12,Math.cos(currentDerby.yaw)*3-5),v(pose.x,pose.y+1.1,2.2));hoist.visible=false;}
+  trolley.visible=!isDerby;hook.visible=!isDerby;
+  spreader.visible=!isDerby;[...slings,...bridles].forEach(m=>m.visible=spreader.visible);
+  if(isDerby&&currentDerby){boom.rotation.y=currentDerby.yaw-Math.PI/2;slew.scale.z=1;const pivot=derbyPivot(currentDerby);const ball=derbyPose(currentDerby);line(derbyCable,v(pivot.x,pivot.y,pivot.z),v(ball.x,ball.y,ball.z));hoist.visible=false;}
   else{hoist.visible=true;line(hoist,v(a.x,32.5,0),v(a.held?pose.x:a.x,a.held?pose.y+2.5:a.pivotY,0));trolley.position.z=0;
-   spreader.position.set(pose.x,pose.y+2.5,0);spreader.scale.x=.1;spreader.rotation.z=a.swing*.25;
-   hook.position.set(pose.x,pose.y+2.45,0);
-   for(let i=0;i<2;i++){const x=i?1.7:-1.7;const angle=a.swing*.25;line(slings[i],v(pose.x,pose.y+2.5,0),v(pose.x+x*Math.cos(angle)-Math.sin(angle),pose.y+x*Math.sin(angle)+Math.cos(angle),0));}
+   const angle=a.swing*.25;
+   // The spreader and both sets of cables remain suspended after release.
+   const center=v(pose.x,pose.y+1.5,0),apex=v(pose.x,center.y+1,0);
+   line(hoist,v(a.x,32.5,0),apex);hook.position.copy(apex);
+   spreader.position.copy(center);spreader.scale.x=1;spreader.rotation.z=angle;
+   for(let i=0;i<2;i++){const x=i?1.7:-1.7;
+    const end=v(center.x+x*Math.cos(angle),center.y+x*Math.sin(angle),0);
+    line(bridles[i],apex,end);
+    const bottom=a.held?v(pose.x+x*Math.cos(angle)-Math.sin(angle),pose.y+x*Math.sin(angle)+Math.cos(angle),0):v(end.x+Math.sin(a.swing)*.25,end.y-.55,0);
+    line(slings[i],end,bottom);
+   }
   }
   for(const [id,m] of meshMap)if(!a.blocks.some(b=>b.id===id)){scene.remove(m);m.traverse(o=>{if(o instanceof THREE.InstancedMesh)o.dispose();});meshMap.delete(id);}
   for(const b of a.blocks){let m=meshMap.get(b.id);if(!m){m=container(palette[b.id%palette.length]);scene.add(m);meshMap.set(b.id,m);}m.position.set(b.x,b.y,0);m.rotation.z=b.angle;}

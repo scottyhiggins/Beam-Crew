@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: two racers synchronize countdown, independent carts, reconnect, finish and host replay
+ok 1 - two racers synchronize countdown, independent carts, reconnect, finish and host replay
+  ---
+  duration_ms: 34290.6658
+  type: 'test'
+  ...
+# Subtest: spilled material synchronizes to both racers and survives reload and reconnect until restart
+ok 2 - spilled material synchronizes to both racers and survives reload and reconnect until restart
+  ---
+  duration_ms: 10068.5819
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 44527.9367
