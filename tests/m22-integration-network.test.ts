@@ -25,8 +25,8 @@ test('M22: eight Crane clients preserve pumpkin, protocol, private arenas, host 
   await assert.rejects(c.joinById(a.roomId,{name:'Late'}));a.send('action');await until(()=>snap.get(a).arena.held);assert.equal(snap.get(clients[1]).arena.held,false);
   const old=clients[1],token=old.reconnectionToken,id=old.sessionId;old.connection.close();await until(()=>snap.get(a).leaders.some((p:any)=>p.id===id&&!p.connected));
   const b=track(await c.reconnect(token));await until(()=>snap.get(b)?.leaders.find((p:any)=>p.id===id)?.connected);assert.equal(b.sessionId,id);assert.equal(snap.get(b).code,code);assert.deepEqual(snap.get(b).leaders.find((p:any)=>p.id===id).look,pumpkin);
-  await a.leave();await until(()=>snap.get(b).host===id);b.send('lobby');await until(()=>snap.get(b).phase==='lobby');b.send('mode','derby');await until(()=>snap.get(b).mode==='derby');
-  b.send('start');await until(()=>snap.get(b).phase==='playing'&&!!snap.get(b).derby);assert.equal(snap.get(b).derby.score,0);assert.equal(snap.get(b).arena.blocks.length,0);
+  await a.leave();await until(()=>snap.get(b).host===id);b.send('lobby');await until(()=>snap.get(b).phase==='lobby');b.send('mode','derby');await new Promise(r=>setTimeout(r,150));assert.equal(snap.get(b).mode,'tower');
+  b.send('start');await until(()=>snap.get(b).phase==='playing');assert.equal(snap.get(b).mode,'tower');assert.equal(snap.get(b).derby,undefined);assert.equal(snap.get(b).arena.blocks.length,0);
   b.send('cosmetics',{hat:-1,vest:-1,expression:'invalid'});await until(()=>snap.get(b).leaders.find((p:any)=>p.id===id).look.hat===DEFAULT_WORKER_LOOK.hat);
   b.send('cosmetics',pumpkin);await until(()=>snap.get(b).leaders.find((p:any)=>p.id===id).look.hat===PUMPKIN_HARD_HAT);
   b.send('lobby');await until(()=>snap.get(b).phase==='lobby');b.send('mode','tower');await until(()=>snap.get(b).mode==='tower');b.send('start');await until(()=>snap.get(b).phase==='playing'&&!snap.get(b).derby);assert.equal(snap.get(b).arena.held,false);assert.equal(snap.get(b).arena.score,0);

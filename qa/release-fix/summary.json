@@ -1,0 +1,20 @@
+{
+  "build": "PASS",
+  "protocol": 23,
+  "regression": {
+    "files": 20,
+    "tests": 109,
+    "passed": 109,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browserChecks": 13,
+  "browserErrors": [],
+  "physicalIphoneDisconnect": "not reproduced; physical retest pending",
+  "beamVisualStepping": {
+    "frames": 61,
+    "repeatedPositionSteps": 40,
+    "scope": "Deterministic 60Hz render/50ms server-clock sampling using shipped courseLoads; not physical device frame measurement"
+  },
+  "recommendation": "GO for candidate review; NO-GO for unconditional release pending physical iPhone reconnect retest and Beam presentation acceptance"
+}

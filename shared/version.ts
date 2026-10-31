@@ -1,2 +1,2 @@
-export const BUILD_LABEL = 'BREAK TIME - Final Release Candidate M32 - Protocol 23';
+export const BUILD_LABEL = 'BREAK TIME - M32 Tower Release Candidate - Protocol 23';
 export const PROTOCOL_VERSION = 23;

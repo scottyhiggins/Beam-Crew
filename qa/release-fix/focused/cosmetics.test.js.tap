@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: all 84 free looks validate and malformed selections fall back atomically
+ok 1 - all 84 free looks validate and malformed selections fall back atomically
+  ---
+  duration_ms: 2.3509
+  type: 'test'
+  ...
+# Subtest: server join validates cosmetics and ignores attempted gameplay field injection
+ok 2 - server join validates cosmetics and ignores attempted gameplay field injection
+  ---
+  duration_ms: 2.6859
+  type: 'test'
+  ...
+# Subtest: cosmetic models preserve animated limb poses for Wheelbarrow and Beam Carry
+ok 3 - cosmetic models preserve animated limb poses for Wheelbarrow and Beam Carry
+  ---
+  duration_ms: 12.9279
+  type: 'test'
+  ...
+# Subtest: cosmetics synchronize by player, survive reconnect and new rounds in wheel
+ok 4 - cosmetics synchronize by player, survive reconnect and new rounds in wheel
+  ---
+  duration_ms: 1914.5854
+  type: 'test'
+  ...
+# Subtest: cosmetics synchronize by player, survive reconnect and new rounds in competitive
+ok 5 - cosmetics synchronize by player, survive reconnect and new rounds in competitive
+  ---
+  duration_ms: 1924.8194
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4137.4599

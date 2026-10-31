@@ -8,12 +8,12 @@ export const craneRooms=new Map<string,CraneRoom>();
 type Worker={look:WorkerLook,id:string,name:string,order:number,score:number,connected:boolean,arena:Arena,derby:DerbyArena,dir:number,lift?:number,last:number,acted:number,retired?:boolean};
 export class CraneRoom extends Room{
  maxClients=8;mode:'tower'|'derby'='tower';code='';host='';phase='lobby';elapsed=0;ticks=0;winner='';reason='';players=new Map<string,Worker>();serial=0;accumulator=0;
- onCreate(options?:{mode?:unknown}){this.mode=options?.mode==='derby'?'derby':'tower';this.code=randomBytes(3).toString('hex').toUpperCase();craneRooms.set(this.code,this);this.setSimulationInterval(dt=>this.advance(dt),1000/30);
+ onCreate(options?:{mode?:unknown}){if(options?.mode==='derby')throw new ServerError(403,'Wrecking Ball Derby is unavailable. Choose Tower Rush.');this.mode=options?.mode==='derby'?'derby':'tower';this.code=randomBytes(3).toString('hex').toUpperCase();craneRooms.set(this.code,this);this.setSimulationInterval(dt=>this.advance(dt),1000/30);
  this.onMessage('cosmetics',(c,d)=>{const p=this.players.get(c.sessionId);if(p)p.look=validateWorkerLook(d);});
  this.onMessage('input',(c,d)=>{const p=this.players.get(c.sessionId);if(p&&typeof d==='number'&&Number.isFinite(d)){p.dir=Math.max(-1,Math.min(1,d));p.last=Date.now();}});
  this.onMessage('height',(c,d)=>{const p=this.players.get(c.sessionId);if(p&&typeof d==='number'&&Number.isFinite(d)){p.lift=Math.max(-1,Math.min(1,d));p.last=Date.now();}});
  this.onMessage('action',c=>{const p=this.players.get(c.sessionId);if(p&&this.phase==='playing'&&Date.now()-p.acted>250){if(this.mode==='derby')derbyAction(p.derby,p.dir);else action(p.arena);p.acted=Date.now();}});
- this.onMessage('mode',(c,mode)=>{if(c.sessionId!==this.host||this.phase!=='lobby'||!['tower','derby'].includes(mode))return;this.mode=mode;for(const p of this.players.values()){p.arena=arena();p.derby=derbyArena();p.score=0;p.dir=0;}});
+ this.onMessage('mode',(c,mode)=>{if(c.sessionId!==this.host||this.phase!=='lobby'||mode!=='tower')return;this.mode=mode;for(const p of this.players.values()){p.arena=arena();p.derby=derbyArena();p.score=0;p.dir=0;}});
  this.onMessage('start',c=>{if(c.sessionId!==this.host||this.phase==='playing'||this.clients.length<2)return;for(const [id,p] of this.players){if(p.retired){this.players.delete(id);continue;}p.arena=arena();p.derby=derbyArena();p.score=0;p.dir=0;}const seed=randomBytes(4).readUInt32LE();for(const p of this.players.values()){p.derby=derbyArena(seed);p.lift=0;}this.elapsed=0;this.ticks=0;this.accumulator=0;this.winner='';this.reason='';this.phase='playing';this.lock();});
  this.onMessage('lobby',c=>{if(c.sessionId===this.host){this.phase='lobby';this.unlock();}});
  }

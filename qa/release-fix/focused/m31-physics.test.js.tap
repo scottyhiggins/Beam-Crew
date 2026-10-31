@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: fast rotated drops cannot tunnel through the pad or yard, including platform edges
+ok 1 - fast rotated drops cannot tunnel through the pad or yard, including platform edges
+  ---
+  duration_ms: 189.7083
+  type: 'test'
+  ...
+# Subtest: a rotated resting container preserves orientation through geometry, without angle snapping
+ok 2 - a rotated resting container preserves orientation through geometry, without angle snapping
+  ---
+  duration_ms: 4.88
+  type: 'test'
+  ...
+# Subtest: repeated releases are bounded, and objects outside the yard are retired
+ok 3 - repeated releases are bounded, and objects outside the yard are retired
+  ---
+  duration_ms: 258.1735
+  type: 'test'
+  ...
+# Subtest: boom tip, rope and ball share one continuous 3D pendulum over the whole control range
+ok 4 - boom tip, rope and ball share one continuous 3D pendulum over the whole control range
+  ---
+  duration_ms: 7.4223
+  type: 'test'
+  ...
+# Subtest: hoisting preserves pendulum angular momentum and stopping retains swing
+ok 5 - hoisting preserves pendulum angular momentum and stopping retains swing
+  ---
+  duration_ms: 0.449
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 547.4417

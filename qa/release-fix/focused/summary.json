@@ -1,0 +1,169 @@
+{
+  "files": 20,
+  "tests": 109,
+  "passed": 109,
+  "failed": 0,
+  "skipped": 0,
+  "results": [
+    {
+      "file": "beam.test.js",
+      "code": 0,
+      "tests": 11,
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "beam-chaos.test.js",
+      "code": 0,
+      "tests": 27,
+      "passed": 27,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "crane.test.js",
+      "code": 0,
+      "tests": 14,
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "derby-network.test.js",
+      "code": 0,
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "beam-chaos-network.test.js",
+      "code": 0,
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "cosmetics.test.js",
+      "code": 0,
+      "tests": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "derby.test.js",
+      "code": 0,
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "m29-party-course.test.js",
+      "code": 0,
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "m31-physics.test.js",
+      "code": 0,
+      "tests": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "m22-integration-network.test.js",
+      "code": 0,
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "party.test.js",
+      "code": 0,
+      "tests": 6,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "party-network.test.js",
+      "code": 0,
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "qa-beam-replay-network.test.js",
+      "code": 0,
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "quick-match-network.test.js",
+      "code": 0,
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "reconnect.test.js",
+      "code": 0,
+      "tests": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "schema.test.js",
+      "code": 0,
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "startup.test.js",
+      "code": 0,
+      "tests": 3,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "beam-multiplayer.test.js",
+      "code": 0,
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "reconnect-network.test.js",
+      "code": 0,
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "m27-beam-expansion-network.test.js",
+      "code": 0,
+      "tests": 8,
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0
+    }
+  ]
+}

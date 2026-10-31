@@ -1,0 +1,24 @@
+{
+  "checks": [
+    "main menu offers Tower only",
+    "Derby chooser hidden 390",
+    "Tower chooser retained 390",
+    "Derby chooser hidden 844",
+    "Tower chooser retained 844",
+    "old Derby link explicitly rejected",
+    "old Derby link opens no multiplayer socket",
+    "Derby lobby setting hidden",
+    "Beam phone-layout browser reconnects after unexpected socket close",
+    "Beam reconnect preserves room",
+    "Beam phone-layout reload reconnect preserves room",
+    "reproduced Beam visual stepping: 50ms authoritative clock held across render frames",
+    "zero browser JavaScript exceptions"
+  ],
+  "errors": [],
+  "beamVisualStepping": {
+    "frames": 61,
+    "repeatedPositionSteps": 40,
+    "scope": "Deterministic 60Hz render/50ms server-clock sampling using shipped courseLoads; not physical device frame measurement"
+  },
+  "physicalIphone": false
+}
