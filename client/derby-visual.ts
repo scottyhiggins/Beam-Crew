@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import {loadPose} from '../shared/crane';
-import {BALL_RADIUS,MAX_DEBRIS,type DerbyArena,type Target,type TargetKind} from '../shared/derby';
+
+import {derbyPose,BALL_RADIUS,MAX_DEBRIS,type DerbyArena,type Target,type TargetKind} from '../shared/derby';
 const colors:Record<TargetKind,number>={wall:0xc87b55,scaffold:0xe9b93e,pallet:0xa78152,barrier:0xef8842};
 /** A visual layer inside the existing Crane Challenge renderer/camera. No client scoring. */
 export function createDerbyVisual(scene:THREE.Scene){
@@ -24,9 +24,9 @@ export function createDerbyVisual(scene:THREE.Scene){
   if(t.kind==='barrier'){box(g,t.w,.55,.7,colors.barrier);box(g,t.w+.05,.18,1.2,0x344c53,0,-.36);for(let i=0;i<4;i++){const stripe=box(g,.13,.52,.03,0xffe6aa,-.65+i*.43,0,.37);stripe.rotation.z=-.35;}}
   const health=box(g,t.w,.08,.06,0xffd052,0,t.h/2+.18,1.5);health.name='health';health.visible=false;targets.set(t.id,g);return g;
  }
- return {setVisible(value:boolean){root.visible=value;visible=value;if(!value){effect=0;lastImpact=0;}},update(d:DerbyArena,dt:number){if(!visible)return;const pose=loadPose(d.crane);ball.position.set(pose.x,pose.y,0);ball.rotation.z=-d.crane.swing;
+ return {setVisible(value:boolean){root.visible=value;visible=value;if(!value){effect=0;lastImpact=0;}},update(d:DerbyArena,dt:number){if(!visible)return;const pose=derbyPose(d);ball.position.set(pose.x,pose.y,2.2);ball.rotation.z=-d.crane.swing;
   // Replay reuses IDs; the authoritative destroyed flags restore all target meshes.
-  for(const t of d.targets){const g=targets.get(t.id)??targetMesh(t);g.visible=!t.destroyed;const health=g.getObjectByName('health')!;health.visible=t.hp<t.maxHp&&!t.destroyed;health.scale.x=Math.max(.01,t.hp/t.maxHp);health.position.x=-(t.w*(1-t.hp/t.maxHp))/2;}
+  for(const t of d.targets){const g=targets.get(t.id)??targetMesh(t);g.position.set(t.x,t.y,0);g.visible=!t.destroyed;const health=g.getObjectByName('health')!;health.visible=t.hp<t.maxHp&&!t.destroyed;health.scale.x=Math.max(.01,t.hp/t.maxHp);health.position.x=-(t.w*(1-t.hp/t.maxHp))/2;}
   chunks.count=d.debris.length;for(let i=0;i<d.debris.length;i++){const b=d.debris[i];const fade=Math.min(1,(b.life-b.age)/.4);position.set(b.x,b.y,b.z);quat.setFromEuler(new THREE.Euler(b.age*b.spin,b.age*.8,0));scale.setScalar(b.size*Math.max(0,fade));matrix.compose(position,quat,scale);chunks.setMatrixAt(i,matrix);color.setHex(colors[b.kind]);chunks.setColorAt(i,color);}chunks.instanceMatrix.needsUpdate=true;if(chunks.instanceColor)chunks.instanceColor.needsUpdate=true;
   if(d.impact.serial<lastImpact)effect=0;
   if(d.impact.serial!==lastImpact){if(d.impact.serial>lastImpact){effect=.45;impactX=d.impact.x;impactY=d.impact.y;}lastImpact=d.impact.serial;}

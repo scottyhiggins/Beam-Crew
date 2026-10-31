@@ -10,7 +10,9 @@
     "start": "node build/server/index.js",
     "test": "tsc -p tsconfig.server.json && node --test build/tests/*.test.js",
     "test:all": "pnpm build && node scripts/test-live.mjs",
-    "smoke:public": "node scripts/smoke-public.mjs"
+    "smoke:public": "node scripts/smoke-public.mjs",
+    "m26:start": "node scripts/start-m26.mjs",
+    "m26:dev": "node scripts/start-m26.mjs --dev"
   },
   "dependencies": {
     "@colyseus/core": "^0.16.24",

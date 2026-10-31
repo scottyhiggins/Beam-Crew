@@ -1,0 +1,13 @@
+colyseus.js - onError => (409) Already assigned to a public match
+Room connection was closed unexpectedly (4002): 
+colyseus.js - onError => (4002) 
+✔ real sockets: public/private separation, concurrent capacity, cancellation, countdown, reconnect and replay (16029.8476ms)
+✔ public room creation is bounded and abandoned waiting rooms release capacity (847.4685ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 17068.6998

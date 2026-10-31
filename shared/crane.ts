@@ -13,6 +13,14 @@ export function step(a:Arena,dir:number,dt:number){
  if(a.held){const acceleration=(a.v-oldV)/dt;a.omega+=(-14/CABLE*Math.sin(a.swing)-acceleration/CABLE*Math.cos(a.swing)-1.05*a.omega)*dt;a.swing+=a.omega*dt;}
  const sorted=[...a.blocks].sort((a,b)=>a.y-b.y||a.id-b.id);
  for(const b of sorted){
+  // The yard is a dissipative resting surface, never a scoring support.
+  if(b.y<=-1&&b.vy<=0&&Math.abs(b.x)>5){
+   b.y=-1;b.vy=0;b.vx*=Math.exp(-5*dt);b.spin*=Math.exp(-7*dt);
+   if(Math.abs(b.vx)<.025)b.vx=0;
+   if(Math.abs(b.spin)<.025)b.spin=0;
+   b.x+=b.vx*dt;b.angle+=b.spin*dt;b.stable=0;b.support=-2;continue;
+  }
+  b.spin*=Math.exp(-.18*dt);
   const previousBottom=b.y-1;b.vy-=14*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;b.angle+=b.spin*dt;
   let top=-2,support=-1,center=b.x,width=100;
   // Stacking pad top is zero; the surrounding yard lies two units lower and never scores.

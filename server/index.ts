@@ -31,5 +31,5 @@ app.get('/api/rooms/:code',(req,res)=>{
 app.get('/health',(_req,res)=>res.set('Cache-Control','no-store').json({ok:true,build:BUILD_LABEL,protocol:PROTOCOL_VERSION,repository,startedAt}));
 if(process.env.NODE_ENV==='production')app.use(express.static(fileURLToPath(new URL('../../dist/',import.meta.url)),{setHeaders(res,path){if(path.endsWith('.html'))res.setHeader('Cache-Control','no-store');}}));
 else {const {createServer}=await import('vite');const vite=await createServer({server:{middlewareMode:true,allowedHosts:true}});app.use(vite.middlewares);}
-const port=Number(process.env.PORT)||(process.env.NODE_ENV==='production'?2567:2525);await server.listen(port,'0.0.0.0');console.log(`${BUILD_LABEL} — ${repository}\nBREAK TIME ready on http://localhost:${port}`);
+const port=Number(process.env.PORT)||(process.env.NODE_ENV==='production'?2567:2728);await server.listen(port,'0.0.0.0');console.log(`${BUILD_LABEL} — ${repository}\nBREAK TIME ready on http://localhost:${port}`);
 

@@ -1,0 +1,37 @@
+✔ held/airborne loads never score; stable levels count in 10-foot increments (2.4025ms)
+✔ acceleration produces predictable lag; stopping and reversing oscillate (0.872ms)
+✔ release inherits swing position, lateral velocity, vertical velocity and rotation (0.1765ms)
+✔ off-centre landings slide and rotate; falling bodies remain visible before cleanup (1.3261ms)
+✔ unsupported elevated bodies cannot score and fall under gravity (0.345ms)
+✔ removing a supporting body collapses its descendants and clears elevated scores (0.698ms)
+✔ tower centre of mass beyond a lower footprint triggers tipping (0.1742ms)
+✔ pickup range, movement bounds, ties and replay arena reset (0.3675ms)
+✔ timeout occurs on exactly tick 1800 with deterministic ties for 2–8 players (31.6415ms)
+✔ 100-foot supported stack instantly wins, all snapshots agree and remain private (0.6462ms)
+✔ same-tick 100-foot arrivals use join order; 90 feet never ends early (0.2498ms)
+✔ target cannot be configured; host replay clears swing, score, timer and results (0.627ms)
+✔ digital left/right/action controls can build a stable 100-foot tower within 60 seconds (7.9663ms)
+✔ scheduler jitter catches up fixed physics steps without extending the 60-second round (4.5526ms)
+✔ layout has 31 reachable destructible targets and deterministic control sweep destroys every one (15.6818ms)
+✔ swing boost has a server cooldown and builds predictable pendulum momentum (0.9174ms)
+✔ idle ball does not score by merely overlapping a target (0.4002ms)
+✔ swept ball collision catches fast crossings and rejects distant passes (0.2397ms)
+✔ destroyed target awards points exactly once through repeat contacts (0.6641ms)
+✔ continuous contact cannot farm repeated damage; a new impact requires separation (0.2934ms)
+✔ debris is capped even on simultaneous destruction and expires without scoring contacts (5.7734ms)
+✔ full demolition simulation is deterministic and bounded (23.7465ms)
+✔ Derby never ends at 100 points; exact 60-second timer, ties, freeze and private snapshots for 2–8 players (103.9211ms)
+✔ host-only lobby selection, invalid messages, replay cleanup and return to unchanged Tower Rush rules (8.729ms)
+✔ seeded props vary while structural frame remains fixed (2.4282ms)
+✔ slew responds smoothly around vertical axis; hoist clamps both ends (6.9009ms)
+✔ destroying a lower support collapses only its bay and never awards twice (3.1417ms)
+✔ high-energy missed containers settle without endless spin or slide (2.2877ms)
+✔ eight independent 60-second demolition arenas remain deterministic and bounded (71.16ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 411.8508
