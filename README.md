@@ -1,4 +1,8 @@
-# BREAK TIME - Milestone 7: Beam Carry
+# BREAK TIME - Milestone 22 Release Candidate
+
+Local candidate: `feature/final-release-integration`, Protocol 21. See [M22 release report](M22_RELEASE_REPORT.md) and [laptop + iPhone QA](M22_PHYSICAL_QA.md). This checkout has not been pushed or deployed.
+
+Historical gameplay notes follow.
 
 [Play BREAK TIME](https://break-time-9n1k.onrender.com/) · [Submission checklist](SUBMISSION.md) · [Physical playtest](PLAYTEST-M7.md)
 
@@ -14,7 +18,7 @@ Carry through the doorway, continue north, rotate right around the column, then 
 
 Beam Carry's haul distance is extended from the original goal at x=4.3 to x=26. Moving loads use the synchronized server race clock for collision and rendering; clients send directions and actions, never accepted positions. Touch joystick changes and release send immediate Beam inputs in addition to the existing 30 Hz updates. Beam mode alone uses the wider yard. Wheelbarrow Championship rules, materials, countdown, reconnect and score ledger are retained.
 
-Crane Challenge and Worker Store remain disabled Coming Soon tiles.
+All six home choices are active: Wheelbarrow Championship, Beam Carry, Toolbox Trivia, Crane Challenge, Party Night, and Worker Store. Crane Challenge offers Tower Rush and Wrecking Ball Derby. Party Night has exactly three playable modes: Wheelbarrow, Beam Carry, and Toolbox Trivia. Pumpkin Hard Hat and classic cosmetics are free.
 
 ## Run and verify
 

@@ -10,7 +10,7 @@ test('production server identifies its build and serves the mode selector assets
  const response=await fetch(`${endpoint}/health`);assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');
  const health=await response.json() as any;assert.equal(health.protocol,PROTOCOL_VERSION);assert.match(health.build,/BREAK TIME/);assert.ok(health.repository);assert.ok(Number.isFinite(Date.parse(health.startedAt)));
  const page=await fetch(endpoint!);assert.equal(page.headers.get('cache-control'),'no-store');const html=await page.text();assert.match(html,/BREAK TIME/);
- const asset=html.match(/src="([^"]+\.js)"/);assert.ok(asset);const script=await (await fetch(new URL(asset[1],endpoint))).text();assert.match(script,/Wheelbarrow/);assert.match(script,/id="mode"/);assert.match(script,/value="wheel"/);
+ const assets=[...html.matchAll(/(?:src|href)="([^"]+\.js)"/g)];assert.ok(assets.length);const script=(await Promise.all(assets.map(async asset=>(await fetch(new URL(asset[1],endpoint))).text()))).join("\n");assert.match(script,/Wheelbarrow/);assert.match(script,/id="mode"/);assert.match(script,/value="wheel"/);
  for(const id of ['quickMatch','cancelMatch','playAgain','beamMap','beamOverview','beamRescue','chooseWheel','chooseBeam','chooseStore','chooseParty','chooseCrane','menuExtras','entryGuide','modeInstructions'])assert.ok(script.includes('id="'+id+'"'), 'Integrated production asset missing '+id);
  assert.equal((script.match(/class="mode-tile/g)||[]).length,4);
 });

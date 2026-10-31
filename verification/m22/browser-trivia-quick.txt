@@ -1,0 +1,21 @@
+PASS round 1 reader cannot submit selector answer
+PASS round 1 authoritative correct-answer score
+PASS round 2 reader cannot submit selector answer
+PASS round 2 authoritative correct-answer score
+PASS Trivia mobile reload reconnects same room
+PASS round 3 reader cannot submit selector answer
+PASS round 3 authoritative correct-answer score
+PASS round 4 reader cannot submit selector answer
+PASS round 4 authoritative correct-answer score
+PASS round 5 reader cannot submit selector answer
+PASS round 5 authoritative correct-answer score
+PASS Trivia final scores agree on mobile
+PASS Trivia shared podium entries match
+PASS Trivia replay clears podium
+PASS Trivia replay preserves room code
+PASS Trivia host transfer reaches mobile browser
+PASS Quick Match waiting cancellation returns safely
+PASS desktop and mobile Quick Match enter a shared race
+PASS Quick Match mobile reload reconnects active race
+PASS Quick Match mobile joystick visible
+PASS zero Trivia and Quick Match browser errors

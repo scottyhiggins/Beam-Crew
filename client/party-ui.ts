@@ -1,3 +1,4 @@
+import {Podium} from './podium';
 import type {Room} from 'colyseus.js';
 import {PARTY_PLAYLIST,PARTY_MODES,partyPoints} from '../shared/party';
 import './party.css';
@@ -7,14 +8,14 @@ export function partyEpochFor(room:Room|null){return room?epochs.get(room):undef
 let shell:HTMLElement|undefined;
 export function installParty(room:Room){
  shell?.remove();shell=document.createElement('section');shell.id='partyShell';shell.setAttribute('aria-label','Party Night');document.body.append(shell);document.body.classList.add('party-connected');
- const root=shell;let lastKey='';let view:any;
+ const root=shell;const podiumHost=document.createElement('div');const podium=new Podium(podiumHost);let lastKey='';let view:any;
  const node=(tag:string,text:string,parent:HTMLElement=root)=>{const n=document.createElement(tag);n.textContent=text;parent.append(n);return n;};
  const button=(text:string,fn:()=>void,parent:HTMLElement=root)=>{const b=node('button',text,parent) as HTMLButtonElement;b.onclick=fn;return b;};
  room.onMessage('partyView',(v:any)=>{if(epochs.get(room)!==v.epoch)window.dispatchEvent(new Event('blur'));epochs.set(room,v.epoch);view=v;const tv=v.trivia;
   // Avoid replacing keyboard-focused controls on every timer update.
   const key=JSON.stringify({...v,remaining:0,trivia:tv?{...tv,remaining:0}:undefined});
   const timer=root.querySelector('[data-timer]');if(timer)timer.textContent=`${tv&&v.index===2?tv.remaining:v.remaining}s`;
-  if(key===lastKey)return;lastKey=key;root.replaceChildren();
+  if(key===lastKey)return;lastKey=key;root.replaceChildren();if(v.phase!=='final')podium.clear();
   const playing=v.phase==='playing',trivia=playing&&v.index===2,host=v.host===room.sessionId;
   root.classList.toggle('compact',playing&&!trivia);document.body.classList.toggle('party-overlay',!playing||trivia);
   node('p',`PARTY NIGHT · ${v.code} · ${v.phase==='final'?'SHIFT COMPLETE':v.index<0?'LOBBY':`${Math.min(v.index+1,3)}/3`}`);
@@ -25,7 +26,7 @@ export function installParty(room:Room){
    node('h1',v.phase==='final'?'EMPLOYEE OF THE MONTH':v.phase==='lobby'?'CLOCK IN TO PARTY':v.phase==='pairing'?'WAITING FOR COMPLETE PAIRS':trivia?'TOOLBOX TRIVIA':'NEXT UP');
    if(v.phase==='lobby'){
     node('p','Wheelbarrow Championship (3 races) → Beam Carry (Construction Chaos) → Toolbox Trivia (5 questions).');
-    node('p',`${PARTY_MODES[3].title}: coming after milestone #16. Not part of this playable playlist.`);
+    node('p','Tower Rush and Wrecking Ball Derby are available separately from Crane Challenge on the home screen.');
     const ul=node('ul','');v.players.forEach((p:any)=>node('li',`${p.name}${p.id===v.host?' · HOST':''}${p.connected?'':' · reconnecting'}`,ul));
     node('p','Pairs follow join order at each mode start. Odd group? Race together, then reconnect to complete pairs or skip the paired mode for everyone after 20 seconds.');
     button('Copy invite link',()=>{void navigator.clipboard.writeText(`${location.origin}/party.html?room=${v.code}`).then(()=>{share.textContent='Invite copied';}).catch(()=>{share.textContent=`Invite: ${location.origin}/party.html?room=${v.code}`;});});const share=node('p','');
@@ -39,7 +40,7 @@ export function installParty(room:Room){
     node('p',tv.teams.map((t:any)=>`${t.members.join(' + ')}: ${t.score} team points`).join(' · '));
    }
    if(v.phase==='final'){
-    const p=v.podium;node('h2',p.ranking[0]?.name??'Shift complete');node('p','Top three: '+p.topThree.map((r:any)=>`#${r.place} ${r.name} · ${r.points} pts`).join(' | '));
+    const p=v.podium;root.append(podiumHost);podium.update(p.ranking.map((r:any)=>({id:r.id,name:r.name,place:r.place,detail:r.points+' Party points · '+r.wins+' mode wins',award:r.place===1?'Employee of the Month':p.awards.find((a:any)=>a.playerId===r.id)?.title,workers:[{id:r.id,name:r.name,look:r.look,connected:v.players.find((w:any)=>w.id===r.id)?.connected??false}]})));node('h2',p.ranking[0]?.name??'Shift complete');node('p','Top three: '+p.topThree.map((r:any)=>`#${r.place} ${r.name} · ${r.points} pts`).join(' | '));
     for(const a of p.awards)node('p',`${a.title}: ${p.ranking.find((r:any)=>r.id===a.playerId)?.name} · ${a.value} ${{wheelSpills:'racing spills',beamRecoveries:'team recoveries',triviaCorrect:'correct team answers'}[a.stat as string]??'recorded actions'}`);
     if(host)button('Play another Party Night',()=>room.send('partyReplay',{epoch:v.epoch}));
    }
@@ -51,5 +52,5 @@ export function installParty(room:Room){
   const rules=node('details','');node('summary','How Party Night scoring works',rules);node('p','Each mode awards 0–100 points once, regardless of sub-rounds. Rank points = 100 × (competitors − rank) ÷ (competitors − 1), rounded. Both teammates receive the full team award. A single team earns 100 only for a delivery or at least one correct trivia answer. DNFs and zero-correct trivia earn 0. Native ties share rank and points. Overall ties: mode wins, then original join order. Wheelbarrow: complete all 3 races; completed races, spills first, then time. Beam: delivery time including penalties. Trivia: correct team points, then correct-answer time. Skipped modes award nobody points. Maximum for three scored modes: 300.',rules);
   button('Leave Party Night',()=>{void room.leave();});
  });
- room.onLeave(()=>{root.remove();document.body.classList.remove('party-connected','party-overlay');});room.send('partySync');
+ room.onLeave(()=>{podium.clear();root.remove();document.body.classList.remove('party-connected','party-overlay');});room.send('partySync');
 }

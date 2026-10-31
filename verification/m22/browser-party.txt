@@ -1,0 +1,32 @@
+PASS eight-player Party lobby: two real browser clients plus six SDK clients
+PASS cycle 1 shows Wheelbarrow Championship
+PASS cycle 1 shows Beam Carry
+PASS cycle 1 shows TOOLBOX TRIVIA
+PASS cycle 1 final podium includes all eight workers
+PASS cycle 1 mobile Party podium visible
+PASS cycle 1 all eight Pumpkin Hats reach final podium
+PASS cycle 1 at most game renderer plus podium contex
+PASS Party mobile landscape has no page overflow
+PASS cycle 1 replay removes podium canvas
+PASS cycle 1 replay preserves room code
+PASS cycle 2 shows Wheelbarrow Championship
+PASS cycle 2 shows Beam Carry
+PASS cycle 2 shows TOOLBOX TRIVIA
+PASS cycle 2 final podium includes all eight workers
+PASS cycle 2 mobile Party podium visible
+PASS cycle 2 all eight Pumpkin Hats reach final podium
+PASS cycle 2 at most game renderer plus podium contex
+PASS cycle 2 replay removes podium canvas
+PASS cycle 2 replay preserves room code
+PASS cycle 3 shows Wheelbarrow Championship
+PASS cycle 3 shows Beam Carry
+PASS cycle 3 shows TOOLBOX TRIVIA
+PASS cycle 3 final podium includes all eight workers
+PASS cycle 3 mobile Party podium visible
+PASS cycle 3 all eight Pumpkin Hats reach final podium
+PASS cycle 3 at most game renderer plus podium contex
+PASS cycle 3 replay removes podium canvas
+PASS cycle 3 replay preserves room code
+PASS Party host transfers to mobile browser after host exits
+PASS zero Party browser page errors
+PASS no duplicate Three.js or exhausted contexts over three complete playlists

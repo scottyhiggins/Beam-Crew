@@ -1,0 +1,27 @@
+{
+  "checks": 21,
+  "passed": [
+    "round 1 reader cannot submit selector answer",
+    "round 1 authoritative correct-answer score",
+    "round 2 reader cannot submit selector answer",
+    "round 2 authoritative correct-answer score",
+    "Trivia mobile reload reconnects same room",
+    "round 3 reader cannot submit selector answer",
+    "round 3 authoritative correct-answer score",
+    "round 4 reader cannot submit selector answer",
+    "round 4 authoritative correct-answer score",
+    "round 5 reader cannot submit selector answer",
+    "round 5 authoritative correct-answer score",
+    "Trivia final scores agree on mobile",
+    "Trivia shared podium entries match",
+    "Trivia replay clears podium",
+    "Trivia replay preserves room code",
+    "Trivia host transfer reaches mobile browser",
+    "Quick Match waiting cancellation returns safely",
+    "desktop and mobile Quick Match enter a shared race",
+    "Quick Match mobile reload reconnects active race",
+    "Quick Match mobile joystick visible",
+    "zero Trivia and Quick Match browser errors"
+  ],
+  "errors": []
+}

@@ -10,7 +10,7 @@ const check=(v,m)=>{assert.ok(v,m);checks++;};
 const errors=[];
 try{
  const c=await browser.newContext();const p=await c.newPage();p.on('pageerror',e=>errors.push(e.message));await p.goto(origin);await p.locator('#create').waitFor({state:'visible'});await p.waitForFunction(()=>!document.querySelector('#create').disabled);
- check(await p.locator('#modeTiles > *').count()===4,'four game tiles');check(await p.locator('#menuExtras > *').count()===2,'two wide buttons');check(await p.locator('#chooseCrane').isDisabled(),'crane gated');check(await p.locator('#chooseParty').isDisabled(),'party gated');
+ check(await p.locator('#modeTiles > *').count()===4,'four game tiles');check(await p.locator('#menuExtras > *').count()===2,'two wide buttons');check(await p.locator('#chooseCrane').isEnabled(),'crane active');check(await p.locator('#chooseParty').isEnabled(),'party active');
  const widths=await p.locator('#menuExtras > *').evaluateAll(es=>es.map(e=>({w:e.getBoundingClientRect().width,h:e.getBoundingClientRect().height})));check(JSON.stringify(widths[0])===JSON.stringify(widths[1]),'matching extra sizes');
  await p.screenshot({path:'qa/menu-desktop.png'});
  await p.locator('#chooseStore').click();await p.locator('#workerStore').waitFor({state:'visible'});check(true,'existing store opens');await p.locator('#storeClose').click();

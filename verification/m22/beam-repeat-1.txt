@@ -1,0 +1,9 @@
+✔ two clients carry, release, reject non-host reset, reconnect, complete and replay the course (56674.4299ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 56887.3427

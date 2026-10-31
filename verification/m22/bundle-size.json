@@ -1,0 +1,52 @@
+[
+  {
+    "file": "crane-CIMabt3Q.js",
+    "bytes": 22796,
+    "gzip": 9820
+  },
+  {
+    "file": "index-CTKzep_N.js",
+    "bytes": 127681,
+    "gzip": 40722
+  },
+  {
+    "file": "invite-BtK40wPj.js",
+    "bytes": 821,
+    "gzip": 468
+  },
+  {
+    "file": "lan-BQhkJn_4.js",
+    "bytes": 1259,
+    "gzip": 762
+  },
+  {
+    "file": "main-DKpBkwO2.js",
+    "bytes": 92210,
+    "gzip": 34970
+  },
+  {
+    "file": "modulepreload-polyfill-B5Qt9EMX.js",
+    "bytes": 711,
+    "gzip": 399
+  },
+  {
+    "file": "podium-DFJ-yD3G.js",
+    "bytes": 539425,
+    "gzip": 139312
+  },
+  {
+    "file": "podiumPreview-BpZRmIqd.js",
+    "bytes": 1082,
+    "gzip": 668
+  },
+  {
+    "file": "trivia-B_CSCiYb.js",
+    "bytes": 8481,
+    "gzip": 3780
+  },
+  {
+    "file": "version-Cik4Nks5.js",
+    "bytes": 5105,
+    "gzip": 2446
+  }
+]

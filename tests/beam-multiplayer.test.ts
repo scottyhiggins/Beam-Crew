@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {Client,type Room} from 'colyseus.js';
 const endpoint=process.env.TEST_URL;
-async function until(predicate:()=>boolean,timeout=6000){const end=Date.now()+timeout;while(!predicate()){if(Date.now()>end)throw Error('Beam synchronization timed out');await new Promise(r=>setTimeout(r,25));}}
+async function until(predicate:()=>boolean,timeout=6000){const end=Date.now()+timeout;while(!predicate()){if(Date.now()>end)throw Error('Beam synchronization timed out after '+timeout+'ms: '+predicate.toString());await new Promise(r=>setTimeout(r,25));}}
 const pause=(ms:number)=>new Promise(r=>setTimeout(r,ms));
 const beamView=(r:Room)=>{const b=r.state.teams[0];return [b.x,b.z,b.angle,b.leftSupported,b.rightSupported,b.checkpoint,b.delivered,b.resets];};
 test('two clients carry, release, reject non-host reset, reconnect, complete and replay the course',{skip:!endpoint,timeout:140000},async()=>{
@@ -44,5 +44,5 @@ test('two clients carry, release, reject non-host reset, reconnect, complete and
     // Pair races restart from the same fair starting line for both workers.
     host.send('reset');await until(()=>guest!.state.teams[0].resets===deliveredResets+1);assert.equal(guest.state.teams[0].checkpoint,false);assert.equal(guest.state.teams[0].delivered,false);assert.equal(guest.state.teams[0].z,6);
     await pause(1100);host.send('restart');await until(()=>guest!.state.teams[0].resets===deliveredResets+2);assert.equal(guest.state.teams[0].checkpoint,false);assert.equal(guest.state.teams[0].z,6);
-  }finally{if(inputTimer)clearInterval(inputTimer);await Promise.allSettled([host,guest].filter((r):r is Room=>!!r&&r.connection.isOpen).map(r=>r.leave()));}
+  }catch(error){console.error('Beam diagnostic',JSON.stringify({host:host?.state?.toJSON?.(),guest:guest?.state?.toJSON?.(),hx,hz,gx,gz,approaching,turning}));throw error;}finally{if(inputTimer)clearInterval(inputTimer);await Promise.allSettled([host,guest].filter((r):r is Room=>!!r&&r.connection.isOpen).map(r=>r.leave()));}
 });

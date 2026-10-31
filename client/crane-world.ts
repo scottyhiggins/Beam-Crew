@@ -1,3 +1,5 @@
+import {makeWorker} from './worker';
+import {validateWorkerLook,workerLookKey,type WorkerLook} from '../shared/cosmetics';
 import * as THREE from 'three';
 import {createDerbyVisual} from './derby-visual';
 import type {DerbyArena} from '../shared/derby';
@@ -5,6 +7,7 @@ import {arena,loadPose,type Arena} from '../shared/crane';
 const palette=[0xe46842,0x239caa,0xeebc3b,0x6476c4,0x61a476];
 /** A full 3D jobsite. Gameplay stays on a single travel axis so three controls suffice. */
 export function createCraneWorld(view:HTMLElement){
+ let worker:THREE.Group|undefined;let lookKey='';
  const scene=new THREE.Scene();scene.background=new THREE.Color(0xb2dfeb);scene.fog=new THREE.Fog(0xb2dfeb,75,180);
  const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;view.append(renderer.domElement);
  const camera=new THREE.PerspectiveCamera(46,1,.1,220);scene.add(new THREE.HemisphereLight(0xe8f8ff,0x6b7560,2.5));const sun=new THREE.DirectionalLight(0xffefd5,3.2);sun.position.set(-18,42,25);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-27;sun.shadow.camera.right=27;sun.shadow.camera.top=36;sun.shadow.camera.bottom=-24;sun.shadow.camera.far=110;sun.shadow.normalBias=.04;scene.add(sun);
@@ -57,7 +60,7 @@ export function createCraneWorld(view:HTMLElement){
   const w=view.clientWidth,h=view.clientHeight;if(renderer.domElement.width!==Math.round(w*renderer.getPixelRatio())||renderer.domElement.height!==Math.round(h*renderer.getPixelRatio()))renderer.setSize(w,h,false);camera.aspect=w/Math.max(1,h);
   target.y=THREE.MathUtils.damp(target.y,active?Math.max(4,highest*.42):Math.max(13,highest*.46),2,dt);target.x=-2;target.z=-1;const distance=Math.max(active?32:52,cameraHeight*(active?1.3:1.5),(active?(isDerby?32:24):28)/camera.aspect);camera.position.set(target.x+distance*.48,target.y+distance*.57,distance*.85);camera.lookAt(target);camera.updateProjectionMatrix();renderer.render(scene,camera);
  }
- const arm=box(scene,.18,.18,5.2,0xe4a925);render();return {update(a:Arena,playing=false,derby?:DerbyArena){current=a;active=playing;currentDerby=derby;}};
+ const arm=box(scene,.18,.18,5.2,0xe4a925);render();return {setLook(value?:WorkerLook){const look=validateWorkerLook(value),key=workerLookKey(look);if(key===lookKey)return;lookKey=key;if(worker){scene.remove(worker);worker.traverse(o=>{const m=o as THREE.Mesh;m.geometry?.dispose();const materials=Array.isArray(m.material)?m.material:[m.material];materials.forEach(v=>v?.dispose());});}worker=makeWorker(look.vest,look);worker.position.set(-7,-1.9,4);worker.scale.setScalar(1.8);scene.add(worker);},update(a:Arena,playing=false,derby?:DerbyArena){current=a;active=playing;currentDerby=derby;}};
 }
 
 

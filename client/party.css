@@ -5,3 +5,6 @@
 #partyShell.compact{inset:8px 8px auto auto;width:300px;max-height:34vh;padding:10px;font-size:12px;border-width:2px;border-radius:10px;box-shadow:none}#partyShell.compact p{margin:2px}#partyShell.compact button{padding:5px;font-size:12px}
 .party-overlay canvas,.party-overlay #hud,.party-overlay #touch,.party-overlay #raceCountdown{visibility:hidden!important}
 @media(max-width:600px){#partyShell{inset:8px;padding:14px}#partyShell.compact{width:200px;max-height:28vh}#partyShell h2{font-size:20px}}
+
+.party-page #menuExtras,.party-page #modeTiles,.party-page .room-shortcut{display:none}
+.party-overlay #partyShell canvas{visibility:visible!important}

@@ -1,0 +1,28 @@
+colyseus.js - onError => (409) Game version mismatch. Refresh before joining.
+Room connection was closed unexpectedly (4002):
+colyseus.js - onError => (4002)
+
+       ___      _
+      / __\___ | |_   _ ___  ___ _   _ ___
+     / /  / _ \| | | | / __|/ _ \ | | / __|
+    / /__| (_) | | |_| \__ \  __/ |_| \__
+    \____/\___/|_|\__, |___/\___|\__,_|___/
+                  |___/
+
+     · Multiplayer Framework for Node.js ·
+
+💖 Consider becoming a Sponsor on GitHub → https://github.com/sponsors/endel
+🌟 Give us a star on GitHub → https://github.com/colyseus/colyseus
+☁️  Deploy and scale your project on Colyseus Cloud → https://cloud.colyseus.io
+
+
+✔ M22: eight Crane clients preserve pumpkin, protocol, private arenas, host transfer, reconnect, mode switch and replay (732.2298ms)
+✔ M22: eight-player Party pumpkin survives all mode boundaries, final podium, host transfer and replay (378.1581ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2358.6302

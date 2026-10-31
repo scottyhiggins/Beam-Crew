@@ -1,0 +1,12 @@
+PASS / 390 no horizontal overflow
+PASS six home choices 390
+PASS Pumpkin selection saves on mobile 390
+PASS /trivia.html 390 no horizontal overflow
+PASS /crane.html 390 no horizontal overflow
+PASS /party.html 390 no horizontal overflow
+PASS / 844 no horizontal overflow
+PASS six home choices 844
+PASS Pumpkin selection saves on mobile 844
+PASS /trivia.html 844 no horizontal overflow
+PASS /crane.html 844 no horizontal overflow
+PASS /party.html 844 no horizontal overflow
