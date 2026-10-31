@@ -1,0 +1,13 @@
+PASS 1366 store opens
+PASS 1366 3D worker preview
+PASS 1366 seasonal look saved
+PASS 1366 saved selection restored
+PASS 1366 store page has no overflow
+PASS 1366 store closes to menu
+PASS 319 store opens
+PASS 319 3D worker preview
+PASS 319 seasonal look saved
+PASS 319 saved selection restored
+PASS 319 store page has no overflow
+PASS 319 store closes to menu
+PASS zero store browser errors

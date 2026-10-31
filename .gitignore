@@ -12,3 +12,7 @@ build/
 /recovery/*.bundle
 /recovery/checkpoint.json
 /crane-playtest.pid
+/baseline-m22/
+/baseline-m22.zip
+/scripts/.m23-*.mjs
+/recovery/m23-checkpoint.txt

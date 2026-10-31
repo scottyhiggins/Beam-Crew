@@ -49,7 +49,7 @@ COURSE_MODULES.push(
  {id:'service-court',name:'Service Court',surface:0xc6bea3,surfaceName:'Cream concrete',barrier:'chain',landmark:'tanks',track:track('service-court',service),drivePath:service},
  {id:'clay-cut',name:'Clay Cut',surface:0xad844b,surfaceName:'Ochre clay',barrier:'tape',landmark:'excavator',track:track('clay-cut',clay),drivePath:clay}
 );
-export const AVAILABLE_LENGTHS=[2,3,5,10] as const;
+export const AVAILABLE_LENGTHS=[3,5,10] as const;
 export function validChampionshipLength(value:unknown):value is number{return typeof value==='number'&&AVAILABLE_LENGTHS.some(n=>n===value);}
 export function selectCourseIds(count:number,seed:number){
  if(count!==3&&count!==5&&count!==10)throw Error('Uncertified Championship length');

@@ -4,11 +4,14 @@ export const HAT_COLORS={Yellow:0xffce36,Orange:0xf08230,Green:0x53ad57,Blue:0x3
 export const VEST_COLORS={Orange:0xf08230,Yellow:0xf0d43b,Green:0x76be45,Blue:0x3588dc} as const;
 export type WorkerLook={hat:number;vest:number;expression:'happy'|'serious'|'goofy'};
 export const DEFAULT_WORKER_LOOK:Readonly<WorkerLook>=Object.freeze({hat:HAT_COLORS.Yellow,vest:VEST_COLORS.Orange,expression:'happy'});
+const allowedHats=new Set<number>([...Object.values(HAT_COLORS),PUMPKIN_HARD_HAT]);
+const allowedVests=new Set<number>(Object.values(VEST_COLORS));
+const allowedExpressions=new Set(['happy','serious','goofy']);
 /** Atomic allowlist validation: malformed or incomplete selections become the classic look. */
 export function validateWorkerLook(value:unknown):WorkerLook{
  if(value&&typeof value==='object'&&!Array.isArray(value)){
   const v=value as Record<string,unknown>;
-  if(typeof v.hat==='number'&&([...Object.values(HAT_COLORS),PUMPKIN_HARD_HAT] as number[]).includes(v.hat)&&typeof v.vest==='number'&&(Object.values(VEST_COLORS) as number[]).includes(v.vest)&&['happy','serious','goofy'].includes(v.expression as string))return {hat:v.hat as number,vest:v.vest as number,expression:v.expression as WorkerLook['expression']};
+  if(typeof v.hat==='number'&&allowedHats.has(v.hat)&&typeof v.vest==='number'&&allowedVests.has(v.vest)&&allowedExpressions.has(v.expression as string))return {hat:v.hat as number,vest:v.vest as number,expression:v.expression as WorkerLook['expression']};
  }
  return {...DEFAULT_WORKER_LOOK};
 }

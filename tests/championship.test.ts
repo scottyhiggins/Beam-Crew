@@ -5,7 +5,7 @@ import {CrewState,Player} from '../server/state.js';
 import {COURSE_TWO,COURSE_TWO_PATH,SHARED_EXIT,championshipTrack} from '../shared/championship.js';
 import {WHEEL_TRACK,WHEEL_COURSE,resetCart,stepCart,onDriveableArea,trackRampHeight,finishCarts,spillMaterial,type Cart} from '../shared/wheelbarrow.js';
 import {fenceContact} from '../shared/fences.js';
-function room(){const r=new CrewRoom();r.setState(new CrewState());r.state.mode='championship';r.state.championshipLength=2;for(let i=0;i<2;i++){const p=new Player();p.name='P'+i;p.color=i;p.materialId=i?11:0;r.state.players.set(''+i,p);}r.restart(false);r.state.phase='test';r.state.racePhase='racing';return r;}
+function room(){const r=new CrewRoom();r.setState(new CrewState());r.state.mode='championship';r.state.championshipLength=2;for(let i=0;i<2;i++){const p=new Player();p.name='P'+i;p.color=i;p.materialId=i?11:0;r.state.players.set(''+i,p);}r.restart(false);/* Explicit historical geometry fixture, never a selectable/replay length. */r.routePlan=[];(r as any).routeMaterialWorld=undefined;r.state.routeIds.clear();r.state.championshipLength=2;r.state.phase='test';r.state.racePhase='racing';return r;}
 function finish(r:CrewRoom,id:string){const p=r.state.players.get(id)!,t=championshipTrack(r.state.leg);Object.assign(p,{x:(t.staging.minX+t.staging.maxX)/2,z:t.finishZ-3,checkpoint:t.gates.length+1,finishCrossed:true});r.tick(1/30);}
 function tick(r:CrewRoom,n:number){for(let i=0;i<n;i++)r.tick(1/30);}
 test('Championship keeps Course 1 unchanged and the socket has continuous driveable ground and matching fences',()=>{
