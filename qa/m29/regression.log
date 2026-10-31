@@ -1,0 +1,407 @@
+beam-chaos-network.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 0)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+beam-chaos.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 1)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+beam-milestone7.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 2)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+beam-multiplayer.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 3)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+beam.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 0)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+championship-network.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 1)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+championship-ten.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 2)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+championship.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 3)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+checkpoint6b-network.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 0)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+checkpoint6b.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 1)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+competition.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 2)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+connected-finish.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 3)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+connections6c.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 0)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+cosmetics.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 1)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+crane.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 2)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+debris-alignment.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 3)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+derby-network.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 0)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+derby.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 1)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+final-integration-network.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 2)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+finish-network.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 3)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+finish-regression.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 0)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+hazard-cap-network.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 1)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+integration-network.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 2)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+m22-integration-network.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 3)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+m22-tower-adapter-spike.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 0)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+m23-hud.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 1)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+m26-crane-overhaul.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 2)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+m27-beam-expansion-network.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 3)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+m27-beam-expansion.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 0)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+milestone4-network.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 1)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+milestone4.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 2)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+movement.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 3)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+multiplayer.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 0)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+party-network.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 1)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+party.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 2)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+podium.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 3)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+presentation.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 0)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+qa-beam-controls.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 1)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+qa-beam-replay-network.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 2)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+qa-beam-replay.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 3)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+quick-match-network.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 0)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+quick-match.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 1)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+reconnect-network.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 2)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+reconnect.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 3)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+render-resolution.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 0)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+renderer6b.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 1)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+schema.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 2)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+spill-clients.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 3)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+spill-visual.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 0)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+startup.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 1)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+trivia-network.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 2)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+trivia.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 3)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+wheelbarrow-multiplayer.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 0)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+wheelbarrow-room.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 1)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+wheelbarrow.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:644:9)
+    at process.processTimers (node:internal/timers:618:7)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 2)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+worker-pose.test.js Error: Server not ready 
+    at run (file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:15:232)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:105
+    at async Promise.all (index 3)
+    at async file:///C:/Users/higgi/.codex/.chatgpt-projects/g-p-6ac291cf8ecc81919bbc636308fbf05d/Beam-Crew-m29-final-all-features/scripts/test-live.mjs:22:1
+FULL SUITE {"files":56,"tests":0,"passed":0,"failed":56,"skipped":0}

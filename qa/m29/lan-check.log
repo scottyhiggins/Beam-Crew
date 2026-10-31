@@ -1,0 +1,1 @@
+PASS LAN HTTP, matching Protocol 23, exact candidate and two synchronized WebSocket clients

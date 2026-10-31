@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: 2 workers form 1 independent pairs and immutable team deliveries
+ok 1 - 2 workers form 1 independent pairs and immutable team deliveries
+  ---
+  duration_ms: 12.3775
+  type: 'test'
+  ...
+# Subtest: 4 workers form 2 independent pairs and immutable team deliveries
+ok 2 - 4 workers form 2 independent pairs and immutable team deliveries
+  ---
+  duration_ms: 18.8077
+  type: 'test'
+  ...
+# Subtest: 6 workers form 3 independent pairs and immutable team deliveries
+ok 3 - 6 workers form 3 independent pairs and immutable team deliveries
+  ---
+  duration_ms: 27.4435
+  type: 'test'
+  ...
+# Subtest: 8 workers form 4 independent pairs and immutable team deliveries
+ok 4 - 8 workers form 4 independent pairs and immutable team deliveries
+  ---
+  duration_ms: 20.0848
+  type: 'test'
+  ...
+# Subtest: moving loads block free workers at the server time, and later clear the same location
+ok 5 - moving loads block free workers at the server time, and later clear the same location
+  ---
+  duration_ms: 0.3184
+  type: 'test'
+  ...
+# Subtest: real WebSockets synchronize 2 workers and every assigned grip
+ok 6 - real WebSockets synchronize 2 workers and every assigned grip
+  ---
+  duration_ms: 3279.5066
+  type: 'test'
+  ...
+# Subtest: real WebSockets synchronize 4 workers and every assigned grip
+ok 7 - real WebSockets synchronize 4 workers and every assigned grip
+  ---
+  duration_ms: 3183.3451
+  type: 'test'
+  ...
+# Subtest: real WebSockets synchronize 6 workers and every assigned grip
+ok 8 - real WebSockets synchronize 6 workers and every assigned grip
+  ---
+  duration_ms: 3260.2408
+  type: 'test'
+  ...
+# Subtest: real WebSockets synchronize 8 workers and every assigned grip
+ok 9 - real WebSockets synchronize 8 workers and every assigned grip
+  ---
+  duration_ms: 3262.7896
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13340.2441

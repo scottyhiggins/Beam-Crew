@@ -1,0 +1,124 @@
+{
+  "branch": "feature/final-all-features-rc",
+  "protocol": 23,
+  "regression": {
+    "files": 57,
+    "tests": 292,
+    "passed": 292,
+    "failed": 0,
+    "skipped": 0
+  },
+  "productionBuild": "PASS",
+  "browser": {
+    "passed": 290,
+    "reports": [
+      {
+        "report": "browser-results.json",
+        "passed": 134,
+        "errors": []
+      },
+      {
+        "report": "menu-trivia-browser-results.json",
+        "passed": 31,
+        "errors": []
+      },
+      {
+        "report": "wheel-browser-results.json",
+        "passed": 38,
+        "errors": []
+      },
+      {
+        "report": "party-browser-results.json",
+        "passed": 16,
+        "errors": []
+      },
+      {
+        "report": "production-browser.json",
+        "passed": 17,
+        "errors": []
+      },
+      {
+        "report": "overhaul-browser.json",
+        "passed": 24,
+        "errors": []
+      },
+      {
+        "report": "mobile-performance.json",
+        "passed": 12,
+        "errors": []
+      },
+      {
+        "report": "store-browser.json",
+        "passed": 13,
+        "errors": []
+      },
+      {
+        "report": "invite-reconnect-browser.json",
+        "passed": 5,
+        "errors": []
+      }
+    ],
+    "physicalIphone": false
+  },
+  "craneSocketMatrix": {
+    "passed": 7,
+    "roomSizes": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ]
+  },
+  "lan": {
+    "status": "PASS",
+    "origin": "http://192.168.1.166:2729",
+    "health": {
+      "ok": true,
+      "build": "BREAK TIME - All Features RC M29 - Protocol 23",
+      "protocol": 23,
+      "repository": "C:\\Users\\higgi\\.codex\\.chatgpt-projects\\g-p-6ac291cf8ecc81919bbc636308fbf05d\\Beam-Crew-m29-final-all-features\\",
+      "startedAt": "2026-10-31T04:06:54.089Z"
+    },
+    "clients": 2,
+    "checkedAt": "2026-10-31T04:14:25.497Z"
+  },
+  "source": {
+    "base": {
+      "branch": "feature/final-combined-rc",
+      "commit": "e52fd3c5c2a7b4af495943bdc0702d6ab7cf7c88"
+    },
+    "requestedM27": "c866eae344d8edbaf53a08b2a7e5c089917a7b59",
+    "requestedObjectAvailable": false,
+    "recovery": {
+      "branch": "feature/beam-course-expansion",
+      "commit": "c866eae344d8edba5f3a08b2a7e5c089917a7b59",
+      "bundle": "../Beam-Crew-beam-expansion-recovery.bundle",
+      "sha256": "792c0254cb248527d6d5d2e1be911f7d5bc0084845e34e1a57eb505709a6227e",
+      "matchesCheckpoint": true,
+      "bundleVerify": true,
+      "freshBareImport": true,
+      "fsck": true
+    },
+    "method": "Independent clone with --no-hardlinks; branch from exact M28; cherry-pick verified recovery commit, resolve client conflicts and apply integration fixes",
+    "protocol": {
+      "before": 22,
+      "after": 23,
+      "reason": "beamRandom boolean added to CrewState and defineTypes changes synchronized schema field layout; client and server import shared/version.ts"
+    },
+    "preservedSources": [
+      "Beam-Crew-m28-final-combined",
+      "Beam-Crew-m24-release-candidate",
+      "Beam-Crew-beam-expansion"
+    ]
+  },
+  "limitations": [
+    "Physical Safari/touch/thermal validation pending",
+    "Beam courses share established route/checkpoints; ramps cosmetic; mud handling unchanged",
+    "Narrow-phone Beam overlays need physical assessment",
+    "539.46 kB shared podium/Three.js chunk exceeds build advisory threshold",
+    "Existing Crane simplified physics retained"
+  ]
+}

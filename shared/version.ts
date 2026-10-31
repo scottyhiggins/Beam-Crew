@@ -1,2 +1,2 @@
-export const BUILD_LABEL = 'BREAK TIME - Final Combined RC M28 - Protocol 22';
-export const PROTOCOL_VERSION = 22;
+export const BUILD_LABEL = 'BREAK TIME - All Features RC M29 - Protocol 23';
+export const PROTOCOL_VERSION = 23;

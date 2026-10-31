@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: two real Derby players keep private destruction and receive identical 60-second results
+ok 1 - two real Derby players keep private destruction and receive identical 60-second results
+  ---
+  duration_ms: 60124.0434
+  type: 'test'
+  ...
+# Subtest: eight real Derby players reconnect, transfer host, reject late joins, replay and switch modes
+ok 2 - eight real Derby players reconnect, transfer host, reject late joins, replay and switch modes
+  ---
+  duration_ms: 1287.6364
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 61595.0549

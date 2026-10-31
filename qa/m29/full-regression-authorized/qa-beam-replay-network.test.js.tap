@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: QA real clients: guest departure DNF rejects restart/reset and solo start, preserves results, then accepts teammate replay
+ok 1 - QA real clients: guest departure DNF rejects restart/reset and solo start, preserves results, then accepts teammate replay
+  ---
+  duration_ms: 7004.2106
+  type: 'test'
+  ...
+# Subtest: QA real clients: host transfer and reserved disconnect count only connected workers for replay
+ok 2 - QA real clients: host transfer and reserved disconnect count only connected workers for replay
+  ---
+  duration_ms: 6636.6782
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13802.5633

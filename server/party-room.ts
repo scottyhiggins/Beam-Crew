@@ -46,7 +46,7 @@ export class PartyRoom extends CrewRoom {
   // Preserve reserved Player objects across mode boundaries.
   this.clearNative();this.roster=active.map(([id])=>id);this.epoch++;this.partyPhase='playing';this.notice='';
   if(this.index===2){this.trivia=new TriviaGame();this.trivia.code=this.state.code;this.trivia.count=5;for(const [id,p]of active)this.trivia.add(id,p.name);this.trivia.host=active.some(([id])=>id===this.state.host)?this.state.host:active[0][0];this.trivia.start(this.trivia.host,now);this.deadline=now+140000;return;}
-  this.state.mode=this.index===0?'championship':'competitive';this.state.championshipLength=3;this.state.beamMap=2;
+  this.state.mode=this.index===0?'championship':'competitive';this.state.championshipLength=3;this.state.beamMap=2;this.state.beamRandom=false;
   this.restart(false);this.state.phase='test';this.deadline=now+(this.index===0?540000:250000);
  }
  private lastPartyPublish=0;

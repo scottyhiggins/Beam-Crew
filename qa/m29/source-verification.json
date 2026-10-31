@@ -1,0 +1,29 @@
+{
+  "base": {
+    "branch": "feature/final-combined-rc",
+    "commit": "e52fd3c5c2a7b4af495943bdc0702d6ab7cf7c88"
+  },
+  "requestedM27": "c866eae344d8edbaf53a08b2a7e5c089917a7b59",
+  "requestedObjectAvailable": false,
+  "recovery": {
+    "branch": "feature/beam-course-expansion",
+    "commit": "c866eae344d8edba5f3a08b2a7e5c089917a7b59",
+    "bundle": "../Beam-Crew-beam-expansion-recovery.bundle",
+    "sha256": "792c0254cb248527d6d5d2e1be911f7d5bc0084845e34e1a57eb505709a6227e",
+    "matchesCheckpoint": true,
+    "bundleVerify": true,
+    "freshBareImport": true,
+    "fsck": true
+  },
+  "method": "Independent clone with --no-hardlinks; branch from exact M28; cherry-pick verified recovery commit, resolve client conflicts and apply integration fixes",
+  "protocol": {
+    "before": 22,
+    "after": 23,
+    "reason": "beamRandom boolean added to CrewState and defineTypes changes synchronized schema field layout; client and server import shared/version.ts"
+  },
+  "preservedSources": [
+    "Beam-Crew-m28-final-combined",
+    "Beam-Crew-m24-release-candidate",
+    "Beam-Crew-beam-expansion"
+  ]
+}

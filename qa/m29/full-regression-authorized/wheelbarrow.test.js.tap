@@ -1,0 +1,82 @@
+TAP version 13
+# Subtest: cart reset and independent starts
+ok 1 - cart reset and independent starts
+  ---
+  duration_ms: 0.8329
+  type: 'test'
+  ...
+# Subtest: fast sharp steering is risky; slower driving avoids spill
+ok 2 - fast sharp steering is risky; slower driving avoids spill
+  ---
+  duration_ms: 2.3524
+  type: 'test'
+  ...
+# Subtest: neutral input recovers instability and brakes
+ok 3 - neutral input recovers instability and brakes
+  ---
+  duration_ms: 1.0436
+  type: 'test'
+  ...
+# Subtest: threshold spills once, holds during reload, resets predictably
+ok 4 - threshold spills once, holds during reload, resets predictably
+  ---
+  duration_ms: 0.2305
+  type: 'test'
+  ...
+# Subtest: rough terrain is spatial and fast driving risks more than careful driving
+ok 5 - rough terrain is spatial and fast driving risks more than careful driving
+  ---
+  duration_ms: 0.2333
+  type: 'test'
+  ...
+# Subtest: solid posts brake and destabilize a severe impact more than a slow impact
+ok 6 - solid posts brake and destabilize a severe impact more than a slow impact
+  ---
+  duration_ms: 0.2742
+  type: 'test'
+  ...
+# Subtest: spilled material persists, moves when another cart hits, and ignores finished racers
+ok 7 - spilled material persists, moves when another cart hits, and ignores finished racers
+  ---
+  duration_ms: 4.4923
+  type: 'test'
+  ...
+# Subtest: eight-player repeated spills preserve all material within a bounded number of piles
+ok 8 - eight-player repeated spills preserve all material within a bounded number of piles
+  ---
+  duration_ms: 53.6197
+  type: 'test'
+  ...
+# Subtest: ranking prioritizes spills, then time, with finish order only an exact tie breaker
+ok 9 - ranking prioritizes spills, then time, with finish order only an exact tie breaker
+  ---
+  duration_ms: 0.7303
+  type: 'test'
+  ...
+# Subtest: one finisher never ends the race by default; grace timeout is an explicit option
+ok 10 - one finisher never ends the race by default; grace timeout is an explicit option
+  ---
+  duration_ms: 0.2161
+  type: 'test'
+  ...
+# Subtest: ordered checkpoints prevent shortcut finish; results remain immutable
+ok 11 - ordered checkpoints prevent shortcut finish; results remain immutable
+  ---
+  duration_ms: 0.192
+  type: 'test'
+  ...
+# Subtest: controlled driver traverses the complete marked course
+ok 12 - controlled driver traverses the complete marked course
+  ---
+  duration_ms: 7.3178
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 153.3736

@@ -4,7 +4,7 @@ import fs from 'node:fs';
 // Each test file gets a fresh public matchmaking pool. Capacity tests must not
 // consume the rooms used by other lifecycle tests running concurrently.
 const files=fs.readdirSync('build/tests').filter(p=>p.endsWith('.test.js')&&(!process.argv[2]||p.startsWith(process.argv[2]))).sort();
-const output='qa/m28/full-regression';fs.mkdirSync(output,{recursive:true});
+const output=process.env.QA_OUTPUT||'qa/m29/full-regression';fs.mkdirSync(output,{recursive:true});
 const results=[];let next=0;
 async function run(file){
  const probe=net.createServer();await new Promise((r,j)=>{probe.once('error',j);probe.listen(0,'127.0.0.1',r);});const port=probe.address().port;await new Promise(r=>probe.close(r));

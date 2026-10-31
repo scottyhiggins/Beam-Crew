@@ -1,0 +1,16 @@
+TAP version 13
+# Subtest: refresh/drop reconnect, host transfer, cancellation and new-room join work over real sockets
+ok 1 - refresh/drop reconnect, host transfer, cancellation and new-room join work over real sockets
+  ---
+  duration_ms: 30919.853
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 31107.5811

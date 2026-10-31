@@ -1,0 +1,26 @@
+TAP version 13
+#        ___      _
+#       / __\\___ | |_   _ ___  ___ _   _ ___
+#      / /  / _ \\| | | | / __|/ _ \\ | | / __|
+#     / /__| (_) | | |_| \\__ \\  __/ |_| \\__ \\
+#     \\____/\\___/|_|\\__, |___/\\___|\\__,_|___/
+#                   |___/
+#      · Multiplayer Framework for Node.js ·
+# 💖 Consider becoming a Sponsor on GitHub → https://github.com/sponsors/endel
+# 🌟 Give us a star on GitHub → https://github.com/colyseus/colyseus
+# ☁️  Deploy and scale your project on Colyseus Cloud → https://cloud.colyseus.io
+# Subtest: integrated schema: simultaneous public matching and private Chaos rescue/reconnect clean up independently
+ok 1 - integrated schema: simultaneous public matching and private Chaos rescue/reconnect clean up independently
+  ---
+  duration_ms: 3610.1035
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4844.0459

@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: server keeps unfinished racer active and reranks a slower clean finish ahead of a spilled first finish
+ok 1 - server keeps unfinished racer active and reranks a slower clean finish ahead of a spilled first finish
+  ---
+  duration_ms: 3.9812
+  type: 'test'
+  ...
+# Subtest: server generates one persistent spill, another racer moves it, and restart clears it
+ok 2 - server generates one persistent spill, another racer moves it, and restart clears it
+  ---
+  duration_ms: 7.9334
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 202.5635

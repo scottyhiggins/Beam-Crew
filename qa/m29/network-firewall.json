@@ -1,0 +1,47 @@
+{
+    "application":  {
+                        "Program":  "C:\\Users\\higgi\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe"
+                    },
+    "profiles":  [
+                     {
+                         "Name":  "Domain",
+                         "Enabled":  1
+                     },
+                     {
+                         "Name":  "Private",
+                         "Enabled":  1
+                     },
+                     {
+                         "Name":  "Public",
+                         "Enabled":  1
+                     }
+                 ],
+    "rule":  {
+                 "DisplayName":  "BREAK TIME M29 Protocol 23 LAN TCP 2729 Private",
+                 "Enabled":  1,
+                 "Profile":  2,
+                 "Direction":  1,
+                 "Action":  2
+             },
+    "network":  {
+                    "InterfaceAlias":  "Wi-Fi",
+                    "NetworkCategory":  1
+                },
+    "interface":  {
+                      "InterfaceAlias":  "Wi-Fi"
+                  },
+    "port":  {
+                 "Protocol":  "TCP",
+                 "LocalPort":  "2729",
+                 "RemotePort":  "Any"
+             },
+    "wifi":  {
+                 "InterfaceAlias":  "Wi-Fi",
+                 "IPAddress":  "192.168.1.166",
+                 "PrefixLength":  24
+             },
+    "address":  {
+                    "LocalAddress":  "192.168.1.166",
+                    "RemoteAddress":  "LocalSubnet"
+                }
+}

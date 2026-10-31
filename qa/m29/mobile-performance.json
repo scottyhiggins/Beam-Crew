@@ -1,0 +1,382 @@
+{
+  "simulation": "Cold cache, 150 ms latency, 200,000 bytes/sec download, 75,000 bytes/sec upload, 4x CPU slowdown; desktop Edge emulation, not physical iPhone",
+  "checks": 12,
+  "passed": [
+    "/ 390 no horizontal overflow",
+    "six home choices 390",
+    "Pumpkin selection saves on mobile 390",
+    "/trivia.html 390 no horizontal overflow",
+    "/crane.html 390 no horizontal overflow",
+    "/party.html 390 no horizontal overflow",
+    "/ 844 no horizontal overflow",
+    "six home choices 844",
+    "Pumpkin selection saves on mobile 844",
+    "/trivia.html 844 no horizontal overflow",
+    "/crane.html 844 no horizontal overflow",
+    "/party.html 844 no horizontal overflow"
+  ],
+  "samples": [
+    {
+      "path": "/",
+      "width": 390,
+      "height": 844,
+      "readyMs": 5214,
+      "heap": 11152767,
+      "load": 5066.9000000059605,
+      "resources": [
+        {
+          "name": "/assets/modulepreload-polyfill-B5Qt9EMX.js",
+          "bytes": 1011,
+          "decoded": 711,
+          "duration": 164.6000000089407
+        },
+        {
+          "name": "/assets/invite-BtK40wPj.js",
+          "bytes": 1121,
+          "decoded": 821,
+          "duration": 169.5
+        },
+        {
+          "name": "/assets/podium-DJ39vZ1g.js",
+          "bytes": 539755,
+          "decoded": 539455,
+          "duration": 4263.70000000298
+        },
+        {
+          "name": "/assets/version-BsW0_tbo.js",
+          "bytes": 5395,
+          "decoded": 5095,
+          "duration": 276.6000000089407
+        },
+        {
+          "name": "/assets/index-CTKzep_N.js",
+          "bytes": 127981,
+          "decoded": 127681,
+          "duration": 2179.9000000059605
+        },
+        {
+          "name": "/assets/main-U-C1NUrB.js",
+          "bytes": 95538,
+          "decoded": 95238,
+          "duration": 1852.7000000029802
+        }
+      ]
+    },
+    {
+      "path": "/trivia.html",
+      "width": 390,
+      "height": 844,
+      "readyMs": 4113,
+      "heap": 3939230,
+      "load": 4032.5,
+      "fcp": 4088,
+      "resources": [
+        {
+          "name": "/assets/trivia-DJjBD-pN.js",
+          "bytes": 8126,
+          "decoded": 7826,
+          "duration": 298.70000000298023
+        },
+        {
+          "name": "/assets/modulepreload-polyfill-B5Qt9EMX.js",
+          "bytes": 1011,
+          "decoded": 711,
+          "duration": 175.5
+        },
+        {
+          "name": "/assets/invite-BtK40wPj.js",
+          "bytes": 1121,
+          "decoded": 821,
+          "duration": 190.59999999403954
+        },
+        {
+          "name": "/assets/podium-DJ39vZ1g.js",
+          "bytes": 539755,
+          "decoded": 539455,
+          "duration": 3652
+        },
+        {
+          "name": "/assets/version-BsW0_tbo.js",
+          "bytes": 5395,
+          "decoded": 5095,
+          "duration": 266.5
+        },
+        {
+          "name": "/assets/index-CTKzep_N.js",
+          "bytes": 127981,
+          "decoded": 127681,
+          "duration": 1677.7999999970198
+        }
+      ]
+    },
+    {
+      "path": "/crane.html",
+      "width": 390,
+      "height": 844,
+      "readyMs": 4710,
+      "heap": 6845897,
+      "load": 4577.79999999702,
+      "resources": [
+        {
+          "name": "/assets/crane-wHaFCnDd.js",
+          "bytes": 25867,
+          "decoded": 25567,
+          "duration": 624.5999999940395
+        },
+        {
+          "name": "/assets/modulepreload-polyfill-B5Qt9EMX.js",
+          "bytes": 1011,
+          "decoded": 711,
+          "duration": 173.29999999701977
+        },
+        {
+          "name": "/assets/podium-DJ39vZ1g.js",
+          "bytes": 539755,
+          "decoded": 539455,
+          "duration": 3775
+        },
+        {
+          "name": "/assets/version-BsW0_tbo.js",
+          "bytes": 5395,
+          "decoded": 5095,
+          "duration": 296.80000001192093
+        },
+        {
+          "name": "/assets/index-CTKzep_N.js",
+          "bytes": 127981,
+          "decoded": 127681,
+          "duration": 1740.0999999940395
+        }
+      ]
+    },
+    {
+      "path": "/party.html",
+      "width": 390,
+      "height": 844,
+      "readyMs": 5316,
+      "heap": 9696872,
+      "load": 5121.600000008941,
+      "fcp": 5164,
+      "resources": [
+        {
+          "name": "/assets/modulepreload-polyfill-B5Qt9EMX.js",
+          "bytes": 1011,
+          "decoded": 711,
+          "duration": 182.5
+        },
+        {
+          "name": "/assets/invite-BtK40wPj.js",
+          "bytes": 1121,
+          "decoded": 821,
+          "duration": 181.70000000298023
+        },
+        {
+          "name": "/assets/podium-DJ39vZ1g.js",
+          "bytes": 539755,
+          "decoded": 539455,
+          "duration": 4282.9000000059605
+        },
+        {
+          "name": "/assets/version-BsW0_tbo.js",
+          "bytes": 5395,
+          "decoded": 5095,
+          "duration": 290.29999999701977
+        },
+        {
+          "name": "/assets/index-CTKzep_N.js",
+          "bytes": 127981,
+          "decoded": 127681,
+          "duration": 2199.5
+        },
+        {
+          "name": "/assets/main-U-C1NUrB.js",
+          "bytes": 95538,
+          "decoded": 95238,
+          "duration": 1857.9000000059605
+        }
+      ]
+    },
+    {
+      "path": "/",
+      "width": 844,
+      "height": 390,
+      "readyMs": 5253,
+      "heap": 11072389,
+      "load": 5078.79999999702,
+      "fcp": 5108,
+      "resources": [
+        {
+          "name": "/assets/modulepreload-polyfill-B5Qt9EMX.js",
+          "bytes": 1011,
+          "decoded": 711,
+          "duration": 179.20000000298023
+        },
+        {
+          "name": "/assets/invite-BtK40wPj.js",
+          "bytes": 1121,
+          "decoded": 821,
+          "duration": 178.5
+        },
+        {
+          "name": "/assets/podium-DJ39vZ1g.js",
+          "bytes": 539755,
+          "decoded": 539455,
+          "duration": 4267
+        },
+        {
+          "name": "/assets/version-BsW0_tbo.js",
+          "bytes": 5395,
+          "decoded": 5095,
+          "duration": 285.70000000298023
+        },
+        {
+          "name": "/assets/index-CTKzep_N.js",
+          "bytes": 127981,
+          "decoded": 127681,
+          "duration": 2200.1000000089407
+        },
+        {
+          "name": "/assets/main-U-C1NUrB.js",
+          "bytes": 95538,
+          "decoded": 95238,
+          "duration": 1950.3999999910593
+        }
+      ]
+    },
+    {
+      "path": "/trivia.html",
+      "width": 844,
+      "height": 390,
+      "readyMs": 4121,
+      "heap": 3939366,
+      "load": 4043.7999999970198,
+      "fcp": 4088,
+      "resources": [
+        {
+          "name": "/assets/trivia-DJjBD-pN.js",
+          "bytes": 8126,
+          "decoded": 7826,
+          "duration": 299
+        },
+        {
+          "name": "/assets/modulepreload-polyfill-B5Qt9EMX.js",
+          "bytes": 1011,
+          "decoded": 711,
+          "duration": 173.70000000298023
+        },
+        {
+          "name": "/assets/invite-BtK40wPj.js",
+          "bytes": 1121,
+          "decoded": 821,
+          "duration": 175.09999999403954
+        },
+        {
+          "name": "/assets/podium-DJ39vZ1g.js",
+          "bytes": 539755,
+          "decoded": 539455,
+          "duration": 3655.9000000059605
+        },
+        {
+          "name": "/assets/version-BsW0_tbo.js",
+          "bytes": 5395,
+          "decoded": 5095,
+          "duration": 281.59999999403954
+        },
+        {
+          "name": "/assets/index-CTKzep_N.js",
+          "bytes": 127981,
+          "decoded": 127681,
+          "duration": 1663.5999999940395
+        }
+      ]
+    },
+    {
+      "path": "/crane.html",
+      "width": 844,
+      "height": 390,
+      "readyMs": 4557,
+      "heap": 7942369,
+      "load": 4425.5,
+      "fcp": 4484,
+      "resources": [
+        {
+          "name": "/assets/crane-wHaFCnDd.js",
+          "bytes": 25867,
+          "decoded": 25567,
+          "duration": 652.4000000059605
+        },
+        {
+          "name": "/assets/modulepreload-polyfill-B5Qt9EMX.js",
+          "bytes": 1011,
+          "decoded": 711,
+          "duration": 172.20000000298023
+        },
+        {
+          "name": "/assets/podium-DJ39vZ1g.js",
+          "bytes": 539755,
+          "decoded": 539455,
+          "duration": 3752.4000000059605
+        },
+        {
+          "name": "/assets/version-BsW0_tbo.js",
+          "bytes": 5395,
+          "decoded": 5095,
+          "duration": 295.20000000298023
+        },
+        {
+          "name": "/assets/index-CTKzep_N.js",
+          "bytes": 127981,
+          "decoded": 127681,
+          "duration": 1689.2999999970198
+        }
+      ]
+    },
+    {
+      "path": "/party.html",
+      "width": 844,
+      "height": 390,
+      "readyMs": 5157,
+      "heap": 11029714,
+      "load": 4975.699999988079,
+      "fcp": 5008,
+      "resources": [
+        {
+          "name": "/assets/modulepreload-polyfill-B5Qt9EMX.js",
+          "bytes": 1011,
+          "decoded": 711,
+          "duration": 174.5
+        },
+        {
+          "name": "/assets/invite-BtK40wPj.js",
+          "bytes": 1121,
+          "decoded": 821,
+          "duration": 173.5
+        },
+        {
+          "name": "/assets/podium-DJ39vZ1g.js",
+          "bytes": 539755,
+          "decoded": 539455,
+          "duration": 4239.800000011921
+        },
+        {
+          "name": "/assets/version-BsW0_tbo.js",
+          "bytes": 5395,
+          "decoded": 5095,
+          "duration": 266.20000000298023
+        },
+        {
+          "name": "/assets/index-CTKzep_N.js",
+          "bytes": 127981,
+          "decoded": 127681,
+          "duration": 2176.8999999910593
+        },
+        {
+          "name": "/assets/main-U-C1NUrB.js",
+          "bytes": 95538,
+          "decoded": 95238,
+          "duration": 1958.800000011921
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+PASS four illustrated tiles
+PASS Party Night directly above Worker Store
+PASS phone menu uses two columns
+PASS Beam lobby hides Wheelbarrow dropdown
+PASS Beam course selection retained
+PASS Wheelbarrow has only race-format choices
+PASS explicit host game switch preserves room code
+PASS shared question 1
+PASS shared four choices 1
+PASS entire question bank fits iphone: 
+PASS all answers visible iphone
+PASS entire question bank fits 319px: 
+PASS all answers visible 319px
+PASS entire question bank fits landscape: 
+PASS all answers visible landscape
+PASS shared question 2
+PASS shared four choices 2
+PASS phone reload reconnects same room
+PASS shared question 3
+PASS shared four choices 3
+PASS shared question 4
+PASS shared four choices 4
+PASS shared question 5
+PASS shared four choices 5
+PASS individual final scores
+PASS replay clears podium
+PASS host transfer to phone
+PASS Quick Match cancellation
+PASS desktop and phone matchmaking share playable race
+PASS Quick Match reload reconnect
+PASS zero browser errors

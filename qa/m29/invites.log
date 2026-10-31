@@ -1,0 +1,5 @@
+PASS Beam invite stores reservation
+PASS Beam invited reload reconnects active room
+PASS Party invite stores reservation
+PASS Party invited reload reconnects same locked room
+PASS zero invite-reload browser errors

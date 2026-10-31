@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: QA: reject solo Beam replay before mutating the completed round
+ok 1 - QA: reject solo Beam replay before mutating the completed round
+  ---
+  duration_ms: 2.8769
+  type: 'test'
+  ...
+# Subtest: QA: reserved disconnected worker is ineligible until reconnected
+ok 2 - QA: reserved disconnected worker is ineligible until reconnected
+  ---
+  duration_ms: 0.7315
+  type: 'test'
+  ...
+# Subtest: QA: valid 2-worker Beam replay keeps exactly two workers per beam
+ok 3 - QA: valid 2-worker Beam replay keeps exactly two workers per beam
+  ---
+  duration_ms: 0.8768
+  type: 'test'
+  ...
+# Subtest: QA: valid 4-worker Beam replay keeps exactly two workers per beam
+ok 4 - QA: valid 4-worker Beam replay keeps exactly two workers per beam
+  ---
+  duration_ms: 0.5808
+  type: 'test'
+  ...
+# Subtest: QA: valid 6-worker Beam replay keeps exactly two workers per beam
+ok 5 - QA: valid 6-worker Beam replay keeps exactly two workers per beam
+  ---
+  duration_ms: 0.6768
+  type: 'test'
+  ...
+# Subtest: QA: valid 8-worker Beam replay keeps exactly two workers per beam
+ok 6 - QA: valid 8-worker Beam replay keeps exactly two workers per beam
+  ---
+  duration_ms: 0.535
+  type: 'test'
+  ...
+# Subtest: QA: no connected workers cannot create a spectator-only round; odd counts keep full teams
+ok 7 - QA: no connected workers cannot create a spectator-only round; odd counts keep full teams
+  ---
+  duration_ms: 0.4476
+  type: 'test'
+  ...
+# Subtest: QA: action policy clears stale attached state for spectators, missing teams, countdown, DNF and results
+ok 8 - QA: action policy clears stale attached state for spectators, missing teams, countdown, DNF and results
+  ---
+  duration_ms: 0.4971
+  type: 'test'
+  ...
+# Subtest: QA: lost/reconnecting partner, protection and completed delivery hide action until eligible again
+ok 9 - QA: lost/reconnecting partner, protection and completed delivery hide action until eligible again
+  ---
+  duration_ms: 0.3658
+  type: 'test'
+  ...
+# Subtest: QA: team DNF and delivery release grips and stop stale controls
+ok 10 - QA: team DNF and delivery release grips and stop stale controls
+  ---
+  duration_ms: 0.7803
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 199.1537

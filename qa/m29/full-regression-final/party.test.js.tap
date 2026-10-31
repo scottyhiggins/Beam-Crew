@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: only three finished adapters are playable; normalized points, shared ties and deterministic podium
+ok 1 - only three finished adapters are playable; normalized points, shared ties and deterministic podium
+  ---
+  duration_ms: 1.656
+  type: 'test'
+  ...
+# Subtest: 2–8 players traverse the complete same-room playlist; incomplete pairs skip with bounded wait; replay resets ledger
+ok 2 - 2–8 players traverse the complete same-room playlist; incomplete pairs skip with bounded wait; replay resets ledger
+  ---
+  duration_ms: 14.0557
+  type: 'test'
+  ...
+# Subtest: unfinished races, abandoned teams, stale scoring and an unmatched final worker cannot stall the party
+ok 3 - unfinished races, abandoned teams, stale scoring and an unmatched final worker cannot stall the party
+  ---
+  duration_ms: 1.6376
+  type: 'test'
+  ...
+# Subtest: trivia keeps independent scores when another worker disconnects
+ok 4 - trivia keeps independent scores when another worker disconnects
+  ---
+  duration_ms: 1.0673
+  type: 'test'
+  ...
+# Subtest: workplace awards require recorded play; empty or zero statistics do not invent achievements
+ok 5 - workplace awards require recorded play; empty or zero statistics do not invent achievements
+  ---
+  duration_ms: 0.7494
+  type: 'test'
+  ...
+# Subtest: Party Trivia runs five independent questions for odd crews and normalizes tied individual results once
+ok 6 - Party Trivia runs five independent questions for odd crews and normalizes tied individual results once
+  ---
+  duration_ms: 0.8218
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 259.6063
