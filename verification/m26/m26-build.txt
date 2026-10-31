@@ -1,0 +1,31 @@
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 103 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/lan.html                                     0.67 kB │ gzip:   0.42 kB
+dist/crane.html                                   0.75 kB │ gzip:   0.36 kB
+dist/index.html                                   0.85 kB │ gzip:   0.37 kB
+dist/trivia.html                                  0.85 kB │ gzip:   0.40 kB
+dist/party.html                                   0.87 kB │ gzip:   0.39 kB
+dist/podium-preview.html                          1.26 kB │ gzip:   0.68 kB
+dist/assets/podium-BPzrfR_1.css                   1.40 kB │ gzip:   0.58 kB
+dist/assets/trivia-BKtEbPjJ.css                   3.50 kB │ gzip:   1.34 kB
+dist/assets/crane-CWZ3cL39.css                    8.71 kB │ gzip:   2.71 kB
+dist/assets/main-Bro_FLqB.css                    31.95 kB │ gzip:   7.35 kB
+dist/assets/modulepreload-polyfill-B5Qt9EMX.js    0.71 kB │ gzip:   0.40 kB
+dist/assets/invite-BtK40wPj.js                    0.82 kB │ gzip:   0.47 kB
+dist/assets/podiumPreview-BpZRmIqd.js             1.08 kB │ gzip:   0.67 kB
+dist/assets/lan-BQhkJn_4.js                       1.26 kB │ gzip:   0.76 kB
+dist/assets/version-Cik4Nks5.js                   5.11 kB │ gzip:   2.45 kB
+dist/assets/trivia-B_CSCiYb.js                    8.48 kB │ gzip:   3.78 kB
+dist/assets/crane-B6ZF57Dg.js                    25.57 kB │ gzip:  10.85 kB
+dist/assets/main-DKpBkwO2.js                     92.21 kB │ gzip:  34.97 kB
+dist/assets/index-CTKzep_N.js                   127.68 kB │ gzip:  40.72 kB
+dist/assets/podium-DFJ-yD3G.js                  539.43 kB │ gzip: 139.31 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.41s

@@ -1,0 +1,30 @@
+✔ two real Derby players keep private destruction and receive identical 60-second results (60103.0427ms)
+✔ eight real Derby players reconnect, transfer host, reject late joins, replay and switch modes (1609.7535ms)
+colyseus.js - onError => (409) Game version mismatch. Refresh before joining.
+Room connection was closed unexpectedly (4002): 
+colyseus.js - onError => (4002) 
+
+       ___      _
+      / __\___ | |_   _ ___  ___ _   _ ___
+     / /  / _ \| | | | / __|/ _ \ | | / __|
+    / /__| (_) | | |_| \__ \  __/ |_| \__ \
+    \____/\___/|_|\__, |___/\___|\__,_|___/
+                  |___/
+
+     · Multiplayer Framework for Node.js ·
+
+💖 Consider becoming a Sponsor on GitHub → https://github.com/sponsors/endel
+🌟 Give us a star on GitHub → https://github.com/colyseus/colyseus
+☁️  Deploy and scale your project on Colyseus Cloud → https://cloud.colyseus.io
+
+
+✔ M22: eight Crane clients preserve pumpkin, protocol, private arenas, host transfer, reconnect, mode switch and replay (676.1252ms)
+✔ M22: eight-player Party pumpkin survives all mode boundaries, final podium, host transfer and replay (552.2636ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 61989.7435

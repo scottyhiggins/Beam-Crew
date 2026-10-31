@@ -1,0 +1,16 @@
+{
+  "arenas": 8,
+  "simulatedSeconds": 60,
+  "totalCpuWallMs": 80.28380000000001,
+  "peakDebrisPerArena": 65,
+  "scores": [
+    1290,
+    1290,
+    1290,
+    1290,
+    1290,
+    1290,
+    1290,
+    1290
+  ]
+}
