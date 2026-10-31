@@ -1,4 +1,6 @@
 import {copyInvite} from './invite';
+import {Podium} from './podium';
+import {crewPodium} from '../shared/podium';
 import {beamActionState,WAITING_FOR_TEAMMATE} from '../shared/beam-session';
 import {resetBeamActionControls} from './beam-action-controls';
 import {BEAM_MAPS,EXCAVATOR,excavatorAngle,beamWorld} from '../shared/beam-chaos';
@@ -103,15 +105,17 @@ el('reset').onclick=()=>{stopInput();room?.send('reset');menuOpen=false;render()
 el('restart').onclick=()=>{stopInput();room?.send('restart');menuOpen=false;render();};el('back').onclick=()=>{stopInput();room?.send('lobby');menuOpen=false;};
 el('leave').onclick=()=>{const old=room;stopInput();room=null;cancelRecovery('Left room. Create or join a room.');void old?.leave();};
 el('share').onclick=async()=>{if(!room?.state.code)return;const url=new URL(location.href);url.search='';url.searchParams.set('room',room.state.code);await copyInvite(url.href,el('share'));};
+const awardsHost=document.createElement('div');el('resultsList').before(awardsHost);const awards=new Podium(awardsHost);
 let shownResults='',dismissedResults='';
 el('showResults').onclick=()=>{dismissedResults='';renderResults(room?.state);};
-el('closeResults').onclick=()=>{dismissedResults=shownResults;el('raceResults').hidden=true;};
+el('closeResults').onclick=()=>{dismissedResults=shownResults;awards.clear();el('raceResults').hidden=true;};
 function renderResults(state:any){
   el('playAgain').hidden=state?.racePhase!=='results'||(!state?.publicMatch&&state?.host!==room?.sessionId);el('playAgain').textContent=state?.publicMatch?'Play Again · Quick Match':'Play Again · Same Crew';
   const ready=state?.phase==='test'&&state.racePhase==='results'&&(state.mode!=='competitive'||state.teams.length>0);el('showResults').hidden=!ready;
   const key=ready?room?.roomId+':'+state.mode+':'+state.raceResets:'';
-  if(!ready){el('raceResults').hidden=true;shownResults='';dismissedResults='';return;}
+  if(!ready){awards.clear();el('raceResults').hidden=true;shownResults='';dismissedResults='';return;}
   shownResults=key;el('raceResults').hidden=dismissedResults===key;
+  if(dismissedResults!==key)awards.update(crewPodium(state));
   el('resultsTitle').textContent=state.mode==='championship'?'Championship results':'Final results';
   if(state.mode==='championship'){
     el('resultsRule').textContent=legCount(state)+' courses · Fewest cumulative spills wins · Combined racing time breaks ties';
