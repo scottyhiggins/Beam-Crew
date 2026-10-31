@@ -1,0 +1,166 @@
+TAP version 13
+# Subtest: random covers every alternative and never immediately repeats
+ok 1 - random covers every alternative and never immediately repeats
+  ---
+  duration_ms: 1.1424
+  type: 'test'
+  ...
+# Subtest: 2 workers / course 0: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 2 - 2 workers / course 0: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 5.7433
+  type: 'test'
+  ...
+# Subtest: 2 workers / course 1: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 3 - 2 workers / course 1: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 1.5127
+  type: 'test'
+  ...
+# Subtest: 2 workers / course 2: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 4 - 2 workers / course 2: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 4.0221
+  type: 'test'
+  ...
+# Subtest: 2 workers / course 3: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 5 - 2 workers / course 3: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 0.9475
+  type: 'test'
+  ...
+# Subtest: 2 workers / course 4: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 6 - 2 workers / course 4: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 1.9978
+  type: 'test'
+  ...
+# Subtest: 4 workers / course 0: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 7 - 4 workers / course 0: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 1.2607
+  type: 'test'
+  ...
+# Subtest: 4 workers / course 1: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 8 - 4 workers / course 1: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 1.075
+  type: 'test'
+  ...
+# Subtest: 4 workers / course 2: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 9 - 4 workers / course 2: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 2.5599
+  type: 'test'
+  ...
+# Subtest: 4 workers / course 3: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 10 - 4 workers / course 3: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 1.113
+  type: 'test'
+  ...
+# Subtest: 4 workers / course 4: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 11 - 4 workers / course 4: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 2.0254
+  type: 'test'
+  ...
+# Subtest: 6 workers / course 0: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 12 - 6 workers / course 0: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 1.3306
+  type: 'test'
+  ...
+# Subtest: 6 workers / course 1: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 13 - 6 workers / course 1: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 1.543
+  type: 'test'
+  ...
+# Subtest: 6 workers / course 2: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 14 - 6 workers / course 2: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 3.2035
+  type: 'test'
+  ...
+# Subtest: 6 workers / course 3: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 15 - 6 workers / course 3: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 1.2547
+  type: 'test'
+  ...
+# Subtest: 6 workers / course 4: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 16 - 6 workers / course 4: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 2.7667
+  type: 'test'
+  ...
+# Subtest: 8 workers / course 0: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 17 - 8 workers / course 0: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 2.0977
+  type: 'test'
+  ...
+# Subtest: 8 workers / course 1: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 18 - 8 workers / course 1: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 1.6697
+  type: 'test'
+  ...
+# Subtest: 8 workers / course 2: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 19 - 8 workers / course 2: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 3.4079
+  type: 'test'
+  ...
+# Subtest: 8 workers / course 3: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 20 - 8 workers / course 3: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 1.7993
+  type: 'test'
+  ...
+# Subtest: 8 workers / course 4: spawn, both grips, release, checkpoint recovery, scores and rematch
+ok 21 - 8 workers / course 4: spawn, both grips, release, checkpoint recovery, scores and rematch
+  ---
+  duration_ms: 3.77
+  type: 'test'
+  ...
+# Subtest: random restart chooses once for the room; checkpoint resets retain the course
+ok 22 - random restart chooses once for the room; checkpoint resets retain the course
+  ---
+  duration_ms: 1.7629
+  type: 'test'
+  ...
+# Subtest: new moving machinery is deterministic and renderer positions match authoritative hazards
+ok 23 - new moving machinery is deterministic and renderer positions match authoritative hazards
+  ---
+  duration_ms: 1.1859
+  type: 'test'
+  ...
+# Subtest: new course 3: boundary fall recovers both workers at latest checkpoint
+ok 24 - new course 3: boundary fall recovers both workers at latest checkpoint
+  ---
+  duration_ms: 0.4093
+  type: 'test'
+  ...
+# Subtest: new course 4: boundary fall recovers both workers at latest checkpoint
+ok 25 - new course 4: boundary fall recovers both workers at latest checkpoint
+  ---
+  duration_ms: 0.238
+  type: 'test'
+  ...
+# Subtest: Muddy Monday bridge ramps rise gently, return flush and leave other courses unchanged
+ok 26 - Muddy Monday bridge ramps rise gently, return flush and leave other courses unchanged
+  ---
+  duration_ms: 0.1286
+  type: 'test'
+  ...
+1..26
+# tests 26
+# suites 0
+# pass 26
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 243.0967

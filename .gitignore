@@ -19,3 +19,16 @@ build/
 
 /recovery/preview.pid
 /recovery/m24-checkpoint.txt
+
+/.m31-baseline/
+/baseline-m31.zip
+/node_modules-copy-incomplete/
+
+/qa/m31/investigation/
+/qa/m31/full-regression/
+/qa/m31/full-regression-authorized/
+/.m31-recovery-check/
+
+# M32 local preview process metadata
+/qa/m32/processes.json
+/.m32-recovery-audit/

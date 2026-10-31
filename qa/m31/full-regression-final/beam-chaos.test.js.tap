@@ -1,0 +1,172 @@
+TAP version 13
+# Subtest: stationary beam is pushed by a moving load with no remaining overlap
+ok 1 - stationary beam is pushed by a moving load with no remaining overlap
+  ---
+  duration_ms: 18.4107
+  type: 'test'
+  ...
+# Subtest: stationary free worker is pushed out of a load
+ok 2 - stationary free worker is pushed out of a load
+  ---
+  duration_ms: 0.6325
+  type: 'test'
+  ...
+# Subtest: impossible opposing wall constraints report failure instead of pinning forever
+ok 3 - impossible opposing wall constraints report failure instead of pinning forever
+  ---
+  duration_ms: 0.8757
+  type: 'test'
+  ...
+# Subtest: touching boxes do not jitter; penetrating rotated boxes separate
+ok 4 - touching boxes do not jitter; penetrating rotated boxes separate
+  ---
+  duration_ms: 0.2442
+  type: 'test'
+  ...
+# Subtest: map 1: falling worker resets both workers and beam at checkpoint
+ok 5 - map 1: falling worker resets both workers and beam at checkpoint
+  ---
+  duration_ms: 1.1465
+  type: 'test'
+  ...
+# Subtest: map 2: falling worker resets both workers and beam at checkpoint
+ok 6 - map 2: falling worker resets both workers and beam at checkpoint
+  ---
+  duration_ms: 0.6445
+  type: 'test'
+  ...
+# Subtest: a falling beam recovers even when free workers are safe
+ok 7 - a falling beam recovers even when free workers are safe
+  ---
+  duration_ms: 0.5816
+  type: 'test'
+  ...
+# Subtest: respawn freezes team briefly, charges once and clears motion
+ok 8 - respawn freezes team briefly, charges once and clears motion
+  ---
+  duration_ms: 0.2622
+  type: 'test'
+  ...
+# Subtest: maps have distinct fall boundaries and validation rejects malformed IDs
+ok 9 - maps have distinct fall boundaries and validation rejects malformed IDs
+  ---
+  duration_ms: 0.2192
+  type: 'test'
+  ...
+# Subtest: excavator sweep is deterministic, bounded and server collision geometry covers its tip
+ok 10 - excavator sweep is deterministic, bounded and server collision geometry covers its tip
+  ---
+  duration_ms: 5.8645
+  type: 'test'
+  ...
+# Subtest: bounded substeps prevent moving load tunneling across a stationary assembly
+ok 11 - bounded substeps prevent moving load tunneling across a stationary assembly
+  ---
+  duration_ms: 48.9595
+  type: 'test'
+  ...
+# Subtest: 2 players: recovery is team-local and replay clears penalties
+ok 12 - 2 players: recovery is team-local and replay clears penalties
+  ---
+  duration_ms: 2.4792
+  type: 'test'
+  ...
+# Subtest: 4 players: recovery is team-local and replay clears penalties
+ok 13 - 4 players: recovery is team-local and replay clears penalties
+  ---
+  duration_ms: 0.8316
+  type: 'test'
+  ...
+# Subtest: 6 players: recovery is team-local and replay clears penalties
+ok 14 - 6 players: recovery is team-local and replay clears penalties
+  ---
+  duration_ms: 0.812
+  type: 'test'
+  ...
+# Subtest: 8 players: recovery is team-local and replay clears penalties
+ok 15 - 8 players: recovery is team-local and replay clears penalties
+  ---
+  duration_ms: 0.7333
+  type: 'test'
+  ...
+# Subtest: disconnected teammate pauses assembly; round timeout resolves missing partners
+ok 16 - disconnected teammate pauses assembly; round timeout resolves missing partners
+  ---
+  duration_ms: 1.249
+  type: 'test'
+  ...
+# Subtest: hazards still push stationary teams while a partner reconnects
+ok 17 - hazards still push stationary teams while a partner reconnects
+  ---
+  duration_ms: 7.1602
+  type: 'test'
+  ...
+# Subtest: penalty-adjusted team ranking is fair and completed times stay immutable
+ok 18 - penalty-adjusted team ranking is fair and completed times stay immutable
+  ---
+  duration_ms: 0.6928
+  type: 'test'
+  ...
+# Subtest: latest checkpoint retains the completed turn on recovery
+ok 19 - latest checkpoint retains the completed turn on recovery
+  ---
+  duration_ms: 0.9708
+  type: 'test'
+  ...
+# Subtest: hazard knockback beyond a worker boundary recovers rather than blocking all future input
+ok 20 - hazard knockback beyond a worker boundary recovers rather than blocking all future input
+  ---
+  duration_ms: 0.4955
+  type: 'test'
+  ...
+# Subtest: replay reset numbers remain monotonic after several automatic recoveries
+ok 21 - replay reset numbers remain monotonic after several automatic recoveries
+  ---
+  duration_ms: 0.6224
+  type: 'test'
+  ...
+# Subtest: excavator contact moves or recovers a stationary beam assembly authoritatively
+ok 22 - excavator contact moves or recovers a stationary beam assembly authoritatively
+  ---
+  duration_ms: 1.627
+  type: 'test'
+  ...
+# Subtest: full course 0: timed load crossings, recovery, checkpoints and supported delivery
+ok 23 - full course 0: timed load crossings, recovery, checkpoints and supported delivery
+  ---
+  duration_ms: 110.3786
+  type: 'test'
+  ...
+# Subtest: full course 1: timed load crossings, recovery, checkpoints and supported delivery
+ok 24 - full course 1: timed load crossings, recovery, checkpoints and supported delivery
+  ---
+  duration_ms: 67.3556
+  type: 'test'
+  ...
+# Subtest: full course 2: timed load crossings, recovery, checkpoints and supported delivery
+ok 25 - full course 2: timed load crossings, recovery, checkpoints and supported delivery
+  ---
+  duration_ms: 202.3255
+  type: 'test'
+  ...
+# Subtest: full course 3: timed load crossings, recovery, checkpoints and supported delivery
+ok 26 - full course 3: timed load crossings, recovery, checkpoints and supported delivery
+  ---
+  duration_ms: 68.2582
+  type: 'test'
+  ...
+# Subtest: full course 4: timed load crossings, recovery, checkpoints and supported delivery
+ok 27 - full course 4: timed load crossings, recovery, checkpoints and supported delivery
+  ---
+  duration_ms: 202.3512
+  type: 'test'
+  ...
+1..27
+# tests 27
+# suites 0
+# pass 27
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 988.0895

@@ -1,0 +1,6 @@
+import fs from 'node:fs';
+import {arena,step} from '../build/shared/crane.js';
+import {derbyArena,stepDerby,derbyAction,derbyHeight} from '../build/shared/derby.js';
+const scenarios=[];
+for(const count of [10,30,60]){const arenas=Array.from({length:8},()=>{const a=arena();a.blocks=Array.from({length:count},(_,id)=>({id,x:(id%5-2)*4.1,y:1+Math.floor(id/5)*2.1,vx:0,vy:0,angle:0,spin:0,stable:0,support:-2}));return a;});const times=[];for(let i=0;i<120;i++){const t=performance.now();for(const a of arenas)step(a,0,1/30);times.push(performance.now()-t);}times.sort((a,b)=>a-b);scenarios.push({mode:'tower',players:8,blocksPerPlayer:count,p50:times[60],p95:times[114],max:times.at(-1)});console.log(scenarios.at(-1));}
+const ds=Array.from({length:8},()=>derbyArena(42)),times=[];let peakDebris=0;for(let i=0;i<5400;i++){const t=performance.now();for(const d of ds){derbyHeight(d,Math.sin(i/100),1/30);if(i%23===0)derbyAction(d,1);stepDerby(d,Math.sin(i/90),1/30);peakDebris=Math.max(peakDebris,d.debris.length);}times.push(performance.now()-t);}times.sort((a,b)=>a-b);scenarios.push({mode:'derby',players:8,simulatedSeconds:180,p50:times[2700],p95:times[5130],max:times.at(-1),peakDebris,endDebris:Math.max(...ds.map(d=>d.debris.length))});fs.writeFileSync('qa/m31/server-performance.json',JSON.stringify(scenarios,null,2));

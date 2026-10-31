@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: M27 real sockets: 2 players, map 3, carry/release, reconnect, host transfer, rematch
+ok 1 - M27 real sockets: 2 players, map 3, carry/release, reconnect, host transfer, rematch
+  ---
+  duration_ms: 7099.6385
+  type: 'test'
+  ...
+# Subtest: M27 real sockets: 2 players, map 4, carry/release, reconnect, host transfer, rematch
+ok 2 - M27 real sockets: 2 players, map 4, carry/release, reconnect, host transfer, rematch
+  ---
+  duration_ms: 7092.631
+  type: 'test'
+  ...
+# Subtest: M27 real sockets: 4 players, map 3, carry/release, reconnect, host transfer, rematch
+ok 3 - M27 real sockets: 4 players, map 3, carry/release, reconnect, host transfer, rematch
+  ---
+  duration_ms: 6989.7149
+  type: 'test'
+  ...
+# Subtest: M27 real sockets: 4 players, map 4, carry/release, reconnect, host transfer, rematch
+ok 4 - M27 real sockets: 4 players, map 4, carry/release, reconnect, host transfer, rematch
+  ---
+  duration_ms: 6933.5868
+  type: 'test'
+  ...
+# Subtest: M27 real sockets: 6 players, map 3, carry/release, reconnect, host transfer, rematch
+ok 5 - M27 real sockets: 6 players, map 3, carry/release, reconnect, host transfer, rematch
+  ---
+  duration_ms: 7074.5374
+  type: 'test'
+  ...
+# Subtest: M27 real sockets: 6 players, map 4, carry/release, reconnect, host transfer, rematch
+ok 6 - M27 real sockets: 6 players, map 4, carry/release, reconnect, host transfer, rematch
+  ---
+  duration_ms: 6929.9973
+  type: 'test'
+  ...
+# Subtest: M27 real sockets: 8 players, map 3, carry/release, reconnect, host transfer, rematch
+ok 7 - M27 real sockets: 8 players, map 3, carry/release, reconnect, host transfer, rematch
+  ---
+  duration_ms: 6992.4079
+  type: 'test'
+  ...
+# Subtest: M27 real sockets: 8 players, map 4, carry/release, reconnect, host transfer, rematch
+ok 8 - M27 real sockets: 8 players, map 4, carry/release, reconnect, host transfer, rematch
+  ---
+  duration_ms: 6944.3067
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 56224.317

@@ -1,0 +1,28 @@
+[
+  {
+    "mode": "derby",
+    "density": "normal",
+    "players": 8,
+    "ticks": 600,
+    "includes": "CraneRoom.tick plus JSON encoding of all eight private snapshots; excludes real socket/network transport",
+    "peakDebrisPerArena": 64,
+    "p50": 0.291499999999985,
+    "p95": 0.9087000000000103,
+    "max": 2.246700000000004,
+    "encodedBytes": 39293392,
+    "budgetMs": 33.333333333333336
+  },
+  {
+    "mode": "derby",
+    "density": "maximum-fragments",
+    "players": 8,
+    "ticks": 600,
+    "includes": "CraneRoom.tick plus JSON encoding of all eight private snapshots; excludes real socket/network transport",
+    "peakDebrisPerArena": 72,
+    "p50": 0.899599999999964,
+    "p95": 1.4382999999999129,
+    "max": 2.2946000000000026,
+    "encodedBytes": 100591472,
+    "budgetMs": 33.333333333333336
+  }
+]

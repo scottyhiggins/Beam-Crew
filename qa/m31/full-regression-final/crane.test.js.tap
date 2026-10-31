@@ -1,0 +1,94 @@
+TAP version 13
+# Subtest: held/airborne loads never score; stable levels count in 10-foot increments
+ok 1 - held/airborne loads never score; stable levels count in 10-foot increments
+  ---
+  duration_ms: 84.1967
+  type: 'test'
+  ...
+# Subtest: acceleration produces predictable lag; stopping and reversing oscillate
+ok 2 - acceleration produces predictable lag; stopping and reversing oscillate
+  ---
+  duration_ms: 2.5249
+  type: 'test'
+  ...
+# Subtest: release inherits swing position, lateral velocity, vertical velocity and rotation
+ok 3 - release inherits swing position, lateral velocity, vertical velocity and rotation
+  ---
+  duration_ms: 0.2351
+  type: 'test'
+  ...
+# Subtest: off-centre landings slide and rotate; falling bodies remain visible before cleanup
+ok 4 - off-centre landings slide and rotate; falling bodies remain visible before cleanup
+  ---
+  duration_ms: 62.1053
+  type: 'test'
+  ...
+# Subtest: unsupported elevated bodies cannot score and fall under gravity
+ok 5 - unsupported elevated bodies cannot score and fall under gravity
+  ---
+  duration_ms: 11.972
+  type: 'test'
+  ...
+# Subtest: removing a supporting body collapses its descendants and clears elevated scores
+ok 6 - removing a supporting body collapses its descendants and clears elevated scores
+  ---
+  duration_ms: 34.8752
+  type: 'test'
+  ...
+# Subtest: tower centre of mass beyond a lower footprint triggers tipping
+ok 7 - tower centre of mass beyond a lower footprint triggers tipping
+  ---
+  duration_ms: 18.2691
+  type: 'test'
+  ...
+# Subtest: pickup range, movement bounds, ties and replay arena reset
+ok 8 - pickup range, movement bounds, ties and replay arena reset
+  ---
+  duration_ms: 1.4136
+  type: 'test'
+  ...
+# Subtest: timeout occurs on exactly tick 1800 with deterministic ties for 2–8 players
+ok 9 - timeout occurs on exactly tick 1800 with deterministic ties for 2–8 players
+  ---
+  duration_ms: 192.2792
+  type: 'test'
+  ...
+# Subtest: 100-foot supported stack instantly wins, all snapshots agree and remain private
+ok 10 - 100-foot supported stack instantly wins, all snapshots agree and remain private
+  ---
+  duration_ms: 2.5864
+  type: 'test'
+  ...
+# Subtest: same-tick 100-foot arrivals use join order; 90 feet never ends early
+ok 11 - same-tick 100-foot arrivals use join order; 90 feet never ends early
+  ---
+  duration_ms: 8.0143
+  type: 'test'
+  ...
+# Subtest: target cannot be configured; host replay clears swing, score, timer and results
+ok 12 - target cannot be configured; host replay clears swing, score, timer and results
+  ---
+  duration_ms: 1.0023
+  type: 'test'
+  ...
+# Subtest: digital left/right/action controls can build a stable 100-foot tower within 60 seconds
+ok 13 - digital left/right/action controls can build a stable 100-foot tower within 60 seconds
+  ---
+  duration_ms: 773.9508
+  type: 'test'
+  ...
+# Subtest: scheduler jitter catches up fixed physics steps without extending the 60-second round
+ok 14 - scheduler jitter catches up fixed physics steps without extending the 60-second round
+  ---
+  duration_ms: 19.2536
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1458.1531

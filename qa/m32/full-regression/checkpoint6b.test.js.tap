@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: ten distinct modules have ten surfaces, three barrier families and deterministic unique 3/5/10 selection
+ok 1 - ten distinct modules have ten surfaces, three barrier families and deterministic unique 3/5/10 selection
+  ---
+  duration_ms: 3.5807
+  type: 'test'
+  ...
+# Subtest: every legal adjacent pair aligns level sockets with a driveable, uncapped 5.6m connection
+ok 2 - every legal adjacent pair aligns level sockets with a driveable, uncapped 5.6m connection
+  ---
+  duration_ms: 33.2307
+  type: 'test'
+  ...
+# Subtest: all twelve materials naturally drive every module including the marked gravel detour with continuous positions
+ok 3 - all twelve materials naturally drive every module including the marked gravel detour with continuous positions
+  ---
+  duration_ms: 573.8111
+  type: 'test'
+  ...
+# Subtest: gravel blocks the visible part of the haul road and leaves a fair left route; truck footprint is authoritative
+ok 4 - gravel blocks the visible part of the haul road and leaves a fair left route; truck footprint is authoritative
+  ---
+  duration_ms: 0.3968
+  type: 'test'
+  ...
+# Subtest: module gates reject skipped and reverse finishes and accept ordered crossing across the lane
+ok 5 - module gates reject skipped and reverse finishes and accept ordered crossing across the lane
+  ---
+  duration_ms: 0.4716
+  type: 'test'
+  ...
+# Subtest: five-leg room freezes each ledger, runs one five-second transition, preserves physical state, hazards and chosen loads
+ok 6 - five-leg room freezes each ledger, runs one five-second transition, preserves physical state, hazards and chosen loads
+  ---
+  duration_ms: 41.9924
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 863.0593

@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: compact framing activates only for short touch landscape and keeps the player and route in view
+ok 1 - compact framing activates only for short touch landscape and keeps the player and route in view
+  ---
+  duration_ms: 1.6558
+  type: 'test'
+  ...
+# Subtest: landscape styling retains safe areas, touch targets, an always-visible leaderboard and mode-specific results
+ok 2 - landscape styling retains safe areas, touch targets, an always-visible leaderboard and mode-specific results
+  ---
+  duration_ms: 0.7422
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 104.0922

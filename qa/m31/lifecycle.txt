@@ -1,0 +1,17 @@
+PASS home Crane tile opens two-mode chooser
+PASS Crane room code
+PASS mobile guest joins desktop Crane room
+PASS mobile reload reconnects same Crane room
+PASS Crane mobile landscape no overflow
+PASS desktop and mobile agree on natural 60-second Tower winner
+PASS Tower shared 3D podium rendered
+PASS Tower podium preserves both workers
+PASS Crane host transfers after original host exits
+PASS new host can switch to Derby
+PASS returning browser reconnects its reserved Crane place
+PASS Derby replay starts at fresh 60 seconds
+PASS home Party tile opens actual playlist
+PASS Party advertises exactly three playable modes
+PASS Party room presents complete three-mode playlist
+PASS zero browser page errors: 
+PASS no duplicate Three.js or exhausted WebGL contexts

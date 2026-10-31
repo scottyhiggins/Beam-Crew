@@ -1,0 +1,38 @@
+{
+  "environment": "Headless desktop Edge with emulated 390x844 touch viewport, DPR 2; not physical phone performance",
+  "samples": [
+    {
+      "map": 0,
+      "viewport": [
+        390,
+        844
+      ],
+      "medianFrameMs": 6.099999999999454,
+      "p95FrameMs": 6.199999999999818,
+      "medianDrawCalls": 131,
+      "heapBytes": 16889285
+    },
+    {
+      "map": 3,
+      "viewport": [
+        390,
+        844
+      ],
+      "medianFrameMs": 6.100000000000364,
+      "p95FrameMs": 6.200000000000728,
+      "medianDrawCalls": 133,
+      "heapBytes": 15969247
+    },
+    {
+      "map": 4,
+      "viewport": [
+        390,
+        844
+      ],
+      "medianFrameMs": 6.099999999998545,
+      "p95FrameMs": 6.200000000000728,
+      "medianDrawCalls": 153,
+      "heapBytes": 17846763
+    }
+  ]
+}

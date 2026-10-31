@@ -1,0 +1,16 @@
+TAP version 13
+# Subtest: all 90 connections have owned non-overlapping surfaces, covered yards and clear visible socket barriers
+ok 1 - all 90 connections have owned non-overlapping surfaces, covered yards and clear visible socket barriers
+  ---
+  duration_ms: 78.1356
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 170.0755

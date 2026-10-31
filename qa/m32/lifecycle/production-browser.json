@@ -1,0 +1,25 @@
+{
+  "checks": 17,
+  "passed": [
+    "home Crane tile selects two-mode chooser",
+    "Crane room code",
+    "mobile guest joins desktop Crane room",
+    "mobile reload reconnects same Crane room",
+    "Crane mobile landscape no overflow",
+    "desktop and mobile agree on natural 60-second Tower winner",
+    "Tower shared 3D podium rendered",
+    "Tower podium preserves both workers",
+    "Crane host transfers after original host exits",
+    "new host can switch to Derby",
+    "returning browser reconnects its reserved Crane place",
+    "Derby replay starts at fresh 60 seconds",
+    "home Party tile opens actual playlist",
+    "Party advertises exactly three playable modes",
+    "Party room presents complete three-mode playlist",
+    "zero browser page errors: ",
+    "no duplicate Three.js or exhausted WebGL contexts"
+  ],
+  "errors": [],
+  "warnings": [],
+  "origin": "http://127.0.0.1:2732"
+}

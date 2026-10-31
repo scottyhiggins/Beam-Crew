@@ -1,0 +1,145 @@
+{
+  "milestone": 32,
+  "protocol": 23,
+  "build": "PASS: client TypeScript, server TypeScript and Vite production build; shared podium chunk 539.46 kB advisory",
+  "regression": {
+    "files": 58,
+    "tests": 297,
+    "passed": 297,
+    "failed": 0,
+    "skipped": 0
+  },
+  "uxBrowserSuites": [
+    {
+      "name": "ui",
+      "code": 0
+    },
+    {
+      "name": "trivia-tap",
+      "code": 0
+    },
+    {
+      "name": "menu-trivia",
+      "code": 0
+    },
+    {
+      "name": "party",
+      "code": 0
+    },
+    {
+      "name": "overhaul-browser",
+      "code": 0
+    },
+    {
+      "name": "beam-performance",
+      "code": 0
+    },
+    {
+      "name": "mobile-performance",
+      "code": 0
+    },
+    {
+      "name": "store",
+      "code": 0
+    },
+    {
+      "name": "invites",
+      "code": 0
+    },
+    {
+      "name": "sharing",
+      "code": 0
+    }
+  ],
+  "uxAssertions": 261,
+  "craneBrowserAssertions": 21,
+  "craneLifecycleAssertions": 17,
+  "craneControlPlayerCounts": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "physicalIphone": false,
+  "lan": {
+    "origin": "http://192.168.1.166:2732",
+    "health": {
+      "ok": true,
+      "build": "BREAK TIME - Final Release Candidate M32 - Protocol 23",
+      "protocol": 23,
+      "repository": "C:\\Users\\higgi\\.codex\\.chatgpt-projects\\g-p-6ac291cf8ecc81919bbc636308fbf05d\\Beam-Crew-m32-final-release-candidate\\",
+      "startedAt": "2026-10-31T06:07:07.084Z"
+    },
+    "connectedClients": 2,
+    "checkedAt": "2026-10-31T06:12:03.757Z",
+    "physicalIphone": false
+  },
+  "performance": [
+    {
+      "mode": "tower",
+      "players": 8,
+      "blocksPerPlayer": 10,
+      "p50": 5.562899999999999,
+      "p95": 8.102499999999992,
+      "max": 18.75799999999998
+    },
+    {
+      "mode": "tower",
+      "players": 8,
+      "blocksPerPlayer": 30,
+      "p50": 12.672800000000052,
+      "p95": 13.668699999999944,
+      "max": 17.02669999999989
+    },
+    {
+      "mode": "tower",
+      "players": 8,
+      "blocksPerPlayer": 60,
+      "p50": 21.490999999999985,
+      "p95": 23.760299999999916,
+      "max": 31.544200000000274
+    },
+    {
+      "mode": "derby",
+      "players": 8,
+      "simulatedSeconds": 180,
+      "p50": 0.01569999999992433,
+      "p95": 0.03949999999986176,
+      "max": 0.8347999999996318,
+      "peakDebris": 40,
+      "endDebris": 0
+    }
+  ],
+  "roomPerformance": [
+    {
+      "mode": "derby",
+      "density": "normal",
+      "players": 8,
+      "ticks": 600,
+      "includes": "CraneRoom.tick plus JSON encoding of all eight private snapshots; excludes real socket/network transport",
+      "peakDebrisPerArena": 64,
+      "p50": 0.291499999999985,
+      "p95": 0.9087000000000103,
+      "max": 2.246700000000004,
+      "encodedBytes": 39293392,
+      "budgetMs": 33.333333333333336
+    },
+    {
+      "mode": "derby",
+      "density": "maximum-fragments",
+      "players": 8,
+      "ticks": 600,
+      "includes": "CraneRoom.tick plus JSON encoding of all eight private snapshots; excludes real socket/network transport",
+      "peakDebrisPerArena": 72,
+      "p50": 0.899599999999964,
+      "p95": 1.4382999999999129,
+      "max": 2.2946000000000026,
+      "encodedBytes": 100591472,
+      "budgetMs": 33.333333333333336
+    }
+  ],
+  "recommendation": "GO for candidate review and physical iPhone playtest; NO-GO for release pending physical Safari validation and owner approval"
+}

@@ -18,7 +18,10 @@
     "m29:start": "node scripts/start-m29.mjs",
     "m29:dev": "node scripts/start-m29.mjs --dev",
     "m30:start": "node scripts/start-m30.mjs",
-    "m30:dev": "node scripts/start-m30.mjs --dev"
+    "m30:dev": "node scripts/start-m30.mjs --dev",
+    "m31:start": "node scripts/start-m31.mjs",
+    "m31:dev": "node scripts/start-m31.mjs --dev",
+    "m32:start": "node scripts/start-m32.mjs"
   },
   "dependencies": {
     "@colyseus/core": "^0.16.24",

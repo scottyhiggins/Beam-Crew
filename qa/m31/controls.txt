@@ -1,0 +1,7 @@
+PASS 2 players: rotation, height, shared seed, private arenas, boost and replay
+PASS 3 players: rotation, height, shared seed, private arenas, boost and replay
+PASS 4 players: rotation, height, shared seed, private arenas, boost and replay
+PASS 5 players: rotation, height, shared seed, private arenas, boost and replay
+PASS 6 players: rotation, height, shared seed, private arenas, boost and replay
+PASS 7 players: rotation, height, shared seed, private arenas, boost and replay
+PASS 8 players: rotation, height, shared seed, private arenas, boost and replay

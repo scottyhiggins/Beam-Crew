@@ -19,10 +19,11 @@ export function derbyArena(seed=1):DerbyArena{
 
  return {crane,yaw:-1.1,turn:0,height:5,seed,targets,debris:[],score:0,destroyed:0,cooldown:0,nextChunk:0,impact:{serial:0,x:0,y:0,strength:0,points:0}};
 }
-/** A slewing boom projects its circular sweep into the facade plane.
- * Depth is visual only: collisions use this readable 2.5D demolition lane. */
-export function derbyPose(d:DerbyArena){const length=4;return {x:Math.sin(d.yaw)*10+Math.sin(d.crane.swing)*length,y:d.height-Math.cos(d.crane.swing)*length,vx:Math.cos(d.yaw)*10*d.turn+Math.cos(d.crane.swing)*length*d.crane.omega,vy:Math.sin(d.crane.swing)*length*d.crane.omega};}
-export function derbyHeight(d:DerbyArena,dir:number,dt:number){d.height=Math.max(5,Math.min(12,d.height+Math.max(-1,Math.min(1,dir))*3*dt));}
+/** The ball hangs from the actual rotating boom tip. Collision/scoring retain
+ * the existing facade projection; depth is a continuous visual sweep. */
+export function derbyPivot(d:DerbyArena){return {x:Math.sin(d.yaw)*10,y:12,z:Math.cos(d.yaw)*10-5};}
+export function derbyPose(d:DerbyArena){const length=16-d.height,p=derbyPivot(d),s=Math.sin(d.crane.swing),c=Math.cos(d.crane.swing),sy=Math.sin(d.yaw),cy=Math.cos(d.yaw);return {x:p.x+cy*s*length,y:p.y-c*length,z:p.z-sy*s*length,vx:cy*10*d.turn+cy*c*length*d.crane.omega-sy*d.turn*s*length,vy:s*length*d.crane.omega,vz:-sy*10*d.turn-sy*c*length*d.crane.omega-cy*d.turn*s*length};}
+export function derbyHeight(d:DerbyArena,dir:number,dt:number){const old=16-d.height;d.height=Math.max(5,Math.min(12,d.height+Math.max(-1,Math.min(1,dir))*3*dt));d.crane.omega*=Math.min(1.2,(old/(16-d.height))**2);}
 
 export function derbyAction(d:DerbyArena,dir:number){if(d.cooldown>0)return false;const sign=Math.sign(dir)||Math.sign(d.crane.omega)||Math.sign(d.crane.v)||1;d.crane.omega=Math.max(-1.8,Math.min(1.8,d.crane.omega+sign*.85));d.cooldown=.7;return true;}
 function circleBox(x:number,y:number,t:Target){const dx=Math.max(0,Math.abs(x-t.x)-t.w/2),dy=Math.max(0,Math.abs(y-t.y)-t.h/2);return dx*dx+dy*dy<=BALL_RADIUS*BALL_RADIUS;}
@@ -34,8 +35,10 @@ export function stepDerby(d:DerbyArena,dir:number,dt:number){
  const before=derbyPose(d),oldTurn=d.turn;
  d.turn+=(Math.max(-1,Math.min(1,dir))*.85-d.turn)*(1-Math.exp(-5*dt));
  d.yaw+=d.turn*dt;
- const acceleration=(d.turn-oldTurn)/Math.max(dt,1e-6)*Math.cos(d.yaw)*10;
- d.crane.omega+=(-3.5*Math.sin(d.crane.swing)-acceleration/4-.7*d.crane.omega)*dt;
+ // Slew stops keep the boom facing the demolition jobsite; reversal still carries momentum.
+ if(Math.abs(d.yaw)>1.22){d.yaw=Math.sign(d.yaw)*1.22;if(d.turn*d.yaw>0)d.turn=0;}
+ const acceleration=(d.turn-oldTurn)/Math.max(dt,1e-6)*10;
+ d.crane.omega+=(-14/(16-d.height)*Math.sin(d.crane.swing)-acceleration/(16-d.height)*Math.cos(d.crane.swing)-.32*d.crane.omega)*dt;
  d.crane.swing+=d.crane.omega*dt;
  d.crane.x=Math.sin(d.yaw)*10;d.crane.v=Math.cos(d.yaw)*10*d.turn;d.crane.pivotY=d.height;
 d.cooldown=Math.max(0,d.cooldown-dt);

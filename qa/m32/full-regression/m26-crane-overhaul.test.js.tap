@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: seeded props vary while structural frame remains fixed
+ok 1 - seeded props vary while structural frame remains fixed
+  ---
+  duration_ms: 1.6042
+  type: 'test'
+  ...
+# Subtest: slew responds smoothly around vertical axis; hoist clamps both ends
+ok 2 - slew responds smoothly around vertical axis; hoist clamps both ends
+  ---
+  duration_ms: 6.5578
+  type: 'test'
+  ...
+# Subtest: destroying a lower support collapses only its bay and never awards twice
+ok 3 - destroying a lower support collapses only its bay and never awards twice
+  ---
+  duration_ms: 3.2319
+  type: 'test'
+  ...
+# Subtest: high-energy missed containers settle without endless spin or slide
+ok 4 - high-energy missed containers settle without endless spin or slide
+  ---
+  duration_ms: 42.4849
+  type: 'test'
+  ...
+# Subtest: eight independent 60-second demolition arenas remain deterministic and bounded
+ok 5 - eight independent 60-second demolition arenas remain deterministic and bounded
+  ---
+  duration_ms: 72.8126
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 210.4319
