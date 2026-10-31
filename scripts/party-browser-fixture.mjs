@@ -10,7 +10,7 @@ import {PartyRoom,partyRooms} from '../build/server/party-room.js';
 import {PROTOCOL_VERSION} from '../build/shared/version.js';
 class BrowserPartyFixture extends PartyRoom {
  next(now){super.next(now);if(this.partyPhase==='intermission'){this.earliest=now+1000;this.deadline=now+5000;}}
- startMode(now){super.startMode(now);if(this.partyPhase==='playing'){this.deadline=now+8000;this.notice='Browser QA fixture: eight-second mode timeout; unfinished objectives earn zero.';}}
+ startMode(now){super.startMode(now);if(this.partyPhase==='playing'&&this.index!==2){this.deadline=now+8000;this.notice='Browser QA fixture: eight-second mode timeout; unfinished objectives earn zero.';}}
 }
 const app=express(),http=createServer(app),server=new Server({transport:new WebSocketTransport({server:http})});
 server.define('party',BrowserPartyFixture);

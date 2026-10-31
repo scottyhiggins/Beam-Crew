@@ -5,13 +5,10 @@ import {TriviaGame} from './trivia-game.js';
 import {Beam} from './state.js';
 import {PARTY_PLAYLIST,applyPartyResult,partyRanking,partyPodium,type PartyPerson,type PartyModeResult} from '../shared/party.js';
 export const partyRooms=new Map<string,PartyRoom>();
-class PartyTrivia extends TriviaGame {
- override role(id:string){const t=this.teams.find(t=>t.members.includes(id));if(!t)return undefined;const partner=t.members.find(x=>x!==id);return partner&&!this.players.get(partner)?.connected?'selector':super.role(id);}
- override view(id:string,now:number){const view=super.view(id,now),t=this.teams.find(t=>t.members.includes(id));if(this.phase==='question'&&t&&t.members.some(x=>!this.players.get(x)?.connected))view.question=this.deck[this.round].question;return view;}
-}
+
 /** Runs existing native simulations inside one room; no child rooms or client scores. */
 export class PartyRoom extends CrewRoom {
- partyPhase='lobby';index=-1;epoch=0;session=0;deadline=0;earliest=0;people=new Map<string,PartyPerson>();results:PartyModeResult[]=[];trivia:PartyTrivia|null=null;notice='';roster:string[]=[];
+ partyPhase='lobby';index=-1;epoch=0;session=0;deadline=0;earliest=0;people=new Map<string,PartyPerson>();results:PartyModeResult[]=[];trivia:TriviaGame|null=null;notice='';roster:string[]=[];
  override acceptModeMessage(c:Client,data:unknown){return this.partyPhase==='playing'&&this.index<2&&this.roster.includes(c.sessionId)&&!!data&&typeof data==='object'&&(data as {partyEpoch?:unknown}).partyEpoch===this.epoch;}
  override onCreate(){
   super.onCreate();this.publicMatch=true; // disables native host start/reset/mode/lobby messages
@@ -37,18 +34,18 @@ export class PartyRoom extends CrewRoom {
   }
   if(this.partyPhase==='intermission'&&now>=this.earliest){this.startMode(now);return;}
   if(this.partyPhase==='pairing'){
-   if(this.connected().length>=2&&this.connected().length%2===0)this.startMode(now);
+   if(this.connected().length>=2&&(this.index!==1||this.connected().length%2===0))this.startMode(now);
    else this.finishMode({mode:PARTY_PLAYLIST[this.index].id,entries:[],skipped:'Incomplete pairs: skipped for everyone; no Party Night points.'},now);
   }
  }
  next(now:number){this.clearNative();this.trivia=null;this.index++;this.epoch++;this.notice='';if(this.index>=PARTY_PLAYLIST.length){this.partyPhase='final';this.deadline=0;return;}this.partyPhase='intermission';this.earliest=now+3000;this.deadline=now+20000;}
  startMode(now:number){
   const active=this.connected().filter(([id])=>this.people.has(id));
-  if(active.length<2||this.index>0&&active.length%2){this.partyPhase='pairing';this.epoch++;this.deadline=now+20000;this.notice='This mode needs complete pairs (and at least two workers). Reconnect within 20 seconds, or the host can skip for everyone. No points for a skipped mode.';return;}
+  if(active.length<2||this.index===1&&active.length%2){this.partyPhase='pairing';this.epoch++;this.deadline=now+20000;this.notice=this.index===1?'Beam needs complete pairs. Reconnect within 20 seconds, or skip Beam for everyone.':'At least two workers needed. Reconnect within 20 seconds, or skip this game for everyone.';return;}
   // Reservations remain in the shared state; native modes only pair connected players.
   // Preserve reserved Player objects across mode boundaries.
   this.clearNative();this.roster=active.map(([id])=>id);this.epoch++;this.partyPhase='playing';this.notice='';
-  if(this.index===2){this.trivia=new PartyTrivia();this.trivia.code=this.state.code;this.trivia.count=5;for(const [id,p]of active)this.trivia.add(id,p.name);this.trivia.host=this.state.host;this.trivia.start(this.state.host,now);this.deadline=now+140000;return;}
+  if(this.index===2){this.trivia=new TriviaGame();this.trivia.code=this.state.code;this.trivia.count=5;for(const [id,p]of active)this.trivia.add(id,p.name);this.trivia.host=active.some(([id])=>id===this.state.host)?this.state.host:active[0][0];this.trivia.start(this.trivia.host,now);this.deadline=now+140000;return;}
   this.state.mode=this.index===0?'championship':'competitive';this.state.championshipLength=3;this.state.beamMap=2;
   this.restart(false);this.state.phase='test';this.deadline=now+(this.index===0?540000:250000);
  }
@@ -58,9 +55,9 @@ export class PartyRoom extends CrewRoom {
   // Native reconnection restores the same Player; mirror connectivity into trivia every tick.
   if(this.trivia)for(const [id,p]of this.trivia.players)p.connected=!!this.state.players.get(id)?.connected;
   if(this.partyPhase==='intermission'&&now>=this.deadline){this.startMode(now);return;}
-  if(this.partyPhase==='pairing'&&now>=this.deadline){if(this.connected().length>=2&&(this.index===0||this.connected().length%2===0))this.startMode(now);else this.finishMode({mode:PARTY_PLAYLIST[this.index].id,entries:[],skipped:'Incomplete pairs: skipped for everyone; no Party Night points.'},now);return;}
+  if(this.partyPhase==='pairing'&&now>=this.deadline){if(this.connected().length>=2&&(this.index!==1||this.connected().length%2===0))this.startMode(now);else this.finishMode({mode:PARTY_PLAYLIST[this.index].id,entries:[],skipped:'Incomplete pairs: skipped for everyone; no Party Night points.'},now);return;}
   if(this.partyPhase!=='playing')return;
-  if(this.index===2){this.trivia!.tick(now);if(this.trivia!.phase==='podium'||now>=this.deadline){const teams=[...this.trivia!.teams].sort((a,b)=>b.score-a.score||a.time-b.time);this.finishMode({mode:'trivia',entries:teams.map((t,i)=>({members:t.members,eligible:t.score>0,rank:teams.findIndex(q=>q.score===t.score&&q.time===t.time)+1,native:`${t.score} team points · ${(t.time/1000).toFixed(2)}s`,stats:{triviaCorrect:t.score/1000}}))},now);}return;}
+  if(this.index===2){this.trivia!.tick(now);if(this.trivia!.phase==='podium'||now>=this.deadline){const individuals=this.trivia!.ranking();this.finishMode({mode:'trivia',entries:individuals.map(t=>({members:[t.id],eligible:t.score>0,rank:individuals.findIndex(q=>q.score===t.score&&q.time===t.time)+1,native:`${t.score} points · ${(t.time/1000).toFixed(2)}s`,stats:{triviaCorrect:t.score/1000}}))},now);}return;}
   if(this.index===0&&this.state.racePhase==='racing'&&this.state.elapsed>=120){for(const [id,p]of this.state.players)if(!p.finishOrder){this.departChampionship(id);p.finishOrder=999;}this.reconcileChampionship();}
   if(this.state.racePhase==='results'||now>=this.deadline){
    if(this.index===0){const totals=[...this.state.standings].sort((a,b)=>b.completed-a.completed||a.spills-b.spills||a.time-b.time);this.finishMode({mode:'wheel',entries:totals.map(t=>({members:[t.playerId],eligible:t.completed===3,rank:totals.findIndex(q=>q.completed===t.completed&&q.spills===t.spills&&q.time===t.time)+1,native:`${t.completed}/3 races · ${t.spills} spills · ${t.time.toFixed(2)}s`,stats:{wheelSpills:t.spills,wheelCompleted:t.completed}}))},now);}

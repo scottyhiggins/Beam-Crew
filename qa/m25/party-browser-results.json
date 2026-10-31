@@ -1,0 +1,22 @@
+{
+  "checks": 16,
+  "passed": [
+    "Party shared question 1",
+    "Party four choices 1",
+    "Party answers visible 319px",
+    "Party answers visible landscape",
+    "Party shared question 2",
+    "Party four choices 2",
+    "Party shared question 3",
+    "Party four choices 3",
+    "Party shared question 4",
+    "Party four choices 4",
+    "Party shared question 5",
+    "Party four choices 5",
+    "Party individual native score",
+    "Party wrong answers earn zero",
+    "Party replay returns same room to lobby",
+    "zero Party browser errors"
+  ],
+  "errors": []
+}

@@ -16,7 +16,7 @@ export interface TowerRushPartyAdapter {
 export const PARTY_MODES:PartyModeAdapter[]=[
  {id:'wheel',title:'Wheelbarrow Championship · 3 races',available:true,controls:'WASD or joystick. Protect your load: spills rank before time.',maxPoints:100},
  {id:'beam',title:'Beam Carry · Construction Chaos',available:true,controls:'WASD or joystick. Space / ACTION grabs or releases. Carry with your partner. Recover team costs 5 seconds.',maxPoints:100},
- {id:'trivia',title:'Toolbox Trivia · 5 questions',available:true,controls:'Reader reads aloud; selector taps an answer. Roles swap each question. A connected partner covers a disconnected worker.',maxPoints:100},
+ {id:'trivia',title:'Toolbox Trivia · 5 questions',available:true,controls:'Free-for-all: everyone answers the same question. Correct answers first; speed breaks ties.',maxPoints:100},
  {id:'tower',title:'Crane Challenge · 60-second Tower Rush',available:false,controls:'Awaiting finished milestone #16 adapter.',maxPoints:100},
 ];
 export const PARTY_PLAYLIST=PARTY_MODES.filter(m=>m.available);

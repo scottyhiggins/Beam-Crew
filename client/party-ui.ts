@@ -17,7 +17,7 @@ export function installParty(room:Room){
   const timer=root.querySelector('[data-timer]');if(timer)timer.textContent=`${tv&&v.index===2?tv.remaining:v.remaining}s`;
   if(key===lastKey)return;lastKey=key;root.replaceChildren();if(v.phase!=='final')podium.clear();
   const playing=v.phase==='playing',trivia=playing&&v.index===2,host=v.host===room.sessionId;
-  root.classList.toggle('compact',playing&&!trivia);document.body.classList.toggle('party-overlay',!playing||trivia);
+  root.classList.toggle('trivia-playing',trivia);root.classList.toggle('compact',playing&&!trivia);document.body.classList.toggle('party-overlay',!playing||trivia);
   node('p',`PARTY NIGHT · ${v.code} · ${v.phase==='final'?'SHIFT COMPLETE':v.index<0?'LOBBY':`${Math.min(v.index+1,3)}/3`}`);
   const timerNode=node('span',`${trivia?tv.remaining:v.remaining}s`);timerNode.dataset.timer='true';
   if(v.notice)node('p',v.notice);
@@ -28,20 +28,20 @@ export function installParty(room:Room){
     node('p','Wheelbarrow Championship (3 races) → Beam Carry (Construction Chaos) → Toolbox Trivia (5 questions).');
     node('p','Tower Rush and Wrecking Ball Derby are available separately from Crane Challenge on the home screen.');
     const ul=node('ul','');v.players.forEach((p:any)=>node('li',`${p.name}${p.id===v.host?' · HOST':''}${p.connected?'':' · reconnecting'}`,ul));
-    node('p','Pairs follow join order at each mode start. Odd group? Race together, then reconnect to complete pairs or skip the paired mode for everyone after 20 seconds.');
+    node('p','Beam pairs follow join order. Odd group? Race and play Trivia together; reconnect for Beam or skip Beam after 20 seconds.');
     button('Copy invite link',()=>{void navigator.clipboard.writeText(`${location.origin}/party.html?room=${v.code}`).then(()=>{share.textContent='Invite copied';}).catch(()=>{share.textContent=`Invite: ${location.origin}/party.html?room=${v.code}`;});});const share=node('p','');
    }
    if(v.phase==='intermission'){node('h2',PARTY_PLAYLIST[v.index].title);node('p',PARTY_PLAYLIST[v.index].controls);node('p','Host can continue after 3 seconds. Automatically continues after 20 seconds.');}
    if(trivia){
-    node('h2',`Question ${tv.round}/${tv.count} · ${tv.role??'spectator'}${tv.partner?' · with '+tv.partner:''}`);
-    node('p',tv.question??'Your partner reads the question aloud.');
-    if(tv.answers)tv.answers.forEach((answer:string,choice:number)=>{const b=button(answer,()=>room.send('partyAnswer',{choice,epoch:tv.epoch,partyEpoch:v.epoch}));b.disabled=tv.phase!=='question'||tv.role!=='selector'||tv.submitted;});
+    node('h2',`Question ${tv.round}/${tv.count} · FREE-FOR-ALL`);
+    node('h2',tv.question??'');
+    const answerGrid=node('div','');answerGrid.className='party-answers';if(tv.answers)tv.answers.forEach((answer:string,choice:number)=>{const b=button(answer,()=>room.send('partyAnswer',{choice,epoch:tv.epoch,partyEpoch:v.epoch}),answerGrid);b.onclick=()=>{answerGrid.querySelectorAll('button').forEach(b=>b.disabled=true);room.send('partyAnswer',{choice,epoch:tv.epoch,partyEpoch:v.epoch});};b.disabled=tv.phase!=='question'||tv.submitted;});
     if(tv.correct)node('p','Correct: '+tv.correct);
-    node('p',tv.teams.map((t:any)=>`${t.members.join(' + ')}: ${t.score} team points`).join(' · '));
+    node('p',tv.standings.map((t:any)=>`${t.name}: ${t.score} pts`).join(' · '));
    }
    if(v.phase==='final'){
     const p=v.podium;root.append(podiumHost);podium.update(p.ranking.map((r:any)=>({id:r.id,name:r.name,place:r.place,detail:r.points+' Party points · '+r.wins+' mode wins',award:r.place===1?'Employee of the Month':p.awards.find((a:any)=>a.playerId===r.id)?.title,workers:[{id:r.id,name:r.name,look:r.look,connected:v.players.find((w:any)=>w.id===r.id)?.connected??false}]})));node('h2',p.ranking[0]?.name??'Shift complete');node('p','Top three: '+p.topThree.map((r:any)=>`#${r.place} ${r.name} · ${r.points} pts`).join(' | '));
-    for(const a of p.awards)node('p',`${a.title}: ${p.ranking.find((r:any)=>r.id===a.playerId)?.name} · ${a.value} ${{wheelSpills:'racing spills',beamRecoveries:'team recoveries',triviaCorrect:'correct team answers'}[a.stat as string]??'recorded actions'}`);
+    for(const a of p.awards)node('p',`${a.title}: ${p.ranking.find((r:any)=>r.id===a.playerId)?.name} · ${a.value} ${{wheelSpills:'racing spills',beamRecoveries:'team recoveries',triviaCorrect:'correct answers'}[a.stat as string]??'recorded actions'}`);
     if(host)button('Play another Party Night',()=>room.send('partyReplay',{epoch:v.epoch}));
    }
   }
@@ -49,7 +49,7 @@ export function installParty(room:Room){
    for(const result of v.results){node('h3',PARTY_MODES.find(m=>m.id===result.mode)?.title??result.mode,details);if(result.skipped)node('p',result.skipped,details);else for(const e of result.entries)node('p',`${e.members.map((id:string)=>v.ranking.find((p:any)=>p.id===id)?.name??'Worker').join(' + ')} · ${e.native} → ${partyPoints(e.rank,result.entries.length,e.eligible)} Party pts each`,details);}
   }
   if(host&&['lobby','intermission','pairing'].includes(v.phase)){const b=button(v.phase==='lobby'?'Start Party Night':v.phase==='pairing'?'Continue with pairs / skip mode':'Continue to next game',()=>room.send('partyContinue',{epoch:view.epoch}));b.disabled=v.phase==='intermission'&&!v.canContinue;}
-  const rules=node('details','');node('summary','How Party Night scoring works',rules);node('p','Each mode awards 0–100 points once, regardless of sub-rounds. Rank points = 100 × (competitors − rank) ÷ (competitors − 1), rounded. Both teammates receive the full team award. A single team earns 100 only for a delivery or at least one correct trivia answer. DNFs and zero-correct trivia earn 0. Native ties share rank and points. Overall ties: mode wins, then original join order. Wheelbarrow: complete all 3 races; completed races, spills first, then time. Beam: delivery time including penalties. Trivia: correct team points, then correct-answer time. Skipped modes award nobody points. Maximum for three scored modes: 300.',rules);
+  const rules=node('details','');node('summary','How Party Night scoring works',rules);node('p','Each mode awards 0–100 points once, regardless of sub-rounds. Rank points = 100 × (competitors − rank) ÷ (competitors − 1), rounded. Beam teammates receive the full team award; Trivia awards each worker individually. A single team earns 100 only for a delivery. DNFs and zero-correct trivia earn 0. Native ties share rank and points. Overall ties: mode wins, then original join order. Wheelbarrow: complete all 3 races; completed races, spills first, then time. Beam: delivery time including penalties. Trivia: individual correct-answer points, then correct-answer time. Skipped modes award nobody points. Maximum for three scored modes: 300.',rules);
   button('Leave Party Night',()=>{void room.leave();});
  });
  room.onLeave(()=>{podium.clear();root.remove();document.body.classList.remove('party-connected','party-overlay');});room.send('partySync');

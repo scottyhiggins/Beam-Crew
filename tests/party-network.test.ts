@@ -26,9 +26,9 @@ test('real clients: same-room transitions, host transfer, reconnect across modes
   room.earliest=0;b.send('partyContinue',{epoch:room.epoch});await until(()=>room.partyPhase==='playing');assert.equal(room.state.mode,'competitive');assert.equal(room.state.teams.length,1);
   const prior=room.epoch;b.send('partyContinue',{epoch:prior-1});room.state.teams[0].delivered=true;room.state.teams[0].finishTime=12;room.state.racePhase='results';room.partyTick(Date.now());assert.equal(room.people.get(id)!.points,100);
   room.earliest=0;b.send('partyContinue',{epoch:room.epoch});await until(()=>room.partyPhase==='playing');assert.equal(room.trivia!.players.size,2);assert.equal(room.state.teams.length,0);assert.equal(room.state.material.length,0);
-  const g=room.trivia!,selector=[...g.players.keys()].find(x=>g.role(x)==='selector')!,sender=selector===a.sessionId?a:b;
-  sender.send('partyAnswer',{choice:g.order.indexOf(0),epoch:g.epoch,partyEpoch:prior});await pause(70);assert.equal(g.teams[0].score,0);
-  sender.send('partyAnswer',{choice:g.order.indexOf(0),epoch:g.epoch,partyEpoch:room.epoch});await until(()=>g.teams[0].score===1000);g.phase='podium';room.partyTick(Date.now());await until(()=>views.get(a)?.phase==='final'&&views.get(b)?.phase==='final');assert.deepEqual(views.get(a).podium,views.get(b).podium);assert.equal(views.get(a).podium.ranking.length,2);
+  const g=room.trivia!,sender=a;
+  sender.send('partyAnswer',{choice:g.order.indexOf(0),epoch:g.epoch,partyEpoch:prior});await pause(70);assert.equal(g.scores.get(a.sessionId)!.score,0);
+  sender.send('partyAnswer',{choice:g.order.indexOf(0),epoch:g.epoch,partyEpoch:room.epoch});await until(()=>g.scores.get(a.sessionId)!.answer!==null);g.tick(g.deadline);assert.equal(g.scores.get(a.sessionId)!.score,1000);g.phase='podium';room.partyTick(Date.now());await until(()=>views.get(a)?.phase==='final'&&views.get(b)?.phase==='final');assert.deepEqual(views.get(a).podium,views.get(b).podium);assert.equal(views.get(a).podium.ranking.length,2);
   b.send('partyReplay',{epoch:room.epoch});await until(()=>room.partyPhase==='lobby');assert.equal(room.people.size,0);assert.equal(room.state.code,code);assert.equal(partyRooms.get(code),room);assert.equal(room.state.players.size,2);
   const friend=track(await client.joinById(b.roomId,{name:'Replay friend'}));await until(()=>friend.state.players?.size===3);b.send('partyContinue',{epoch:room.epoch});await until(()=>room.partyPhase==='intermission');assert.equal(room.results.length,0);assert.equal(room.people.size,3);
  }finally{await Promise.allSettled(clients.filter(r=>r.connection.isOpen).map(r=>r.leave()));await server.gracefullyShutdown(false);}
@@ -52,10 +52,10 @@ test('real 2–8 client matrix: native three-race finishes, team results, odd sk
     r.partyTick(Date.now());assert.equal(r.index,1);assert.equal(r.results[0].entries.length,count);assert.ok(r.results[0].entries.every(e=>e.eligible));
     r.earliest=0;r.continueParty();
     if(count%2)r.partyTick(r.deadline+1);else{assert.equal(r.state.teams.length,count/2);for(const t of r.state.teams){t.delivered=true;t.finishTime=10;}r.state.racePhase='results';r.partyTick(Date.now());}
-    r.earliest=0;r.continueParty();if(count%2)r.partyTick(r.deadline+1);else{for(const t of r.trivia!.teams)t.score=1000;r.trivia!.phase='podium';r.partyTick(Date.now());}
+    r.earliest=0;r.continueParty();assert.equal(r.partyPhase,'playing');for(const t of r.trivia!.scores.values())t.score=1000;r.trivia!.phase='podium';r.partyTick(Date.now());
     r.publishParty();await until(()=>clients.every(c=>views.get(c)?.phase==='final'));const podium=views.get(a).podium;
     assert.equal(podium.ranking.length,count);for(const c of clients){assert.equal(c.state.code,code);assert.equal(c.roomId,a.roomId);assert.deepEqual(views.get(c).podium,podium);}
-    assert.equal(r.results.filter(x=>x.skipped).length,count%2?2:0);
+    assert.equal(r.results.filter(x=>x.skipped).length,count%2?1:0);
    }finally{await Promise.allSettled(clients.filter(c=>c.connection.isOpen).map(c=>c.leave()));}
   }
  }finally{await server.gracefullyShutdown(false);}
