@@ -1,0 +1,52 @@
+PASS 2 workers course 0: host selection sync and guest locked
+PASS 2 workers course 0: two browser workers carry shared beam
+PASS 2 workers course 0: both workers release
+PASS 0 portrait: no horizontal overflow
+PASS 0 portrait: phone action visible
+PASS 0 landscape: no horizontal overflow
+PASS 0 landscape: phone action visible
+PASS 0 319px: no horizontal overflow
+PASS 0 319px: phone action visible
+PASS 2 workers course 0: rematch reaches racing
+PASS 2 workers course 1: host selection sync and guest locked
+PASS 2 workers course 1: two browser workers carry shared beam
+PASS 2 workers course 1: both workers release
+PASS 1 portrait: no horizontal overflow
+PASS 1 portrait: phone action visible
+PASS 1 landscape: no horizontal overflow
+PASS 1 landscape: phone action visible
+PASS 1 319px: no horizontal overflow
+PASS 1 319px: phone action visible
+PASS 2 workers course 1: rematch reaches racing
+PASS 2 workers course 2: host selection sync and guest locked
+PASS 2 workers course 2: two browser workers carry shared beam
+PASS 2 workers course 2: both workers release
+PASS 2 portrait: no horizontal overflow
+PASS 2 portrait: phone action visible
+PASS 2 landscape: no horizontal overflow
+PASS 2 landscape: phone action visible
+PASS 2 319px: no horizontal overflow
+PASS 2 319px: phone action visible
+PASS 2 workers course 2: rematch reaches racing
+PASS 2 workers course 3: host selection sync and guest locked
+PASS 2 workers course 3: two browser workers carry shared beam
+PASS 2 workers course 3: both workers release
+PASS 3 portrait: no horizontal overflow
+PASS 3 portrait: phone action visible
+PASS 3 landscape: no horizontal overflow
+PASS 3 landscape: phone action visible
+PASS 3 319px: no horizontal overflow
+PASS 3 319px: phone action visible
+PASS 2 workers course 3: rematch reaches racing
+PASS 2 workers course 4: host selection sync and guest locked
+PASS 2 workers course 4: two browser workers carry shared beam
+PASS 2 workers course 4: both workers release
+PASS 4 portrait: no horizontal overflow
+PASS 4 portrait: phone action visible
+PASS 4 landscape: no horizontal overflow
+PASS 4 landscape: phone action visible
+PASS 4 319px: no horizontal overflow
+PASS 4 319px: phone action visible
+PASS 2 workers course 4: rematch reaches racing
+PASS 2 workers: Random lobby synchronization
+PASS zero browser page errors

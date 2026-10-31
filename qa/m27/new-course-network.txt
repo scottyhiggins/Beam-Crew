@@ -1,0 +1,16 @@
+✔ M27 real sockets: 2 players, map 3, carry/release, reconnect, host transfer, rematch (7117.4649ms)
+✔ M27 real sockets: 2 players, map 4, carry/release, reconnect, host transfer, rematch (7091.1162ms)
+✔ M27 real sockets: 4 players, map 3, carry/release, reconnect, host transfer, rematch (6918.2253ms)
+✔ M27 real sockets: 4 players, map 4, carry/release, reconnect, host transfer, rematch (6946.11ms)
+✔ M27 real sockets: 6 players, map 3, carry/release, reconnect, host transfer, rematch (6916.102ms)
+✔ M27 real sockets: 6 players, map 4, carry/release, reconnect, host transfer, rematch (7061.1603ms)
+✔ M27 real sockets: 8 players, map 3, carry/release, reconnect, host transfer, rematch (6946.9715ms)
+✔ M27 real sockets: 8 players, map 4, carry/release, reconnect, host transfer, rematch (7072.8274ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 56230.9578

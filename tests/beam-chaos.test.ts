@@ -43,9 +43,9 @@ test('respawn freezes team briefly, charges once and clears motion',()=>{
  assert.equal(b.x,x);assert.equal(b.penalty,5);assert.equal(b.recoveries,1);assert.equal(b.vx,0);assert.ok(b.protection>0);
 });
 test('maps have distinct fall boundaries and validation rejects malformed IDs',()=>{
- assert.equal(BEAM_MAPS.length,3);assert.ok(onBeamPlatform(16,0,0));assert.ok(!onBeamPlatform(16,0,1));
+ assert.equal(BEAM_MAPS.length,5);assert.ok(onBeamPlatform(16,0,0));assert.ok(!onBeamPlatform(16,0,1));
  assert.ok(onBeamPlatform(16,-4.8,1));assert.ok(!onBeamPlatform(16,-4.8,2));
- for(const id of [-1,3,'1',null,NaN,Infinity,.5])assert.equal(validBeamMap(id),false);assert.ok(validBeamMap(2));
+ for(const id of [-1,5,'1',null,NaN,Infinity,.5])assert.equal(validBeamMap(id),false);assert.ok(validBeamMap(2));
 });
 test('excavator sweep is deterministic, bounded and server collision geometry covers its tip',()=>{
  for(let t=0;t<20;t+=.1){const boxes=excavatorBoxes(t);assert.deepEqual(boxes,excavatorBoxes(t));assert.equal(boxes.length,16);
@@ -106,7 +106,7 @@ test('excavator contact moves or recovers a stationary beam assembly authoritati
  assert.ok(b.x!==before.x||b.z!==before.z||b.recoveries>0);
  if(!b.protection)assert.equal(beamCollides(b,Math.PI*1.5/.38,beamWorld(2)),false);
 });
-for(const map of [0,1,2])test(`full course ${map}: timed load crossings, recovery, checkpoints and supported delivery`,()=>{
+for(const map of [0,1,2,3,4])test(`full course ${map}: timed load crossings, recovery, checkpoints and supported delivery`,()=>{
  const b=new BeamTeam(),members=pair(b);let stage=0,lastReset=0;
  for(let i=1;i<240*30&&!b.delivered;i++){
   const t=i/30;if(b.resets!==lastReset){lastReset=b.resets;stage=b.stage>=2?2:0;}
@@ -115,8 +115,8 @@ for(const map of [0,1,2])test(`full course ${map}: timed load crossings, recover
   if(stage===0){z=-Math.min(1,Math.max(.08,(b.z+6.1)*1.5));if(b.z<=-6.05)stage=1;}
   else if(stage===1){turn=Math.min(1,b.angle*2);if(b.angle<.03)stage=2;}
   else {
-   z=Math.max(-1,Math.min(1,((map===1?-7.5:b.x<21?-6.65:-7.5)-b.z)*2));turn=b.angle*2;x=Math.max(-1,Math.min(1,(26-b.x)*2));
-   const loads=movingLoads(t);if(b.x<8.6&&b.x>7.5&&loads[0].z<-3.4)x=0;if(b.x>18&&b.x<18.8&&loads[1].z<-3.4)x=0;
+   z=Math.max(-1,Math.min(1,(((map===1||map===3)?-7.5:b.x<21?-6.65:-7.5)-b.z)*2));turn=b.angle*2;x=Math.max(-1,Math.min(1,(26-b.x)*2));
+   const loads=beamWorld(map).hazards(t);if(b.x<8.6&&b.x>7.5&&loads[0].z<-3.4)x=0;if(b.x>18&&b.x<18.8&&loads[1].z<-3.4)x=0;
   }
   members[0].inputX=x-Math.sin(b.angle)*turn;members[0].inputZ=z+Math.cos(b.angle)*turn;
   members[1].inputX=x+Math.sin(b.angle)*turn;members[1].inputZ=z-Math.cos(b.angle)*turn;

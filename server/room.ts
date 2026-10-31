@@ -1,4 +1,4 @@
-import {validBeamMap,stepChaosTeam,recoverTeam} from '../shared/beam-chaos.js';
+import {chooseBeamMap,validBeamMap,stepChaosTeam,recoverTeam} from '../shared/beam-chaos.js';
 import {validateWorkerLook} from '../shared/cosmetics.js';
 import {selectCourseIds,assembleRoute,routeWorld,validChampionshipLength,type CourseInstance} from '../shared/course-modules.js';
 import {championshipTrack,COURSE_TWO} from '../shared/championship.js';
@@ -47,7 +47,7 @@ export class CrewRoom extends Room<CrewState> {
     });
     this.onMessage('signal',(c,value)=>{const p=this.state.players.get(c.sessionId);if(p&&['LIFT','WAIT','LEFT','RIGHT'].includes(value)&&Date.now()-p.lastSignal>500){p.signal=value;p.lastSignal=Date.now();p.signalUntil=Date.now()+2000;}});
     this.onMessage('mode',(c,value)=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='lobby'&&['beam','wheel','competitive','championship'].includes(value))this.state.mode=value==='beam'?'competitive':value;});
-    this.onMessage('beamMap',(c,value)=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='lobby'&&validBeamMap(value))this.state.beamMap=value;});
+    this.onMessage('beamMap',(c,value)=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='lobby'&&(value===-1||validBeamMap(value))){this.state.beamRandom=value===-1;if(value!==-1)this.state.beamMap=value;}});
     this.onMessage('rescue',(c,data)=>{if(!this.acceptModeMessage(c,data))return;const p=this.state.players.get(c.sessionId),b=p&&this.state.teams[p.team];if(this.state.mode==='competitive'&&this.state.racePhase==='racing'&&b&&!b.delivered&&!b.dnf&&b.protection===0)recoverTeam(b,[...this.state.players.values()].filter(q=>q.team===p!.team));});
     this.onMessage('championshipLength',(c,value)=>{if(!this.publicMatch&&c.sessionId===this.state.host&&this.state.phase==='lobby'&&validChampionshipLength(value))this.state.championshipLength=value;});
     this.onMessage('material',(c,id)=>{const p=this.state.players.get(c.sessionId);if(p&&this.state.phase==='lobby'&&validMaterial(id))p.materialId=id;});
@@ -72,6 +72,7 @@ export class CrewRoom extends Room<CrewState> {
       this.state.routeSeed=randomInt(0x100000000);const ids=selectCourseIds(this.state.championshipLength,this.state.routeSeed);this.state.routeIds.push(...ids);this.routePlan=assembleRoute(ids);this.routeMaterialWorld=routeWorld(this.routePlan);
     }
     if(this.state.mode==='competitive'){
+      if(!checkpoint&&this.state.beamRandom)this.state.beamMap=chooseBeamMap(this.state.beamMap);
       this.state.raceResets=Math.max(this.state.raceResets,...this.state.teams.map(b=>b.resets))+1;this.state.teams.clear();this.state.elapsed=0;this.state.racePhase='countdown';this.state.countdown=3;
       for(const p of this.state.players.values()){p.team=p.end=p.grip=-1;p.inputX=p.inputZ=p.vx=p.vz=0;}
       for(let i=0;i+1<players.length;i+=2){const b=new BeamTeam();b.resets=this.state.raceResets;b.name='Team '+(i/2+1);b.members=players[i][1].name+' + '+players[i+1][1].name;this.state.teams.push(b);

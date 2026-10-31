@@ -1,0 +1,34 @@
+✔ random covers every alternative and never immediately repeats (1.1022ms)
+✔ 2 workers / course 0: spawn, both grips, release, checkpoint recovery, scores and rematch (5.5766ms)
+✔ 2 workers / course 1: spawn, both grips, release, checkpoint recovery, scores and rematch (1.5083ms)
+✔ 2 workers / course 2: spawn, both grips, release, checkpoint recovery, scores and rematch (3.813ms)
+✔ 2 workers / course 3: spawn, both grips, release, checkpoint recovery, scores and rematch (0.88ms)
+✔ 2 workers / course 4: spawn, both grips, release, checkpoint recovery, scores and rematch (1.8314ms)
+✔ 4 workers / course 0: spawn, both grips, release, checkpoint recovery, scores and rematch (1.2983ms)
+✔ 4 workers / course 1: spawn, both grips, release, checkpoint recovery, scores and rematch (1.1168ms)
+✔ 4 workers / course 2: spawn, both grips, release, checkpoint recovery, scores and rematch (2.4541ms)
+✔ 4 workers / course 3: spawn, both grips, release, checkpoint recovery, scores and rematch (1.2502ms)
+✔ 4 workers / course 4: spawn, both grips, release, checkpoint recovery, scores and rematch (2.2262ms)
+✔ 6 workers / course 0: spawn, both grips, release, checkpoint recovery, scores and rematch (1.3178ms)
+✔ 6 workers / course 1: spawn, both grips, release, checkpoint recovery, scores and rematch (1.4552ms)
+✔ 6 workers / course 2: spawn, both grips, release, checkpoint recovery, scores and rematch (2.8928ms)
+✔ 6 workers / course 3: spawn, both grips, release, checkpoint recovery, scores and rematch (1.3872ms)
+✔ 6 workers / course 4: spawn, both grips, release, checkpoint recovery, scores and rematch (3.0608ms)
+✔ 8 workers / course 0: spawn, both grips, release, checkpoint recovery, scores and rematch (2.7101ms)
+✔ 8 workers / course 1: spawn, both grips, release, checkpoint recovery, scores and rematch (1.7894ms)
+✔ 8 workers / course 2: spawn, both grips, release, checkpoint recovery, scores and rematch (4.1263ms)
+✔ 8 workers / course 3: spawn, both grips, release, checkpoint recovery, scores and rematch (1.8095ms)
+✔ 8 workers / course 4: spawn, both grips, release, checkpoint recovery, scores and rematch (3.906ms)
+✔ random restart chooses once for the room; checkpoint resets retain the course (1.9111ms)
+✔ new moving machinery is deterministic and renderer positions match authoritative hazards (1.4772ms)
+✔ new course 3: boundary fall recovers both workers at latest checkpoint (0.4381ms)
+✔ new course 4: boundary fall recovers both workers at latest checkpoint (0.2105ms)
+✔ Muddy Monday bridge ramps rise gently, return flush and leave other courses unchanged (0.1275ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 283.6346

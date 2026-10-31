@@ -11,13 +11,28 @@ export const BEAM_MAPS=[
  {name:'1 · Crew training',description:'Doorway, tight turn and moving loads.',elevated:false,edge:-10,excavator:false},
  {name:'2 · Skyway haul',description:'Elevated dogleg around a parked load. Watch both ends and the edges.',elevated:true,edge:-4.4,excavator:false},
  {name:'3 · Excavator alley',description:'Narrow skyway and a sweeping excavator. Wait for your opening.',elevated:true,edge:-5.1,excavator:true},
+ {name:'4 · Rooftop Run',description:'OSHA would like a word. Steel decks, temporary walkways and crossing construction lifts.',elevated:true,edge:-4.7,excavator:false},
+ {name:'5 · Muddy Monday',description:'The forecast said probably fine. Puddles, temporary bridges and machinery with right of way.',elevated:false,edge:-10,excavator:true},
 ] as const;
 export function validBeamMap(id:unknown):id is number{return Number.isInteger(id)&&Number(id)>=0&&Number(id)<BEAM_MAPS.length;}
 export function beamWorld(id:number):BeamWorld {
  const map=BEAM_MAPS[id]??BEAM_MAPS[0];
- const fixed=id===1?[...COURSE.obstacles.filter(o=>o.x!==17),{x:17,z:-5,halfX:1.2,halfZ:.35}]:COURSE.obstacles;
+ const fixed=(id===1||id===3)?[...COURSE.obstacles.filter(o=>o.x!==17),{x:17,z:-5,halfX:1.2,halfZ:.35}]:COURSE.obstacles;
  return {obstacles:[...fixed,...(map.excavator?[{x:20,z:-2.6,halfX:1.15,halfZ:.8}]:[])],
- hazards:t=>[...movingLoads(t),...(map.excavator?excavatorBoxes(t):[])]};
+ hazards:t=>[...courseLoads(id,t),...(map.excavator?excavatorBoxes(t):[])]};
+}
+// Deterministic machinery uses the existing room clock without extra messages.
+export function courseLoads(id:number,t:number):Obstacle[]{
+ return movingLoads(id===3?t*.85+1:id===4?t*.9+2:t);
+}
+export function chooseBeamMap(previous:number,random:()=>number=Math.random){
+ const choices=BEAM_MAPS.map((_,i)=>i).filter(i=>i!==previous);
+ return choices[Math.min(choices.length-1,Math.max(0,Math.floor(random()*choices.length)))];
+}
+// Shallow bridge ramps change rendered height, while the established planar
+// authoritative collision solver remains the source of all horizontal motion.
+export function beamTerrainHeight(id:number,x:number,z:number){
+ return id===4&&z>=-9.85&&z<=-5.15?Math.max(0,Math.min(.22,(x-10)*.22,(17-x)*.22)):0;
 }
 export function onBeamPlatform(x:number,z:number,mapId:number,margin=0){
  const map=BEAM_MAPS[mapId]??BEAM_MAPS[0];
