@@ -6,12 +6,9 @@ build/
 .pnpm-store/
 /sources/
 /AGENTS.md
-<<<<<<< HEAD
 /backups/
 
 # Local Work 14 recovery artifacts
 /recovery/*.bundle
 /recovery/checkpoint.json
-=======
 /crane-playtest.pid
->>>>>>> refs/recovery/m22/crane

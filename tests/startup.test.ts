@@ -11,8 +11,8 @@ test('production server identifies its build and serves the mode selector assets
  const health=await response.json() as any;assert.equal(health.protocol,PROTOCOL_VERSION);assert.match(health.build,/BREAK TIME/);assert.ok(health.repository);assert.ok(Number.isFinite(Date.parse(health.startedAt)));
  const page=await fetch(endpoint!);assert.equal(page.headers.get('cache-control'),'no-store');const html=await page.text();assert.match(html,/BREAK TIME/);
  const asset=html.match(/src="([^"]+\.js)"/);assert.ok(asset);const script=await (await fetch(new URL(asset[1],endpoint))).text();assert.match(script,/Wheelbarrow/);assert.match(script,/id="mode"/);assert.match(script,/value="wheel"/);
- for(const id of ['quickMatch','cancelMatch','playAgain','beamMap','beamOverview','beamRescue','chooseWheel','chooseBeam','chooseStore'])assert.ok(script.includes('id="'+id+'"'), 'Integrated production asset missing '+id);
- assert.equal((script.match(/class="mode-tile/g)||[]).length,5);
+ for(const id of ['quickMatch','cancelMatch','playAgain','beamMap','beamOverview','beamRescue','chooseWheel','chooseBeam','chooseStore','chooseParty','chooseCrane','menuExtras','entryGuide','modeInstructions'])assert.ok(script.includes('id="'+id+'"'), 'Integrated production asset missing '+id);
+ assert.equal((script.match(/class="mode-tile/g)||[]).length,4);
 });
 test('launcher preflight accepts an available port',async()=>{await run(process.execPath,['scripts/check-port.mjs','0']);});
 test('launcher preflight identifies occupied port instead of appearing to start',async()=>{const listener=net.createServer();await new Promise<void>(resolve=>listener.listen(0,'0.0.0.0',resolve));try{const address=listener.address() as net.AddressInfo;await assert.rejects(run(process.execPath,['scripts/check-port.mjs',String(address.port)]),(error:any)=>{assert.equal(error.code,1);assert.match(error.stderr,/has NOT started/);assert.match(error.stderr,/already-running server/);return true;});}finally{await new Promise<void>(resolve=>listener.close(()=>resolve()));}});

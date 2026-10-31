@@ -14,14 +14,11 @@ const startedAt=new Date().toISOString();
 const app=express();const http=createServer(app);
 const server=new Server({transport:new WebSocketTransport({server:http})});
 server.define('crew',CrewRoom);
-<<<<<<< HEAD
 server.define('wheel_public',PublicWheelRoom);
 server.define('trivia',TriviaRoom);
 app.get('/api/trivia/:code',(req,res)=>{const room=triviaRooms.get(req.params.code.toUpperCase());if(!room){res.status(404).json({error:'Trivia room not found'});return;}if(room.game.phase!=='lobby'){res.status(409).json({error:'Round in progress. Reconnect or wait for the lobby.'});return;}res.json({roomId:room.roomId});});
-=======
 server.define('crane',CraneRoom);
 app.get('/api/crane/:code',(req,res)=>{const r=craneRooms.get(req.params.code.toUpperCase());if(!r){res.status(404).json({error:'Room not found'});return;}if(r.phase!=='lobby'){res.status(409).json({error:'Round in progress'});return;}res.json({roomId:r.roomId});});
->>>>>>> refs/recovery/m22/crane
 app.get('/api/rooms/:code',(req,res)=>{
   const room=roomsByCode.get(req.params.code.toUpperCase());
   if(!room){res.status(404).json({error:'Room not found'});return;}
